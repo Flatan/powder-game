@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.IllegalComponentStateException;
 
 import java.awt.MouseInfo;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -66,12 +67,12 @@ public class Board extends JPanel
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         g2.setColor(Color.WHITE);
         
         g2.drawImage(image, 0, 0, null);
-        //g2.drawOval(mouseX-cursorSize/2, mouseY-cursorSize/2, cursorSize, cursorSize);
+        g2.drawOval(mouseX-cursorSize/2, mouseY-cursorSize/2, cursorSize, cursorSize);
     }
 
 
@@ -84,10 +85,19 @@ public class Board extends JPanel
     	
     	Particle[][] grid = Particle.getGrid();
     	
-		if (mouseX<B_WIDTH && mouseX>0)
-		if (mouseY<B_HEIGHT && mouseY>0)
-    	if (mouseDown && grid[mouseX][mouseY] == null)
-    			new Particle(mouseX, mouseY);
+		for (int x = mouseX-cursorSize/2; x < mouseX+cursorSize/2; x++) {
+		for (int y = mouseY-cursorSize/2; y < mouseY+cursorSize/2; y++) {
+			if (x<B_WIDTH && x>0)
+			if (y<B_HEIGHT && y>0)
+	    	if (mouseDown && grid[x][y] == null) 
+	    	if (Math.hypot(x-mouseX, y-mouseY)<=cursorSize/2)
+	    	{
+	    		new Granular(x,y,Color.WHITE);
+	    	}
+			
+		}}
+    	
+    		
     	
 		Particle.updateGrid();
 
