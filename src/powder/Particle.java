@@ -2,6 +2,14 @@ package powder;
 
 import java.awt.Color;
 
+
+/**
+* Particle
+*
+* This is the base particle class that represents a single pixel on the screen
+*
+*
+*/
 public class Particle {
 
 	protected static Particle[][] grid = new Particle[600][600];

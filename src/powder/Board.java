@@ -75,6 +75,29 @@ public class Board extends JPanel
         g2.drawOval(mouseX-cursorSize/2, mouseY-cursorSize/2, cursorSize, cursorSize);
     }
 
+    // For testing if a single (x,y) coord fits on the screen
+    public boolean outOfBounds(int x, int y) {
+
+        return !(x < B_WIDTH && y < B_HEIGHT && x > 0 && y > 0);
+
+    }
+
+    // Draw a cluster of particles on the screen given (x, y) coords and a diameter
+    public void paintParticleCluster(int mx, int my, int diameter) {
+
+    	Particle[][] grid = Particle.getGrid();
+
+		for (int x = mx-diameter/2; x < mx+diameter/2; x++) {
+		for (int y = mouseY-diameter/2; y < mouseY+diameter/2; y++) {
+            if (!outOfBounds(x, y))
+	    	if (mouseDown && grid[x][y] == null) 
+	    	if (Math.hypot(x-mx, y-mouseY)<=diameter/2)
+	    	{
+	    		new Granular(x,y,Color.WHITE);
+	    	}
+		}}
+    }
+
 
     private void cycle() {
     	try {mouseX = MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x;}
@@ -85,22 +108,9 @@ public class Board extends JPanel
     	
     	Particle[][] grid = Particle.getGrid();
     	
-		for (int x = mouseX-cursorSize/2; x < mouseX+cursorSize/2; x++) {
-		for (int y = mouseY-cursorSize/2; y < mouseY+cursorSize/2; y++) {
-			if (x<B_WIDTH && x>0)
-			if (y<B_HEIGHT && y>0)
-	    	if (mouseDown && grid[x][y] == null) 
-	    	if (Math.hypot(x-mouseX, y-mouseY)<=cursorSize/2)
-	    	{
-	    		new Granular(x,y,Color.WHITE);
-	    	}
-			
-		}}
-    	
-    		
+        paintParticleCluster(mouseX, mouseY, cursorSize);
     	
 		Particle.updateGrid();
-
 		
     	for ( int x = 0; x < B_WIDTH; x++ ) {
     	for ( int y = 0; y < B_HEIGHT; y++ ) {
