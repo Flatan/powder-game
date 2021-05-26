@@ -43,6 +43,13 @@ public class Particle {
 		return gridX;
 	}
 
+	
+	// Returns a Particle relative to the position of this one
+	public Particle getRelativeParticle(int x, int y) {
+
+		return grid[gridX + x][gridY + y];
+	}
+
 	// Update the particle position, only taking the preciseX and Y as input
 	public void setNewPosition(double x, double y) {
 		grid[gridX][gridY] = null;
