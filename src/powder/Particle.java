@@ -63,7 +63,8 @@ public class Particle {
 	public static Particle[][] getGrid() {
 		return grid;
 	}
-	
+
+	// Grid refresher that is looped through forever when application starts
 	public static void updateGrid() {
 
 		// Iterate through the grid and update every pixel with a Particle
