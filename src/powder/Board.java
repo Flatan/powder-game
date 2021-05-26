@@ -112,6 +112,7 @@ public class Board extends JPanel
     	
 		Particle.updateGrid();
 		
+        // Convert the Particle[][] grid to an actual buffered image
     	for ( int x = 0; x < B_WIDTH; x++ ) {
     	for ( int y = 0; y < B_HEIGHT; y++ ) {
 			if (grid[x][y] != null)
