@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This is a test comment 
+
 x=$(realpath $0)
 SCRIPTS=$(dirname $x)
 
