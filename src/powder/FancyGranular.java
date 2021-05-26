@@ -48,11 +48,11 @@ public class FancyGranular extends Particle {
 					return;
 
 
-				System.out.println(getgridY());
-				if (getgridY() == 599.0) {
-					
-					System.out.println("grounded");
-				}
+				//System.out.println(getGridY());
+				//if (getGridY() == 599.0) {
+	//                
+					//System.out.println("grounded");
+				//}
 				// If target coord is already occupied
 				if (grid[(int) (newX + normVelX)][(int) (newY + normVelY)] != null) {
 					newX += Math.random();
