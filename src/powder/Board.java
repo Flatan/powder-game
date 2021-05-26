@@ -76,7 +76,7 @@ public class Board extends JPanel
     }
 
     // For testing if a single (x,y) coord fits on the screen
-    public boolean outOfBounds(int x, int y) {
+     public boolean outOfBounds(int x, int y) {
 
         return !(x < B_WIDTH && y < B_HEIGHT && x > 0 && y > 0);
 

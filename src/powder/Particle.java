@@ -14,8 +14,11 @@ public class Particle {
 
 	protected static Particle[][] grid = new Particle[600][600];
 	
-	int gridX,gridY;
-	double preciseX, preciseY;
+	// We should hide these variables after Particle initialization, because if you think about it,
+	// once a particle is created it can only ever move up,down.left or right from its relative position
+	private int gridX,gridY;
+	private double preciseX, preciseY;
+
 	double gravity = 0.5;
 	
 	//velocity:
@@ -23,10 +26,30 @@ public class Particle {
 	
 	public Color color = Color.white;
 
-	boolean moving = true;
 	double downPush = 0.0;
 	public boolean updated = false;
 	
+
+	public double getX() {
+		return preciseX;
+	}
+
+	public double getY() {
+		return preciseY;
+	}
+
+	// This method should throw an error if the new coords dont make sense 
+	// (like more than 1 pix away from relative position) but I'm too lazy
+	// to do that right now
+	public void setNewPosition(double x, double y) {
+		grid[gridX][gridY] = null;
+		preciseX = x;
+		preciseY = y;
+		gridX = (int) x;
+		gridY = (int) y;
+		grid[gridX][gridY] = this;
+	}
+
 	
 	public static void setGridSize(int width, int height) {
 		grid = new Particle[width][height];
@@ -66,14 +89,6 @@ public class Particle {
 		this.color = color;
 	}
 	
-	protected void moveToCell(int x, int y) {
-		
-		grid[gridX][gridY] = null;
-		gridX = x;
-		gridY = y;	
-		grid[gridX][gridY] = this;
-
-	}
 	
 	public Particle getParticleToLeft() {
 		

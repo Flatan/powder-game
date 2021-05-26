@@ -19,6 +19,8 @@ public class Granular extends Particle {
 		super(x, y, color);
 	}
 
+
+	// Good ole particle movin method 
 	@Override
 	public void update() {
 		if (!updated) {
@@ -26,47 +28,36 @@ public class Granular extends Particle {
 
 			velY += gravity;
 
-			double targetX = preciseX + velX;
-			double targetY = preciseY + velY;
+			double currentX = getX();
+			double currentY = getY();
+			double targetX = currentX + velX;
+			double targetY = currentY + velY;
+			double newX = currentX;
+			double newY = currentY;
 
 			// normalized velocity vector
 			double normVelX = velX / Math.hypot(velX, velY);
 			double normVelY = velY / Math.hypot(velX, velY);
 
-			while (preciseX < targetX || preciseY < targetY) {
+			while (newX < targetX || newY < targetY) {
 
-				if( preciseX + normVelX > 599 || preciseY + normVelY > 599 )
+				if( newX + normVelX > 599 || newY + normVelY > 599 )
 					break;
 
 				// If target coord is already occupied
-				if (grid[(int) (preciseX + normVelX)][(int) (preciseY + normVelY)] != null)
+				if (grid[(int) (newX + normVelX)][(int) (newY + normVelY)] != null)
 					break;
 
-				preciseX += normVelX;
-				preciseY += normVelY;
-				if (preciseY >= targetY)
-					preciseY = targetY;
-				if (preciseX >= targetX)
-					preciseX = targetX;
+				newX += normVelX;
+				newY += normVelY;
+
+				if (newY >= targetY)
+					newY = targetY;
+				if (newX >= targetX)
+					newX = targetX;
 			}
 
-			int newGridX = (int) preciseX;
-			int newGridY = (int) preciseY;
-
-			int width = grid[0].length;
-			int height = grid.length;
-
-			// if (newGridX<0)
-			// newGridX = 0;
-			// else if (newGridX>=width)
-			// newGridX = width-1;
-			// if (newGridY<0)
-			// newGridY = 0;
-			// else if (newGridY>=width)
-			// newGridY = height-1;
-
-			moveToCell(newGridX, newGridY);
+			setNewPosition(newX, newY);
 		}
 	}
-
 }
