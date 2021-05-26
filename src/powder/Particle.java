@@ -23,6 +23,8 @@ public class Particle {
 	
 	public Color color = Color.white;
 
+	boolean moving = true;
+	double downPush = 0.0;
 	public boolean updated = false;
 	
 	
@@ -73,6 +75,23 @@ public class Particle {
 
 	}
 	
+	public Particle getParticleToLeft() {
+		
+		return grid[gridX -1][gridY];
+	}
+	public Particle getParticleToRight() {
+		
+		return grid[gridX +1][gridY];
+	}
+	public Particle getParticleAbove() {
+		
+		return grid[gridX][gridY - 1];
+	}
+	public Particle getParticleBelow() {
+		
+		return grid[gridX][gridY + 1];
+	}
+
 	public void update() {
 
 	}

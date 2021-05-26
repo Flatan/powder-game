@@ -3,19 +3,19 @@ package powder;
 import java.awt.Color;
 
 /**
-* Granular
+* FancyGranular
 *
-* Extension of the Particle class that is affected by gravity
+* Extension of the Particle class that is affected by gravity + weight of surrounding particles
 *
 */
 
-public class Granular extends Particle {
+public class FancyGranular extends Particle {
 
-	Granular(int x, int y) {
+	FancyGranular(int x, int y) {
 		super(x, y);
 	}
 
-	Granular(int x, int y, Color color) {
+	FancyGranular(int x, int y, Color color) {
 		super(x, y, color);
 	}
 
@@ -24,14 +24,51 @@ public class Granular extends Particle {
 		if (!updated) {
 			updated = true;
 
-			velY += gravity;
+			double totalWeightFromAbove = 0.0;
+			Particle p = getParticleAbove();
 
+			while (p != null) {
+				totalWeightFromAbove += p.downPush;
+				p = p.getParticleAbove();
+			}
+
+
+			if (totalWeightFromAbove > 20) {
+
+				velX += 0.6;
+				
+				color = Color.RED;
+				
+			}
+
+			velY += gravity;
+			
+
+			downPush = gravity;
+			
 			double targetX = preciseX + velX;
 			double targetY = preciseY + velY;
 
 			// normalized velocity vector
 			double normVelX = velX / Math.hypot(velX, velY);
 			double normVelY = velY / Math.hypot(velX, velY);
+			
+
+			//if (getParticleAbove() != null) {
+				//System.out.println("Above");
+				//velX += 0.2;
+			//}
+
+			
+			//double normVelX = 1.0;
+			//double normVelY = 2.0;
+
+			//if (!moving) {
+				//targetX = preciseX + 1;
+	//            
+		//}
+
+			System.out.println(preciseX+normVelX);
 
 			while (preciseX < targetX || preciseY < targetY) {
 
@@ -39,11 +76,16 @@ public class Granular extends Particle {
 					break;
 
 				// If target coord is already occupied
-				if (grid[(int) (preciseX + normVelX)][(int) (preciseY + normVelY)] != null)
+
+				if (getParticleBelow() != null)
 					break;
+				
+				//if (grid[(int) (preciseX + normVelX)][(int) (preciseY + normVelY)] != null)
+					//break;
 
 				preciseX += normVelX;
 				preciseY += normVelY;
+
 				if (preciseY >= targetY)
 					preciseY = targetY;
 				if (preciseX >= targetX)
