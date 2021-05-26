@@ -93,7 +93,7 @@ public class Board extends JPanel
 	    	if (mouseDown && grid[x][y] == null) 
 	    	if (Math.hypot(x-mx, y-mouseY)<=diameter/2)
 	    	{
-	    		new Granular(x,y,Color.WHITE);
+	    		new FancyGranular(x,y,Color.WHITE);
 	    	}
 		}}
     }

@@ -38,6 +38,9 @@ public class Particle {
 		return preciseY;
 	}
 
+	public double getgridY() {
+		return gridY;
+	}
 	// This method should throw an error if the new coords dont make sense 
 	// (like more than 1 pix away from relative position) but I'm too lazy
 	// to do that right now
