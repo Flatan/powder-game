@@ -15,23 +15,33 @@ import java.awt.image.BufferedImage;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+
+
+/**
+ * Board
+ *
+ * Displays BufferedImage which is the main visual component
+ */
+
 public class Board extends JPanel
         implements Runnable {
 
+    // Width and height of the window
     private final int B_WIDTH = 600;
     private final int B_HEIGHT = 600;
     
     //Milliseconds per frame:
     private final int DELAY = 25;
 
-    private Thread animator;
-	private int mouseX;
-	private int mouseY;
+    // Mouse conditions
+	private int mouseX, mouseY;
+	private boolean mouseDown = false;
+
+    // Defines the area of powder placement
 	private int cursorSize = 20;
 	
-	private boolean mouseDown = false;
 	private BufferedImage image;
-    
+    private Thread animator;
    
     public Board() {
 
@@ -39,12 +49,14 @@ public class Board extends JPanel
     }
 
 
+    // Setup initial settings and event listeners
     private void initBoard() {
 
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
+
         image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
-        
+
         addMouseListener(new MouseAdapter() {
         	public void mousePressed(MouseEvent e) {
         		mouseDown = true;
@@ -63,14 +75,17 @@ public class Board extends JPanel
         animator.start();
     }
 
+    // Automatically called whenever the board is redrawn
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
         g2.setColor(Color.WHITE);
         
+        // The state of the game grid is drawn to an image buffer, 
+        // which is then drawn to the screen
         g2.drawImage(image, 0, 0, null);
         g2.drawOval(mouseX-cursorSize/2, mouseY-cursorSize/2, cursorSize, cursorSize);
     }
@@ -89,6 +104,7 @@ public class Board extends JPanel
 
 		for (int x = mx-diameter/2; x < mx+diameter/2; x++) {
 		for (int y = mouseY-diameter/2; y < mouseY+diameter/2; y++) {
+            
             if (!outOfBounds(x, y))
 	    	if (mouseDown && grid[x][y] == null) 
 	    	if (Math.hypot(x-mx, y-mouseY)<=diameter/2)

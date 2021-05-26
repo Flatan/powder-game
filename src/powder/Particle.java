@@ -14,8 +14,7 @@ public class Particle {
 
 	protected static Particle[][] grid = new Particle[600][600];
 	
-	// We should hide these variables after Particle initialization, because if you think about it,
-	// once a particle is created it can only ever move up,down.left or right from its relative position
+	// Only modified through setters after Particle initialization
 	private int gridX,gridY;
 	private double preciseX, preciseY;
 
@@ -38,12 +37,15 @@ public class Particle {
 		return preciseY;
 	}
 
-	public double getgridY() {
+	public double getGridY() {
 		return gridY;
 	}
-	// This method should throw an error if the new coords dont make sense 
-	// (like more than 1 pix away from relative position) but I'm too lazy
-	// to do that right now
+
+	public double getGridX() {
+		return gridX;
+	}
+
+	//  Update the particle position, only taking the preciseX and Y as input
 	public void setNewPosition(double x, double y) {
 		grid[gridX][gridY] = null;
 		preciseX = x;
@@ -63,11 +65,15 @@ public class Particle {
 	}
 	
 	public static void updateGrid() {
+
+		// Iterate through the grid and update every pixel with a Particle
 		for ( int x = 0; x < grid[0].length; x++ ) {
 		for ( int y = 0; y < grid.length; y++ ) {
 		  			if (grid[x][y] != null ) 
 		  				grid[x][y].update();
 		  	}}
+
+		// Iterate again and reset the updated flag for each Particle at its new position
 		for ( int x = 0; x < grid[0].length; x++ ) {
   		for ( int y = 0; y < grid.length; y++ ) {
   			if (grid[x][y] != null ) 
@@ -92,23 +98,7 @@ public class Particle {
 		this.color = color;
 	}
 	
-	
-	public Particle getParticleToLeft() {
-		
-		return grid[gridX -1][gridY];
-	}
-	public Particle getParticleToRight() {
-		
-		return grid[gridX +1][gridY];
-	}
-	public Particle getParticleAbove() {
-		
-		return grid[gridX][gridY - 1];
-	}
-	public Particle getParticleBelow() {
-		
-		return grid[gridX][gridY + 1];
-	}
+
 
 	public void update() {
 
