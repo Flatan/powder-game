@@ -39,23 +39,21 @@ public class Granular extends Particle {
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
-			if (getRelativeParticle(0,-1)!=null&&
+			if		(relParticleExists(0, -1)&&
+					!relParticleExists(-1, 0)&&
+					!relParticleExists(-1, 1)&&
+					(relParticleExists(1, 0)||
+					 relParticleExists(1, 1))) {
+						setNewPosition(getX()-1, getY());
+					 }
 
-					getRelativeParticle(-1,0)==null&&
-					getRelativeParticle(-1,1)==null&&
-					(getRelativeParticle(1,0)!=null||
-					getRelativeParticle(1,1)!=null)){
-				setNewPosition(getX()-1, getY());
-			}
-			else if (getRelativeParticle(0,-1)!=null&&
-
-					getRelativeParticle(1,0)==null&&
-					getRelativeParticle(1,1)==null&&
-					(getRelativeParticle(-1,0)!=null||
-					getRelativeParticle(-1,1)!=null)){
-				setNewPosition(getX()+1, getY());
-			}
-			
+			else if (relParticleExists(0, -1)&&
+					!relParticleExists(1, 0)&&
+					!relParticleExists(1, 1)&&
+					(relParticleExists(-1, 0)||
+					 relParticleExists(-1, 1))) {
+						setNewPosition(getX()+1, getY());
+					}
 			else
 				color = Color.white;
 		}

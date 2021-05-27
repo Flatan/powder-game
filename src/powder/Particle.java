@@ -53,6 +53,11 @@ public class Particle {
 	}
 
 
+	public boolean relParticleExists(int x, int y) {
+
+		return getRelativeParticle(x, y) != null;
+	}
+
 	// Update the particle position, only taking the preciseX and Y as input
 	public void setNewPosition(double x, double y) {
 		if (!outOfBounds((int)x,(int)y)) {
