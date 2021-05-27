@@ -31,7 +31,6 @@ public class Granular extends Particle {
 		*/
 		
 		
-		
 		if (!updated) {
 			updated = true;
 			velY += gravity;

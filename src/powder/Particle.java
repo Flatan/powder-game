@@ -53,6 +53,13 @@ public class Particle {
 	}
 
 
+	/**
+	* 
+	* Checks if a particle exists relative to this one and returns a boolean
+	* @param x Relative x position
+	* @param y Relative y position
+	* @return boolean True if the particle exists else False
+	 */
 	public boolean relParticleExists(int x, int y) {
 
 		return getRelativeParticle(x, y) != null;
