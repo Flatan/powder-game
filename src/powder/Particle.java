@@ -1,6 +1,7 @@
 package powder;
 
 import java.awt.Color;
+import java.util.function.Consumer;
 
 /**
  * Particle
@@ -117,21 +118,11 @@ public class Particle {
 	public static void updateGrid() {
 
 		// Iterate through the grid and update every pixel with a Particle
-		for (int x = 0; x < grid[0].length; x++) {
-			for (int y = 0; y < grid.length; y++) {
-				if (grid[x][y] != null)
-					grid[x][y].update();
-			}
-		}
+		forEachParticle(x -> x.update());
 
 		// Iterate again and reset the updated flag for each Particle at its new
 		// position
-		for (int x = 0; x < grid[0].length; x++) {
-			for (int y = 0; y < grid.length; y++) {
-				if (grid[x][y] != null)
-					grid[x][y].updated = false;
-			}
-		}
+		forEachParticle(x -> x.updated = false);
 	}
 
 	Particle(int x, int y) {
@@ -153,6 +144,15 @@ public class Particle {
 
 	public void update() {
 
+	}
+	
+	public static void forEachParticle(Consumer<Particle> action) {
+		for (int x = 0; x < grid[0].length; x++) {
+			for (int y = 0; y < grid.length; y++) {
+				if (grid[x][y] != null)
+					action.accept(grid[x][y]);
+			}
+		}
 	}
 
 }
