@@ -30,14 +30,34 @@ public class Granular extends Particle {
 			color = Color.white;
 		*/
 		
+		
+		
 		if (!updated) {
 			updated = true;
-
 			velY += gravity;
 
-			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
+			
+			if (getRelativeParticle(0,1)!=null&&
+
+					getRelativeParticle(-1,0)==null&&
+					getRelativeParticle(-1,-1)==null&&
+					(getRelativeParticle(1,0)!=null||
+					getRelativeParticle(1,-1)!=null)){
+				setNewPosition(getX()-1, getY());
+			}
+			else if (getRelativeParticle(0,1)!=null&&
+
+					getRelativeParticle(1,0)==null&&
+					getRelativeParticle(1,-1)==null&&
+					(getRelativeParticle(-1,0)!=null||
+					getRelativeParticle(-1,-1)!=null)){
+				setNewPosition(getX()+1, getY());
+			}
+			
+			else
+				color = Color.white;
 		}
 	}
 	

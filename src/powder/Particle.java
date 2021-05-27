@@ -46,18 +46,22 @@ public class Particle {
 	
 	// Returns a Particle relative to the position of this one
 	public Particle getRelativeParticle(int x, int y) {
-
-		return grid[gridX + x][gridY + y];
+		if (!outOfBounds(gridX + x,gridY + y)) 
+			return grid[gridX + x][gridY + y];
+		else
+			return null;	
 	}
 
 	// Update the particle position, only taking the preciseX and Y as input
 	public void setNewPosition(double x, double y) {
-		grid[gridX][gridY] = null;
-		preciseX = x;
-		preciseY = y;
-		gridX = (int) x;
-		gridY = (int) y;
-		grid[gridX][gridY] = this;
+		if (!outOfBounds((int)x,(int)y)) {
+			grid[gridX][gridY] = null;
+			preciseX = x;
+			preciseY = y;
+			gridX = (int) x;
+			gridY = (int) y;
+			grid[gridX][gridY] = this;
+		}
 	}
 
 	public static void setGridSize(int width, int height) {
@@ -67,7 +71,14 @@ public class Particle {
 	public static Particle[][] getGrid() {
 		return grid;
 	}
+	
+	// For testing if a single (x,y) coord fits on the screen
+    public boolean outOfBounds(int x, int y) {
 
+        return !(x < grid[0].length && y < grid.length && x >= 0 && y >= 0);
+
+    }
+	
 	// Grid refresher that is looped through forever when application starts
 	public static void updateGrid() {
 
