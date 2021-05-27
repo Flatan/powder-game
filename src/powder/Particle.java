@@ -46,11 +46,12 @@ public class Particle {
 	
 	// Returns a Particle relative to the position of this one
 	public Particle getRelativeParticle(int x, int y) {
-		if (!outOfBounds(gridX + x,gridY + y)) 
-			return grid[gridX + x][gridY + y];
+		if (!outOfBounds(gridX + x,gridY - y)) 
+			return grid[gridX + x][gridY - y];
 		else
 			return null;	
 	}
+
 
 	// Update the particle position, only taking the preciseX and Y as input
 	public void setNewPosition(double x, double y) {
