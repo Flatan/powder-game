@@ -43,7 +43,8 @@ public class Granular extends Particle {
 					!relParticleExists(-1, 0)&&
 					!relParticleExists(-1, 1)&&
 					(relParticleExists(1, 0)||
-					 relParticleExists(1, 1))) {
+					 relParticleExists(1, 1))
+					&& velY ==0) {
 						setNewPosition(getX()-1, getY());
 					 }
 
@@ -51,7 +52,8 @@ public class Granular extends Particle {
 					!relParticleExists(1, 0)&&
 					!relParticleExists(1, 1)&&
 					(relParticleExists(-1, 0)||
-					 relParticleExists(-1, 1))) {
+					 relParticleExists(-1, 1))
+					&& velY ==0) {
 						setNewPosition(getX()+1, getY());
 					}
 			
