@@ -22,6 +22,8 @@ import javax.swing.JPanel;
  */
 
 public class Board extends JPanel implements Runnable {
+	
+	//Test comment 2
 
     // Width and height of the window
     private final int B_WIDTH = 600;
