@@ -3,12 +3,10 @@ package powder;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-<<<<<<< HEAD
+
 // Test comment
 
-=======
 //Better test comment
->>>>>>> 4b86fe9c6c9e78103de7141dae38fa5cbf4d7c05
 /**
  * Application 
  *
