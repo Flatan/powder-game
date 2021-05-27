@@ -34,7 +34,8 @@ public class Granular extends Particle {
 		if (!updated) {
 			updated = true;
 			velY += gravity;
-
+			
+			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
@@ -53,8 +54,7 @@ public class Granular extends Particle {
 					 relParticleExists(-1, 1))) {
 						setNewPosition(getX()+1, getY());
 					}
-			else
-				color = Color.white;
+			
 		}
 	}
 	
@@ -73,11 +73,11 @@ public class Granular extends Particle {
 
 		while (newX < targetX || newY < targetY) {
 
-			if( newX + normVelX >= 599 ) {
+			if( newX + normVelX >= grid[0].length-1 || newX + normVelX < 0) {
 				velX=0;
 				break;
 			}
-			if (newY + normVelY >= 599) {
+			if (newY + normVelY >= grid.length-1 || newY + normVelY < 0) {
 				velY=0;
 				break;
 			}
