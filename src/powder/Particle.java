@@ -45,6 +45,15 @@ public class Particle {
 
 	
 	// Returns a Particle relative to the position of this one
+	
+	/**
+	* Returns a Particle relative to the position of this one
+	* Takes regular Cartesian coordinates
+	*
+	* @param x Relative x position
+	* @param y Relative y position
+	* @return Particle
+	 */
 	public Particle getRelativeParticle(int x, int y) {
 		if (!outOfBounds(gridX + x,gridY - y)) 
 			return grid[gridX + x][gridY - y];
@@ -56,16 +65,23 @@ public class Particle {
 	/**
 	* 
 	* Checks if a particle exists relative to this one and returns a boolean
+	* Takes regular Cartesian coordinates
+	* 
 	* @param x Relative x position
 	* @param y Relative y position
-	* @return boolean True if the particle exists else False
+	* @return boolean true if the particle exists else false
 	 */
 	public boolean relParticleExists(int x, int y) {
 
 		return getRelativeParticle(x, y) != null;
 	}
 
-	// Update the particle position, only taking the preciseX and Y as input
+	
+	/**
+	* Update the particle's position on the particle grid given precise coordinates
+	* @param x X coordinate
+	* @param y Y coordinate
+	 */
 	public void setNewPosition(double x, double y) {
 		if (!outOfBounds((int)x,(int)y)) {
 			grid[gridX][gridY] = null;
@@ -85,7 +101,12 @@ public class Particle {
 		return grid;
 	}
 	
-	// For testing if a single (x,y) coord fits on the screen
+	/**
+	* Checks if arbitrary (x,y) coordinates fall within the bounds of the particle grid
+	* @param x X coordinate
+	* @param y Y coordinate
+	* @return boolean true if coordinates fall outside else false
+	 */
     public boolean outOfBounds(int x, int y) {
 
         return !(x < grid[0].length && y < grid.length && x >= 0 && y >= 0);
