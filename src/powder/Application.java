@@ -3,7 +3,7 @@ package powder;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-
+//Better test comment
 /**
  * Application 
  *
