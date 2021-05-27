@@ -82,8 +82,13 @@ public class Granular extends Particle {
 				break;
 			}
 
-			// If target coord is already occupied
+			// Check if path is blocked by particle
 			Particle obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
+			
+			//If so, updates blocking particle and checks again
+			if (obstacle != null && !obstacle.updated)
+				obstacle.update();
+			obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
 			if (obstacle != null ) {
 				velX = obstacle.velX;
 				velY = obstacle.velY;
