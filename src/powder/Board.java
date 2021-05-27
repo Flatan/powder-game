@@ -105,7 +105,7 @@ public class Board extends JPanel implements Runnable {
                 if (!outOfBounds(x, y))
                 if (mouseDown && grid[x][y] == null)
                 if (Math.hypot(x - mx, y - mouseY) <= diameter / 2) {
-                            new DumbGranular(x, y, Color.WHITE);
+                            new Granular(x, y, Color.WHITE);
                         }
             }
         }

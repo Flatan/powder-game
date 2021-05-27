@@ -35,11 +35,11 @@ public class Particle {
 		return preciseY;
 	}
 
-	public double getGridY() {
+	public int getGridY() {
 		return gridY;
 	}
 
-	public double getGridX() {
+	public int getGridX() {
 		return gridX;
 	}
 
