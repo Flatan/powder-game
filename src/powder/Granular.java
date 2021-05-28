@@ -36,6 +36,7 @@ public class Granular extends Particle {
 			velY += gravity;
 			
 			
+			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
@@ -45,7 +46,7 @@ public class Granular extends Particle {
 					(relParticleExists(1, 0)||
 					 relParticleExists(1, 1))
 					&& velY ==0) {
-						setNewPosition(getX()-1, getY());
+						velX = -1;
 					 }
 
 			else if (relParticleExists(0, -1)&&
@@ -54,8 +55,10 @@ public class Granular extends Particle {
 					(relParticleExists(-1, 0)||
 					 relParticleExists(-1, 1))
 					&& velY ==0) {
-						setNewPosition(getX()+1, getY());
+						velX = 1;
 					}
+			else
+				velX = 0;
 			
 		}
 	}
@@ -72,38 +75,41 @@ public class Granular extends Particle {
 		// normalized velocity vector
 		double normVelX = velX / Math.hypot(velX, velY);
 		double normVelY = velY / Math.hypot(velX, velY);
+		
+		double targetDistance = Math.hypot(targetX-currentX, targetY-currentY);
 
-		while (newX < targetX || newY < targetY) {
-
+		while (Math.hypot(newX-currentX,newY-currentY) < targetDistance) {
+			
 			if( newX + normVelX >= grid[0].length-1 || newX + normVelX < 0) {
 				velX=0;
+				
 				break;
 			}
 			if (newY + normVelY >= grid.length-1 || newY + normVelY < 0) {
 				velY=0;
+				
 				break;
 			}
-
 			// Check if path is blocked by particle
 			Particle obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
 			
 			//If so, updates blocking particle and checks again
-			if (obstacle != null && !obstacle.updated)
+			if (obstacle != null && !obstacle.updated && obstacle != this)
 				obstacle.update();
 			obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
-			if (obstacle != null ) {
+			if (obstacle != null && obstacle != this) {
 				velX = obstacle.velX;
 				velY = obstacle.velY;
 				break;
 			}
-
+			
 			newX += normVelX;
 			newY += normVelY;
 
-			if (newY >= targetY)
+			if (Math.hypot(newX-currentX,newY-currentY) >= targetDistance) {
 				newY = targetY;
-			if (newX >= targetX)
 				newX = targetX;
+			}
 		}
 		double[] nextPos = {newX,newY};
 		return nextPos;
