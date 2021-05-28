@@ -1,6 +1,8 @@
 package powder;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.function.BiFunction;
 
 import static powder.ParticleOR.*;
 import static powder.ParticleAND.*;
@@ -55,7 +57,7 @@ public class Granular extends Particle {
 			updated = true;
 			velY += gravity;
 			
-			
+
 			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
@@ -78,7 +80,7 @@ public class Granular extends Particle {
 			if(	relAND(Aa) &&
 					(relParticleExists(1, 0)||
 					 relParticleExists(1, 1))
-					&& velY ==0) {
+					&& supported()) {
 						velX = -1;
 					 }
 
@@ -89,12 +91,14 @@ public class Granular extends Particle {
 			else if ( relAND(Ba) &&
 					(relParticleExists(-1, 0)||
 					 relParticleExists(-1, 1))
-					&& velY ==0) {
+					&& supported()) {
 						velX = 1;
+						
 					}
 			else
 				velX = 0;
 			
+
 		}
 	}
 	
@@ -115,12 +119,12 @@ public class Granular extends Particle {
 
 		while (Math.hypot(newX-currentX,newY-currentY) < targetDistance) {
 			
-			if( newX + normVelX >= grid[0].length-1 || newX + normVelX < 0) {
+			if( newX + normVelX >= grid[0].length || newX + normVelX < 0) {
 				velX=0;
 				
 				break;
 			}
-			if (newY + normVelY >= grid.length-1 || newY + normVelY < 0) {
+			if (newY + normVelY >= grid.length || newY + normVelY < 0) {
 				velY=0;
 				
 				break;
@@ -129,12 +133,15 @@ public class Granular extends Particle {
 			Particle obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
 			
 			//If so, updates blocking particle and checks again
-			if (obstacle != null && !obstacle.updated && obstacle != this)
+			if (obstacle != null && !obstacle.updated && obstacle != this) {
+				
 				obstacle.update();
+			}
 			obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
 			if (obstacle != null && obstacle != this) {
-				velX = obstacle.velX;
-				velY = obstacle.velY;
+				collide(obstacle, 1);
+				//velX = obstacle.velX;
+				//velY = obstacle.velY;
 				break;
 			}
 			
@@ -149,4 +156,22 @@ public class Granular extends Particle {
 		double[] nextPos = {newX,newY};
 		return nextPos;
 	}
+	
+	/**
+	 * Calculates collision between two particles
+	 * @param other The other particle
+	 * @param cR Coefficient of Restitution. Should be between 0-1. Or SLIGHTLY higher for fun bouncy effect
+	 */
+	public void collide(Particle other, double cR) {
+		BiFunction<Double,Double,Double> newVel = (a,b) -> (cR*(b-a)+a+b)/2;
+		
+		velX = newVel.apply(velX, other.velX);
+		velY = newVel.apply(velY, other.velY);
+		
+		other.velX = newVel.apply(other.velX, velX);
+		other.velY = newVel.apply(other.velY, velY);
+			
+	}
+	
+
 }

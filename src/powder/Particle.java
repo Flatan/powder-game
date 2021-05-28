@@ -198,6 +198,19 @@ public class Particle {
 	}
 	
 	/**
+	 * Finds if a particle is on the ground or on another grounded particle
+	 * @return
+	 */
+	public boolean supported() {
+		if (gridY >= grid.length-1)
+			return true;
+		else if (!relParticleExists(0,-1))
+			return false;
+		else
+			return getRelativeParticle(0,-1).supported();
+	}
+	
+	/**
 	 * Calculates the slope of the surface below the particle.
 	 * 
 	 * Also I hate this method and never want to mess with it again.
