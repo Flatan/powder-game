@@ -132,6 +132,7 @@ public class Particle {
 			gridX = (int) x;
 			gridY = (int) y;
 			grid[gridX][gridY] = this;
+			
 		}
 	}
 
@@ -195,5 +196,97 @@ public class Particle {
 			}
 		}
 	}
+	
+	/**
+	 * Calculates the slope of the surface below the particle.
+	 * 
+	 * Also I hate this method and never want to mess with it again.
+	 * I hope I never have to fix something with it.
+	 * @return slope
+	 */
+	public double slope() {
+		double slope = 0;
+		int scope = 5;
+		if(relParticleExists(0,1)&&relParticleExists(0,-1))
+			return 0;
+		
+		int distToLeftEdge = 0;
+		boolean leftGoesUp = false;
+		for (int x = -1;x>=-scope;x--) {
+			if (relParticleExists(x,0)) {
+				distToLeftEdge = x+1;
+				leftGoesUp = true;
+				break;
+			}
+			if (!relParticleExists(x,-1)) {
+				distToLeftEdge = x+1;
+				leftGoesUp = false;
+				break;
+			}
+		}
+		distToLeftEdge = Math.abs(distToLeftEdge);
+		
+		int distToRightEdge = 0;
+		boolean rightGoesUp = false;
+		for (int x = 1;x<=scope;x++) {
+			if (relParticleExists(x,0)) {
+				distToRightEdge = x-1;
+				rightGoesUp = true;
+				break;
+			}
+			if (!relParticleExists(x,-1)) {
+				distToRightEdge = x-1;
+				rightGoesUp = false;
+				break;
+			}
+		}
+		distToRightEdge = Math.abs(distToRightEdge);
+		
+		if (leftGoesUp == rightGoesUp)
+			return 0;
+		
+		int totalRun = distToLeftEdge+distToRightEdge+1;
+		
+		slope = 1./totalRun;
+		if (!rightGoesUp)
+			slope *= -1;
+		
+		
+		if (Math.abs(slope) == 1 || !relParticleExists(0,-1)) {
+			if(relParticleExists(-1,0)==relParticleExists(1,0))
+				return 0;
+			
+			int distToBottomEdge = 0;
+			boolean onRightSide = relParticleExists(1,0);
+			for (int y = -1;y>=-scope;y--) {
+				if (relParticleExists(0,y)) {
+					distToBottomEdge = y+1;
+					break;
+				}
+			}
+			distToBottomEdge = Math.abs(distToBottomEdge);
+			
+			int distToTopEdge = 0;
+			for (int y = 1;y<=scope;y++) {
+				if (!relParticleExists(1,y)&&onRightSide) {
+					distToTopEdge = y-1;
+					break;
+				}
+				else if (!relParticleExists(-1,y)&&!onRightSide) {
+					distToTopEdge = y-1;
+					break;
+				}
+			}
+			distToTopEdge = Math.abs(distToTopEdge);
+			
+			int totalRise = distToBottomEdge + distToTopEdge + 1;
+			slope = totalRise;
+			if (!onRightSide)
+				slope *= -1;
+		}
+		
+		return slope;
+		
+		}
 
 }

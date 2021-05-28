@@ -64,7 +64,17 @@ public class Granular extends Particle {
 			//if		(relParticleExists(0, -1)&&
 					//!relParticleExists(-1, 0)&&
 					//!relParticleExists(-1, 1)&&
-					
+				
+			/*if (slope()>1) {
+				color = Color.red;
+			}
+			else if (slope()<-1) {
+				color = Color.green;
+			}
+			else
+				color = Color.white;
+			*/
+			
 			if(	relAND(Aa) &&
 					(relParticleExists(1, 0)||
 					 relParticleExists(1, 1))
