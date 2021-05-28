@@ -2,6 +2,6 @@ package powder;
 
 
 enum ParticleGate {
-  TRUE, FALSE 
+  TRUE, FALSE, ____
 }
 

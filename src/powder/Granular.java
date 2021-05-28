@@ -30,32 +30,31 @@ public class Granular extends Particle {
 
 		ParticleGate[][] A1 = {
 			{FALSE, null,  null},
-			{FALSE, null,  null},
+			{FALSE, ____,  null},
 			{null,  TRUE,  null},
 		};
 
 		ParticleGate[][] O1 = {
 			{null,  null,  TRUE},
-			{null,	null,  TRUE},
+			{null,	____,  TRUE},
 			{null,  null,  null},
 		};
 
 		ParticleGate[][] A2 = {
-			{null, null,  FALSE},
-			{null, null,  FALSE},
-			{null, TRUE,   null},
+			{null,  null, FALSE},
+			{null,  ____, FALSE},
+			{null,  TRUE,  null},
 		};
 		
 		ParticleGate[][] O2 = {
-			{TRUE, null,  null},
-			{TRUE, null,  null},
-			{null, TRUE,  null},
+			{TRUE,  null,  null},
+			{TRUE,  ____,  null},
+			{null,  null,  null},
 		};
 
 		if (!updated) {
 			updated = true;
 			velY += gravity;
-			
 
 			
 			double[] nextPos = getNextPos();

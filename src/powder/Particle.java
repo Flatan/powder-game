@@ -84,7 +84,7 @@ public class Particle {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 
-				if (ANDGate[i][j] == null) {
+				if (ANDGate[i][j] == null || ANDGate[i][j] == ParticleGate.____) {
 					continue;
 				}
 
@@ -120,7 +120,7 @@ public class Particle {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 
-				if (ORGate[i][j] == null) {
+				if (ORGate[i][j] == null || ORGate[i][j] == ParticleGate.____) {
 					continue;
 				}
 
