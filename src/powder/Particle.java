@@ -3,6 +3,8 @@ package powder;
 import java.awt.Color;
 import java.util.function.Consumer;
 
+import java.lang.UnsupportedOperationException;
+
 /**
  * Particle
  *
@@ -77,6 +79,20 @@ public class Particle {
 		return getRelativeParticle(x, y) != null;
 	}
 
+	public boolean relAND(ParticleAND[][] ANDGate) {
+
+		throw new UnsupportedOperationException("In progress");
+
+		//for (int i = 0; i < ANDGate.length; i++) {
+			//for (int j = 0; j < ANDGate.length; j++) {
+	//            
+				//if (ANDGate[i][j] == null || ANDGate[i][j] == ParticleAND.ATHIS) {
+					//continue;
+//
+				//}
+			//}
+		//}
+	}
 	
 	/**
 	* Update the particle's position on the particle grid given precise coordinates

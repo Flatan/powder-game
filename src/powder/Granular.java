@@ -2,6 +2,8 @@ package powder;
 
 import java.awt.Color;
 
+import static powder.ParticleOR.*;
+import static powder.ParticleAND.*;
 
 /**
 * Granular
@@ -30,6 +32,20 @@ public class Granular extends Particle {
 			color = Color.white;
 		*/
 		
+
+		ParticleAND[][] A = {
+			{AFALSE, null,  null},
+			{AFALSE, ATHIS, null},
+			{null,   ATRUE, null},
+		};
+
+		ParticleOR[][] B = {
+			{null,  null,  OTRUE},
+			{null, OTHIS,  OTRUE},
+			{null,  null,   null},
+		};
+	
+
 		
 		if (!updated) {
 			updated = true;
