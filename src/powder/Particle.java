@@ -81,18 +81,43 @@ public class Particle {
 
 	public boolean relAND(ParticleAND[][] ANDGate) {
 
-		throw new UnsupportedOperationException("In progress");
 
-		//for (int i = 0; i < ANDGate.length; i++) {
-			//for (int j = 0; j < ANDGate.length; j++) {
-	//            
-				//if (ANDGate[i][j] == null || ANDGate[i][j] == ParticleAND.ATHIS) {
-					//continue;
-//
-				//}
-			//}
-		//}
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+
+				if (ANDGate[i][j] == null) {
+					continue;
+				}
+
+				int y = (i * -1)+1;
+				int x = j -1;
+				
+				switch (ANDGate[i][j]) {
+					case ATRUE:
+						if (!relParticleExists(x,y)) {
+							return false;
+						}
+						continue;
+
+					case AFALSE:
+
+						if (relParticleExists(x,y)) {
+							return false;
+						}
+						continue;
+
+					default:
+						continue;
+				}
+				}
+			}
+
+
+
+		return true;
 	}
+
+	
 	
 	/**
 	* Update the particle's position on the particle grid given precise coordinates

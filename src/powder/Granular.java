@@ -33,19 +33,23 @@ public class Granular extends Particle {
 		*/
 		
 
-		ParticleAND[][] A = {
+		ParticleAND[][] Aa = {
 			{AFALSE, null,  null},
-			{AFALSE, ATHIS, null},
+			{AFALSE, null,  null},
 			{null,   ATRUE, null},
 		};
 
-		ParticleOR[][] B = {
+		ParticleOR[][] Ao = {
 			{null,  null,  OTRUE},
-			{null, OTHIS,  OTRUE},
+			{null,	null,  OTRUE},
 			{null,  null,   null},
 		};
 
-
+		ParticleAND[][] Ba = {
+			{null, null,  AFALSE},
+			{null, null,  AFALSE},
+			{null, ATRUE,   null},
+		};
 		
 		if (!updated) {
 			updated = true;
@@ -55,18 +59,23 @@ public class Granular extends Particle {
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
-			if		(relParticleExists(0, -1)&&
-					!relParticleExists(-1, 0)&&
-					!relParticleExists(-1, 1)&&
+			//if (
+			//if		(relParticleExists(0, -1)&&
+					//!relParticleExists(-1, 0)&&
+					//!relParticleExists(-1, 1)&&
+					
+			if(	relAND(Aa) &&
 					(relParticleExists(1, 0)||
 					 relParticleExists(1, 1))
 					&& velY ==0) {
 						setNewPosition(getX()-1, getY());
 					 }
 
-			else if (relParticleExists(0, -1)&&
-					!relParticleExists(1, 0)&&
-					!relParticleExists(1, 1)&&
+			//else if (relParticleExists(0, -1)&&
+					//!relParticleExists(1, 0)&&
+					//!relParticleExists(1, 1)&&
+
+			else if ( relAND(Ba) &&
 					(relParticleExists(-1, 0)||
 					 relParticleExists(-1, 1))
 					&& velY ==0) {
