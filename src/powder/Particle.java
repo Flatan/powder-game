@@ -29,6 +29,23 @@ public class Particle {
 	double downPush = 0.0;
 	public boolean updated = false;
 
+	Particle(int x, int y) {
+		grid[x][y] = this;
+		gridX = x;
+		gridY = y;
+		preciseX = gridX;
+		preciseY = gridY;
+	}
+
+	Particle(int x, int y, Color color) {
+		grid[x][y] = this;
+		gridX = x;
+		gridY = y;
+		preciseX = gridX;
+		preciseY = gridY;
+		this.color = color;
+	}
+
 	public double getX() {
 		return preciseX;
 	}
@@ -62,7 +79,6 @@ public class Particle {
 		else
 			return null;	
 	}
-
 
 	/**
 	* 
@@ -136,7 +152,7 @@ public class Particle {
 
 					case FALSE:
 
-						if (!relParticleExists(x,y)) {
+						if (!relParticleExists(x,y)) { 
 							return true;
 						}
 						continue;
@@ -187,7 +203,9 @@ public class Particle {
 
     }
 	
-	// Grid refresher that is looped through forever when application starts
+	/**
+	 * Grid refresher that is looped through forever when application starts
+	 * */
 	public static void updateGrid() {
 
 		// Iterate through the grid and update every pixel with a Particle
@@ -198,27 +216,15 @@ public class Particle {
 		forEachParticle(x -> x.updated = false);
 	}
 
-	Particle(int x, int y) {
-		grid[x][y] = this;
-		gridX = x;
-		gridY = y;
-		preciseX = gridX;
-		preciseY = gridY;
-	}
-
-	Particle(int x, int y, Color color) {
-		grid[x][y] = this;
-		gridX = x;
-		gridY = y;
-		preciseX = gridX;
-		preciseY = gridY;
-		this.color = color;
-	}
 
 	public void update() {
 
 	}
 	
+	/**
+	* Helper method for mapping a function to every particle on the grid
+	* @param action The lambda expression to use
+	 */
 	public static void forEachParticle(Consumer<Particle> action) {
 		for (int x = 0; x < grid[0].length; x++) {
 			for (int y = 0; y < grid.length; y++) {
@@ -230,7 +236,7 @@ public class Particle {
 	
 	/**
 	 * Finds if a particle is on the ground or on another grounded particle
-	 * @return
+	 * @return boolean 
 	 */
 	public boolean supported() {
 		if (gridY >= grid.length-1)
