@@ -3,7 +3,6 @@ package powder;
 import java.awt.Color;
 import java.util.function.Consumer;
 
-import java.lang.UnsupportedOperationException;
 
 /**
  * Particle
@@ -79,8 +78,8 @@ public class Particle {
 		return getRelativeParticle(x, y) != null;
 	}
 
-	public boolean relAND(ParticleAND[][] ANDGate) {
-
+	//Not documented yet because want to move to different class
+	public boolean relAND(ParticleGate[][] ANDGate) {
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -93,13 +92,13 @@ public class Particle {
 				int x = j -1;
 				
 				switch (ANDGate[i][j]) {
-					case ATRUE:
+					case TRUE:
 						if (!relParticleExists(x,y)) {
 							return false;
 						}
 						continue;
 
-					case AFALSE:
+					case FALSE:
 
 						if (relParticleExists(x,y)) {
 							return false;
@@ -112,12 +111,44 @@ public class Particle {
 				}
 			}
 
-
-
 		return true;
 	}
 
-	
+	//Not documented yet because want to move to different class
+	public boolean relOR(ParticleGate[][] ORGate) {
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+
+				if (ORGate[i][j] == null) {
+					continue;
+				}
+
+				int y = (i * -1)+1;
+				int x = j -1;
+				
+				switch (ORGate[i][j]) {
+					case TRUE:
+						if (relParticleExists(x,y)) {
+							return true;
+						}
+						continue;
+
+					case FALSE:
+
+						if (!relParticleExists(x,y)) {
+							return true;
+						}
+						continue;
+
+					default:
+						continue;
+				}
+				}
+			}
+
+		return false;
+	}
 	
 	/**
 	* Update the particle's position on the particle grid given precise coordinates

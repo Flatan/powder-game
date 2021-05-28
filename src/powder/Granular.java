@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
-import static powder.ParticleOR.*;
-import static powder.ParticleAND.*;
+import static powder.ParticleGate.*;
 
 /**
 * Granular
@@ -28,31 +27,31 @@ public class Granular extends Particle {
 	// Good ole particle movin method 
 	@Override
 	public void update() {
-		/*if (Math.abs(velY)==0)
-			color = Color.red;
-		else
-			color = Color.white;
-		*/
-		
 
-		ParticleAND[][] Aa = {
-			{AFALSE, null,  null},
-			{AFALSE, null,  null},
-			{null,   ATRUE, null},
+		ParticleGate[][] A1 = {
+			{FALSE, null,  null},
+			{FALSE, null,  null},
+			{null,  TRUE,  null},
 		};
 
-		ParticleOR[][] Ao = {
-			{null,  null,  OTRUE},
-			{null,	null,  OTRUE},
-			{null,  null,   null},
+		ParticleGate[][] O1 = {
+			{null,  null,  TRUE},
+			{null,	null,  TRUE},
+			{null,  null,  null},
 		};
 
-		ParticleAND[][] Ba = {
-			{null, null,  AFALSE},
-			{null, null,  AFALSE},
-			{null, ATRUE,   null},
+		ParticleGate[][] A2 = {
+			{null, null,  FALSE},
+			{null, null,  FALSE},
+			{null, TRUE,   null},
 		};
 		
+		ParticleGate[][] O2 = {
+			{TRUE, null,  null},
+			{TRUE, null,  null},
+			{null, TRUE,  null},
+		};
+
 		if (!updated) {
 			updated = true;
 			velY += gravity;
@@ -62,11 +61,6 @@ public class Granular extends Particle {
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
-			//if (
-			//if		(relParticleExists(0, -1)&&
-					//!relParticleExists(-1, 0)&&
-					//!relParticleExists(-1, 1)&&
-				
 			/*if (slope()>1) {
 				color = Color.red;
 			}
@@ -77,28 +71,19 @@ public class Granular extends Particle {
 				color = Color.white;
 			*/
 			
-			if(	relAND(Aa) &&
-					(relParticleExists(1, 0)||
-					 relParticleExists(1, 1))
-					&& supported()) {
+			if(relAND(A1) &&
+				relOR(O1) &&
+				supported()) {
 						velX = -1;
 					 }
 
-			//else if (relParticleExists(0, -1)&&
-					//!relParticleExists(1, 0)&&
-					//!relParticleExists(1, 1)&&
-
-			else if ( relAND(Ba) &&
-					(relParticleExists(-1, 0)||
-					 relParticleExists(-1, 1))
-					&& supported()) {
+			else if(relAND(A2) &&
+					 relOR(O2) &&
+					 supported()) {
 						velX = 1;
-						
 					}
 			else
 				velX = 0;
-			
-
 		}
 	}
 	
