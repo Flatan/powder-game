@@ -105,7 +105,7 @@ public class Board extends JPanel implements Runnable {
         for (int y = mouseY - diameter / 2; y < mouseY + diameter / 2; y++) {
 
                 if (!outOfBounds(x, y))
-                if (mouseDown && grid[x][y] == null)
+                if (grid[x][y] == null)
                 if (Math.hypot(x - mx, y - mouseY) <= diameter / 2) {
                             new Granular(x, y, Color.WHITE);
                         }
@@ -126,7 +126,9 @@ public class Board extends JPanel implements Runnable {
 
         Particle[][] grid = Particle.getGrid();
 
-        paintParticleCluster(mouseX, mouseY, cursorSize);
+       // Particle p = new Particle(mouseX, mouseY);
+        if (mouseDown)
+        	paintParticleCluster(mouseX, mouseY, cursorSize);
 
         Particle.updateGrid();
 

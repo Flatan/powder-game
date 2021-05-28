@@ -79,7 +79,7 @@ public class Particle {
 		return getRelativeParticle(x, y) != null;
 	}
 
-	public boolean testRelatives(ParticleAND[][] ANDGate) {
+	public boolean relAND(ParticleAND[][] ANDGate) {
 
 		throw new UnsupportedOperationException("In progress");
 
