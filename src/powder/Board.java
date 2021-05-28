@@ -41,6 +41,7 @@ public class Board extends JPanel implements Runnable {
 
     private BufferedImage image;
     private Thread animator;
+	private Granular p = null;
 
     public Board() {
 
@@ -125,8 +126,15 @@ public class Board extends JPanel implements Runnable {
         }
 
         Particle[][] grid = Particle.getGrid();
-
-       // Particle p = new Particle(mouseX, mouseY);
+        
+        
+       
+        /*if (mouseDown)
+        	p  = new Granular(mouseX, mouseY);
+        if (p != null)
+        	System.out.println(p.velY);*/
+        
+        
         if (mouseDown)
         	paintParticleCluster(mouseX, mouseY, cursorSize);
 
