@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 
 import static powder.ParticleGate.*;
+import static powder.GateType.*;
 
 /**
 * Granular
@@ -57,6 +58,7 @@ public class Granular extends Particle {
 			velY += gravity;
 
 			
+			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
@@ -70,14 +72,14 @@ public class Granular extends Particle {
 				color = Color.white;
 			*/
 			
-			if(relAND(A1) &&
-				relOR(O1) &&
+			if(relGate(A1, ALL) &&
+				relGate(O1, ANY) &&
 				supported()) {
 						velX = -1;
 					 }
 
-			else if(relAND(A2) &&
-					 relOR(O2) &&
+			else if(relGate(A2, ALL) &&
+					 relGate(O2, ANY) &&
 					 supported()) {
 						velX = 1;
 					}
