@@ -242,12 +242,7 @@ public class Particle {
 	 * @return boolean 
 	 */
 	public boolean supported() {
-		if (gridY <= 0)
-			return true;
-		else if (!relParticleExists(0,-1))
-			return false;
-		else
-			return getRelativeParticle(0,-1).supported();
+		return true;
 	}
 	
 	/**

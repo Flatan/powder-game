@@ -158,5 +158,15 @@ public class Granular extends Particle {
 			
 	}
 	
+	@Override
+	public boolean supported() {
+		if (getGridY() <= 0)
+			return true;
+		else if (!relParticleExists(0,-1))
+			return false;
+		else
+			return getRelativeParticle(0,-1).supported();
+	}
+	
 
 }
