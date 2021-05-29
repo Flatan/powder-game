@@ -102,6 +102,21 @@ public class Board extends JPanel implements Runnable {
 
     }
 
+
+    /**
+     * Convenience method to initialize a new particle and 
+     * add it to the cartesian grid
+     * @param x X coordinate
+     * @param y Y coordinate
+     */
+    private void spawnParticle(int x, int y) {
+
+        CartesianGrid<Particle> grid = Particle.getGrid();
+        grid.set(x, y, new Granular(x, y, Color.WHITE));
+    }
+
+
+
     // Draw a cluster of particles on the screen given (x, y) coords and a diameter
     public void paintParticleCluster(int mx, int my, int diameter) {
 
@@ -122,8 +137,8 @@ public class Board extends JPanel implements Runnable {
                 if (!outOfBounds(x, y))
                 if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                            grid.set(x, y, new Granular(x, y, Color.WHITE));
-                        }
+                    spawnParticle(x,y);
+                }
             }
         }
     }
