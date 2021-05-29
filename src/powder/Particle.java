@@ -153,7 +153,7 @@ public class Particle {
 	 * Finds if a particle is on the ground or on another grounded particle
 	 * @return boolean 
 	 */
-	public boolean isSupported() {
+	public boolean supported() {
 		return true;
 	}
 	

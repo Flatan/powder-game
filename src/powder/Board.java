@@ -170,7 +170,7 @@ public class Board extends JPanel implements Runnable {
      * @param x X coordinate
      * @param y Y coordinate
      */
-    private void spawnParticle(int x, int y, Color color, Class<? extends Particle> elementType) {
+    private Particle spawnParticle(int x, int y, Color color, Class<? extends Particle> elementType) {
 
         ParticleGrid grid = Particle.getGrid();
 
@@ -182,6 +182,7 @@ public class Board extends JPanel implements Runnable {
 			System.out.println(e);
 		}
         grid.set(x, y, particle);
+        return particle;
     }
 
     // Draw a cluster of particles on the screen given (x, y) coords and a diameter
