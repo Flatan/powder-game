@@ -1,7 +1,6 @@
 package powder;
 
 import java.awt.Color;
-import java.util.function.Consumer;
 
 
 /**
@@ -14,7 +13,7 @@ import java.util.function.Consumer;
 public class Particle {
 
 
-	protected static CartesianGrid<Particle> grid = new CartesianGrid<Particle>(new Particle[600][600]);
+	protected static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
 	// Only modified through setters after Particle initialization
 	private int gridX, gridY;
 	private double preciseX, preciseY;
@@ -188,10 +187,10 @@ public class Particle {
 	}
 
 	public static void setGridSize(int width, int height) {
-		grid = new CartesianGrid<Particle>(new Particle[width][height]);
+		grid = new ParticleGrid(new Particle[width][height]);
 	}
 
-	public static CartesianGrid<Particle> getGrid() {
+	public static ParticleGrid getGrid() {
 		return grid;
 	}
 	
@@ -212,29 +211,15 @@ public class Particle {
 	public static void updateGrid() {
 
 		// Iterate through the grid and update every pixel with a Particle
-		forEachParticle(x -> x.update());
-
+		grid.forEachParticle(x -> x.update());
 		// Iterate again and reset the updated flag for each Particle at its new
 		// position
-		forEachParticle(x -> x.updated = false);
+		grid.forEachParticle(x -> x.updated = false);
 	}
 
 
 	public void update() {
 
-	}
-	
-	/**
-	* Helper method for mapping a function to every particle on the grid
-	* @param action The lambda expression to use
-	 */
-	public static void forEachParticle(Consumer<Particle> action) {
-		for (int x = 0; x < grid.W; x++) {
-			for (int y = 0; y < grid.H; y++) {
-				if (grid.get(x, y) != null)
-					action.accept(grid.get(x,y));
-			}
-		}
 	}
 	
 	/**

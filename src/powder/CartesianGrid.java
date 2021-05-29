@@ -2,14 +2,15 @@ package powder;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
-class CartesianGrid<T> extends AbstractCollection<T> {
+class ParticleGrid extends AbstractCollection<Particle> {
 
-  private final T[][] a;
+  private final Particle[][] a;
   public final int W;
   public final int H;
   
-  CartesianGrid(T[][] array) {
+  ParticleGrid(Particle[][] array) {
 
     a = array;
     W = a.length;
@@ -17,7 +18,7 @@ class CartesianGrid<T> extends AbstractCollection<T> {
     
   }
 
-  public T get(int x, int y) {
+  public Particle get(int x, int y) {
       
 
       try {
@@ -31,9 +32,23 @@ class CartesianGrid<T> extends AbstractCollection<T> {
 
   }
 
-  public void set(int x, int y, T element) {
+  public void set(int x, int y, Particle element) {
 
       a[x][a.length-1 - y] = element;
+  }
+
+
+/**
+* Helper method for mapping a function to every particle on the grid
+* @param action The lambda expression to use
+*/
+public void forEachParticle(Consumer<Particle> action) {
+		for (int x = 0; x < W; x++) {
+			for (int y = 0; y < H; y++) {
+				if (get(x, y) != null)
+					action.accept(get(x,y));
+			}
+		}
   }
 
   @Override
@@ -41,8 +56,9 @@ class CartesianGrid<T> extends AbstractCollection<T> {
       return (a.length * a[0].length);
   }
 
+
   @Override
-  public Iterator<T> iterator() {
+  public Iterator<Particle> iterator() {
       return null;
   }
 

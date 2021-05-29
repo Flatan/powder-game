@@ -57,6 +57,7 @@ public class Board extends JPanel implements Runnable {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
+        ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
         image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
         addMouseListener(new MouseAdapter() {
@@ -108,7 +109,7 @@ public class Board extends JPanel implements Runnable {
      */
     private void spawnParticle(int x, int y) {
 
-        CartesianGrid<Particle> grid = Particle.getGrid();
+        ParticleGrid grid = Particle.getGrid();
         grid.set(x, y, new Granular(x, y, Color.WHITE));
     }
 
@@ -117,7 +118,7 @@ public class Board extends JPanel implements Runnable {
     // Draw a cluster of particles on the screen given (x, y) coords and a diameter
     public void paintParticleCluster(int mx, int my, int diameter) {
 
-        CartesianGrid<Particle> grid = Particle.getGrid();
+        ParticleGrid grid = Particle.getGrid();
 
         my = B_HEIGHT - 1 - my;
 
@@ -151,7 +152,7 @@ public class Board extends JPanel implements Runnable {
         } catch (IllegalComponentStateException e2) {
         }
 
-        CartesianGrid<Particle> grid = Particle.getGrid();
+        ParticleGrid grid = Particle.getGrid();
         
         if (mouseDown)
         	paintParticleCluster(mouseX, mouseY, cursorSize);
