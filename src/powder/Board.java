@@ -120,9 +120,9 @@ public class Board extends JPanel implements Runnable {
 					selectedElement = Particle.class;
 					selectedColor = Color.gray;
 					break;
-                case 't':
-                    selectedElement = Wind.class;
-                    selectedColor = Color.blue;
+                //case 't':
+                    //selectedElement = Wind.class;
+                    //selectedColor = Color.blue;
 				}
 		}
 
@@ -229,15 +229,6 @@ public class Board extends JPanel implements Runnable {
         grid.forEachParticle((particle) -> {
             image.setRGB(particle.getGridX(), B_HEIGHT - 1 - particle.getGridY(), particle.color.getRGB());
         });
-
-        //for (int x = 0; x < B_WIDTH; x++) {
-            //for (int y = B_HEIGHT - 1; y >= 0; y--) {
-                //if (grid.get(x, y) != null)
-                    //image.setRGB(x, B_HEIGHT - 1 - y, grid.get(x, y).color.getRGB());
-                //else
-                    //image.setRGB(x, B_HEIGHT - 1 - y, Color.BLACK.getRGB());
-            //}
-        //}
     
     }
 
