@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 
 public class Board extends JPanel implements Runnable {
 	
+    public static int runtimeParticleCount = 0;
 	//Test comment 2
 
     // Width and height of the window
@@ -121,7 +122,7 @@ public class Board extends JPanel implements Runnable {
                 if (!outOfBounds(x, y))
                 if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                            new Granular(x, y, Color.WHITE);
+                            grid.set(x, y, new Granular(x, y, Color.WHITE));
                         }
             }
         }

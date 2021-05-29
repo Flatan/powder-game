@@ -18,6 +18,7 @@ public class Particle {
 	// Only modified through setters after Particle initialization
 	private int gridX, gridY;
 	private double preciseX, preciseY;
+	private int particleID;
 
 	double gravity = -0.5;
 
@@ -30,7 +31,8 @@ public class Particle {
 	public boolean updated = false;
 
 	Particle(int x, int y) {
-		grid.set(x, y, this);
+
+		particleID = Board.runtimeParticleCount++;
 		gridX = x;
 		gridY = y;
 		preciseX = gridX;
@@ -38,7 +40,8 @@ public class Particle {
 	}
 
 	Particle(int x, int y, Color color) {
-		grid.set(x, y, this);
+
+		particleID = Board.runtimeParticleCount++;
 		gridX = x;
 		gridY = y;
 		preciseX = gridX;
@@ -62,6 +65,14 @@ public class Particle {
 		return gridX;
 	}
 
+	/**
+	* getID returns a unique particle identifier that can be used for
+	* logging
+	* @return String particleID
+	 */
+	public String getID() {
+		return String.format("P-%d", particleID);
+	}
 	
 	// Returns a Particle relative to the position of this one
 	
