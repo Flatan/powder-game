@@ -32,8 +32,10 @@ public class Board extends JPanel implements Runnable {
     // Milliseconds per frame:
     private final int DELAY = 25;
 
+    
     // Mouse conditions
     private int mouseX, mouseY;
+    private int prevX, prevY;
     private boolean mouseDown = false;
 
     // Defines the area of powder placement
@@ -58,10 +60,12 @@ public class Board extends JPanel implements Runnable {
 
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
+                Logger.log("mouseDown event");
                 mouseDown = true;
             }
 
             public void mouseReleased(MouseEvent e) {
+                Logger.log("mouseReleased event");
                 mouseDown = false;
             }
         });
@@ -102,12 +106,18 @@ public class Board extends JPanel implements Runnable {
 
         Particle[][] grid = Particle.getGrid();
 
+        if (prevX != mx && prevY != my) {
+            Logger.log("particleCluster (%d,%d)", mx, my);
+        }
+        prevX = mx;
+        prevY = my;
+
         for (int x = mx - diameter / 2; x < mx + diameter / 2; x++) {
-        for (int y = mouseY - diameter / 2; y < mouseY + diameter / 2; y++) {
+        for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
                 if (!outOfBounds(x, y))
                 if (grid[x][y] == null)
-                if (Math.hypot(x - mx, y - mouseY) <= diameter / 2) {
+                if (Math.hypot(x - mx, y - my) <= diameter / 2) {
                             new Granular(x, y, Color.WHITE);
                         }
             }
@@ -138,6 +148,7 @@ public class Board extends JPanel implements Runnable {
         if (p != null)
         	System.out.println(p.slope());
         */
+        
         
         if (mouseDown)
         	paintParticleCluster(mouseX, mouseY, cursorSize);
