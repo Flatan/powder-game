@@ -104,11 +104,14 @@ public class Board extends JPanel implements Runnable {
     // Draw a cluster of particles on the screen given (x, y) coords and a diameter
     public void paintParticleCluster(int mx, int my, int diameter) {
 
-        Particle[][] grid = Particle.getGrid();
+        CartesianGrid<Particle> grid = Particle.getGrid();
+
+        my = B_HEIGHT - 1 - my;
 
         if (prevX != mx && prevY != my) {
             Logger.log("particleCluster (%d,%d)", mx, my);
         }
+
         prevX = mx;
         prevY = my;
 
@@ -116,7 +119,7 @@ public class Board extends JPanel implements Runnable {
         for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
                 if (!outOfBounds(x, y))
-                if (grid[x][y] == null)
+                if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
                             new Granular(x, y, Color.WHITE);
                         }
@@ -135,7 +138,7 @@ public class Board extends JPanel implements Runnable {
         } catch (IllegalComponentStateException e2) {
         }
 
-        Particle[][] grid = Particle.getGrid();
+        CartesianGrid<Particle> grid = Particle.getGrid();
         
 
        /*for(int x = 0; x<B_WIDTH; x++) {
@@ -157,11 +160,11 @@ public class Board extends JPanel implements Runnable {
 
         // Convert the Particle[][] grid to an actual buffered image
         for (int x = 0; x < B_WIDTH; x++) {
-        for (int y = 0; y < B_HEIGHT; y++) {
-            if (grid[x][y] != null)
-                    image.setRGB(x, y, grid[x][y].color.getRGB());
+        for (int y = B_HEIGHT-1; y >= 0; y--) {
+            if (grid.get(x, y) != null)
+                    image.setRGB(x, B_HEIGHT-1-y, grid.get(x, y).color.getRGB());
             else
-                    image.setRGB(x, y, Color.BLACK.getRGB());
+                    image.setRGB(x, B_HEIGHT-1-y, Color.BLACK.getRGB());
             }
         }
     }

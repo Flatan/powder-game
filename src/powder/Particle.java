@@ -13,13 +13,13 @@ import java.util.function.Consumer;
  */
 public class Particle {
 
-	protected static Particle[][] grid = new Particle[600][600];
 
+	protected static CartesianGrid<Particle> grid = new CartesianGrid<Particle>(new Particle[600][600]);
 	// Only modified through setters after Particle initialization
 	private int gridX, gridY;
 	private double preciseX, preciseY;
 
-	double gravity = 0.5;
+	double gravity = -0.5;
 
 	// velocity:
 	double velX, velY = 0;
@@ -30,7 +30,7 @@ public class Particle {
 	public boolean updated = false;
 
 	Particle(int x, int y) {
-		grid[x][y] = this;
+		grid.set(x, y, this);
 		gridX = x;
 		gridY = y;
 		preciseX = gridX;
@@ -38,7 +38,7 @@ public class Particle {
 	}
 
 	Particle(int x, int y, Color color) {
-		grid[x][y] = this;
+		grid.set(x, y, this);
 		gridX = x;
 		gridY = y;
 		preciseX = gridX;
@@ -74,8 +74,8 @@ public class Particle {
 	* @return Particle
 	 */
 	public Particle getRelativeParticle(int x, int y) {
-		if (!outOfBounds(gridX + x,gridY - y)) 
-			return grid[gridX + x][gridY - y];
+		if (!outOfBounds(gridX + x,gridY + y)) 
+			return grid.get(gridX +x, gridY+y);
 		else
 			return null;	
 	}
@@ -166,21 +166,21 @@ public class Particle {
 	 */
 	public void setNewPosition(double x, double y) {
 		if (!outOfBounds((int)x,(int)y)) {
-			grid[gridX][gridY] = null;
+			grid.set(gridX, gridY, null);
 			preciseX = x;
 			preciseY = y;
 			gridX = (int) x;
 			gridY = (int) y;
-			grid[gridX][gridY] = this;
+			grid.set(gridX, gridY, this);
 			
 		}
 	}
 
 	public static void setGridSize(int width, int height) {
-		grid = new Particle[width][height];
+		grid = new CartesianGrid<Particle>(new Particle[width][height]);
 	}
 
-	public static Particle[][] getGrid() {
+	public static CartesianGrid<Particle> getGrid() {
 		return grid;
 	}
 	
@@ -192,8 +192,7 @@ public class Particle {
 	 */
     public boolean outOfBounds(int x, int y) {
 
-        return !(x < grid[0].length && y < grid.length && x >= 0 && y >= 0);
-
+		return (x >= grid.W || y >= grid.H || x < 0 || y < 0);
     }
 	
 	/**
@@ -219,10 +218,10 @@ public class Particle {
 	* @param action The lambda expression to use
 	 */
 	public static void forEachParticle(Consumer<Particle> action) {
-		for (int x = 0; x < grid[0].length; x++) {
-			for (int y = 0; y < grid.length; y++) {
-				if (grid[x][y] != null)
-					action.accept(grid[x][y]);
+		for (int x = 0; x < grid.W; x++) {
+			for (int y = 0; y < grid.H; y++) {
+				if (grid.get(x, y) != null)
+					action.accept(grid.get(x,y));
 			}
 		}
 	}
@@ -232,7 +231,7 @@ public class Particle {
 	 * @return boolean 
 	 */
 	public boolean supported() {
-		if (gridY >= grid.length-1)
+		if (gridY <= 0)
 			return true;
 		else if (!relParticleExists(0,-1))
 			return false;

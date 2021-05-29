@@ -1,7 +1,6 @@
 package powder;
 
 import java.awt.Color;
-import java.util.Arrays;
 import java.util.function.BiFunction;
 
 import static powder.ParticleGate.*;
@@ -105,25 +104,25 @@ public class Granular extends Particle {
 
 		while (Math.hypot(newX-currentX,newY-currentY) < targetDistance) {
 			
-			if( newX + normVelX >= grid[0].length || newX + normVelX < 0) {
+			if( newX + normVelX >= grid.W || newX + normVelX < 0) {
 				velX=0;
 				
 				break;
 			}
-			if (newY + normVelY >= grid.length || newY + normVelY < 0) {
+			if (newY + normVelY >= grid.H || newY + normVelY < 0) {
 				velY=0;
 				
 				break;
 			}
 			// Check if path is blocked by particle
-			Particle obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
+			Particle obstacle = grid.get((int) (newX + normVelX),(int) (newY + normVelY));
 			
 			//If so, updates blocking particle and checks again
 			if (obstacle != null && !obstacle.updated && obstacle != this) {
 				
 				obstacle.update();
 			}
-			obstacle = grid[(int) (newX + normVelX)][(int) (newY + normVelY)];
+			obstacle = grid.get ((int) (newX + normVelX), (int) (newY + normVelY));
 			if (obstacle != null && obstacle != this) {
 				collide(obstacle, 1);
 				//velX = obstacle.velX;
