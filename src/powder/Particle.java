@@ -84,7 +84,7 @@ public class Particle {
 	* @return Particle
 	 */
 	public Particle getRelativeParticle(int x, int y) {
-		if (!outOfBounds(gridX + x,gridY + y)) 
+		if (!grid.outOfBounds(gridX + x,gridY + y)) 
 			return grid.get(gridX +x, gridY+y);
 		else
 			return null;	
@@ -175,7 +175,7 @@ public class Particle {
 	* @param y Y coordinate
 	 */
 	public void setNewPosition(double x, double y) {
-		if (!outOfBounds((int)x,(int)y)) {
+		if (!grid.outOfBounds((int)x,(int)y)) {
 			grid.set(gridX, gridY, null);
 			preciseX = x;
 			preciseY = y;
@@ -193,17 +193,6 @@ public class Particle {
 	public static ParticleGrid getGrid() {
 		return grid;
 	}
-	
-	/**
-	* Checks if arbitrary (x,y) coordinates fall within the bounds of the particle grid
-	* @param x X coordinate
-	* @param y Y coordinate
-	* @return boolean true if coordinates fall outside else false
-	 */
-    public boolean outOfBounds(int x, int y) {
-
-		return (x >= grid.W || y >= grid.H || x < 0 || y < 0);
-    }
 	
 	/**
 	 * Grid refresher that is looped through forever when application starts

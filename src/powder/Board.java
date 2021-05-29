@@ -22,9 +22,9 @@ import javax.swing.JPanel;
  */
 
 public class Board extends JPanel implements Runnable {
-	
+
     public static int runtimeParticleCount = 0;
-	//Test comment 2
+    // Test comment 2
 
     // Width and height of the window
     private final int B_WIDTH = 600;
@@ -33,7 +33,6 @@ public class Board extends JPanel implements Runnable {
     // Milliseconds per frame:
     private final int DELAY = 25;
 
-    
     // Mouse conditions
     private int mouseX, mouseY;
     private int prevX, prevY;
@@ -44,7 +43,7 @@ public class Board extends JPanel implements Runnable {
 
     private BufferedImage image;
     private Thread animator;
-	private Particle p = null;
+    private Particle p = null;
 
     public Board() {
 
@@ -96,14 +95,10 @@ public class Board extends JPanel implements Runnable {
         g2.drawOval(mouseX - cursorSize / 2, mouseY - cursorSize / 2, cursorSize, cursorSize);
     }
 
-    // For testing if a single (x,y) coord fits on the screen
-    public boolean outOfBounds(int x, int y) {
-		return (x >= B_WIDTH || y >= B_HEIGHT || x < 0 || y < 0);
-    }
-
     /**
-     * Convenience method to initialize a new particle and 
-     * add it to the cartesian grid
+     * Convenience method to initialize a new particle and add it to the cartesian
+     * grid
+     * 
      * @param x X coordinate
      * @param y Y coordinate
      */
@@ -112,8 +107,6 @@ public class Board extends JPanel implements Runnable {
         ParticleGrid grid = Particle.getGrid();
         grid.set(x, y, new Granular(x, y, Color.WHITE));
     }
-
-
 
     // Draw a cluster of particles on the screen given (x, y) coords and a diameter
     public void paintParticleCluster(int mx, int my, int diameter) {
@@ -130,12 +123,12 @@ public class Board extends JPanel implements Runnable {
         prevY = my;
 
         for (int x = mx - diameter / 2; x < mx + diameter / 2; x++) {
-        for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
+            for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
-                if (!outOfBounds(x, y))
+                if (!grid.outOfBounds(x, y))
                 if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                    spawnParticle(x,y);
+                    spawnParticle(x, y);
                 }
             }
         }
@@ -153,18 +146,18 @@ public class Board extends JPanel implements Runnable {
         }
 
         ParticleGrid grid = Particle.getGrid();
-        
+
         if (mouseDown)
-        	paintParticleCluster(mouseX, mouseY, cursorSize);
+            paintParticleCluster(mouseX, mouseY, cursorSize);
 
         Particle.updateGrid();
 
         for (int x = 0; x < B_WIDTH; x++) {
-        for (int y = B_HEIGHT-1; y >= 0; y--) {
-            if (grid.get(x, y) != null)
-                    image.setRGB(x, B_HEIGHT-1-y, grid.get(x, y).color.getRGB());
-            else
-                    image.setRGB(x, B_HEIGHT-1-y, Color.BLACK.getRGB());
+            for (int y = B_HEIGHT - 1; y >= 0; y--) {
+                if (grid.get(x, y) != null)
+                    image.setRGB(x, B_HEIGHT - 1 - y, grid.get(x, y).color.getRGB());
+                else
+                    image.setRGB(x, B_HEIGHT - 1 - y, Color.BLACK.getRGB());
             }
         }
     }
