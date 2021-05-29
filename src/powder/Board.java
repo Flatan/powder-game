@@ -62,6 +62,7 @@ public class Board extends JPanel implements Runnable {
     private Particle p = null;
     private Class<? extends Particle> selectedElement = Granular.class;
     private Color selectedColor = Color.white;
+    private int[]bgGrid;
 
     public Board() {
 
@@ -78,6 +79,7 @@ public class Board extends JPanel implements Runnable {
 
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        bgGrid = new int[B_WIDTH * B_HEIGHT];
         
         addMouseWheelListener(new MouseWheelListener() {
 
@@ -222,14 +224,21 @@ public class Board extends JPanel implements Runnable {
 
         Particle.updateGrid();
 
-        for (int x = 0; x < B_WIDTH; x++) {
-            for (int y = B_HEIGHT - 1; y >= 0; y--) {
-                if (grid.get(x, y) != null)
-                    image.setRGB(x, B_HEIGHT - 1 - y, grid.get(x, y).color.getRGB());
-                else
-                    image.setRGB(x, B_HEIGHT - 1 - y, Color.BLACK.getRGB());
-            }
-        }
+        image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0,0);
+
+        grid.forEachParticle((particle) -> {
+            image.setRGB(particle.getGridX(), B_HEIGHT - 1 - particle.getGridY(), particle.color.getRGB());
+        });
+
+        //for (int x = 0; x < B_WIDTH; x++) {
+            //for (int y = B_HEIGHT - 1; y >= 0; y--) {
+                //if (grid.get(x, y) != null)
+                    //image.setRGB(x, B_HEIGHT - 1 - y, grid.get(x, y).color.getRGB());
+                //else
+                    //image.setRGB(x, B_HEIGHT - 1 - y, Color.BLACK.getRGB());
+            //}
+        //}
+    
     }
 
 
