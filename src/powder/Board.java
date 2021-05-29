@@ -8,6 +8,8 @@ import java.awt.IllegalComponentStateException;
 
 import java.awt.MouseInfo;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -41,10 +43,14 @@ public class Board extends JPanel implements Runnable {
 
     // Defines the area of powder placement
     private int cursorSize = 20;
+    
+    private KeyAction ka = new KeyAction();
 
     private BufferedImage image;
     private Thread animator;
     private Particle p = null;
+    private Class<? extends Particle> selectedElement = Granular.class;
+    private Color selectedColor = Color.white;
 
     public Board() {
 
@@ -53,11 +59,13 @@ public class Board extends JPanel implements Runnable {
 
     // Setup initial settings and event listeners
     private void initBoard() {
-
+    	setFocusable(true);
+    	this.addKeyListener(ka);
+    	
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
-        ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
+        ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
         addMouseListener(new MouseAdapter() {
@@ -71,6 +79,32 @@ public class Board extends JPanel implements Runnable {
                 mouseDown = false;
             }
         });
+    }
+    
+    class KeyAction implements KeyListener{
+		@Override
+        public void keyTyped(KeyEvent e) {
+        }
+
+        //Dispatch key presses based on state
+		@Override
+		public void keyPressed(KeyEvent e) {
+        
+			switch(e.getKeyChar()) {
+				case 'p':
+					selectedElement = Granular.class;
+					selectedColor = Color.white;
+					break;
+				case 's':
+					selectedElement = Particle.class;
+					selectedColor = Color.gray;
+					break;
+				}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {}
+		
     }
 
     @Override
@@ -94,6 +128,10 @@ public class Board extends JPanel implements Runnable {
         // which is then drawn to the screen
         g2.drawImage(image, 0, 0, null);
         g2.drawOval(mouseX - cursorSize / 2, mouseY - cursorSize / 2, cursorSize, cursorSize);
+        
+        g2.drawString("Hotkeys:", 0, 20);
+        g2.drawString("p - powder", 0, 40);
+        g2.drawString("s - solid", 0, 60);
     }
 
     /**
@@ -137,7 +175,7 @@ public class Board extends JPanel implements Runnable {
                 if (!grid.outOfBounds(x, y))
                 if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                	spawnParticle(x,y,Color.WHITE,Granular.class);
+                	spawnParticle(x,y,selectedColor,selectedElement);
                 }
             }
         }
