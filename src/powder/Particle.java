@@ -28,6 +28,8 @@ public class Particle {
 
 	double downPush = 0.0;
 	public boolean updated = false;
+	
+	public boolean supported = false;
 
 	Particle(int x, int y) {
 
@@ -106,70 +108,6 @@ public class Particle {
 
 	
 	/**
-	* 
-	* relGate takes a 3x3 array of ParticleGates (booleans) of surrounding particles
-	* relative to this one. Use null if the value does not matter. Use null or "____"
-	* for 'this' Particle.
-	*
-	* @param ANDGate 3x3 2D array of ParticleGate enum / null values
-	* @param type GateType ALL / ANY (AND / OR)
-	* @return boolean true if real conditions match gate conditions else false
-	 */
-	public boolean relGate(ParticleGate[][] Gate, GateType type) {
-
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-
-				// null values are skipped
-				// can use null or "____" to refer to 'this' particle in the array
-				if (Gate[i][j] == null || Gate[i][j] == ParticleGate.____) {
-					continue;
-				}
-
-				// map iteration counters to relative coordinates
-				int y = (i * -1)+1;
-				int x = j -1;
-				
-				// check the value of the current cell 
-				switch (Gate[i][j]) {
-					case TRUE:
-					// Particle must exist
-						if (type == GateType.ALL && !relParticleExists(x, y))
-						// ALL returns early if it finds a bad match
-							return false;
-
-						if (type == GateType.ANY && relParticleExists(x, y)) {
-						// ANY returns early if it finds a good match
-							return true;
-						}
-						continue;
-
-					case FALSE:
-					// Particle must not exist
-						if (type == GateType.ALL && relParticleExists(x, y)) 
-							return false;
-							
-						if (type == GateType.ANY && !relParticleExists(x, y)) {
-							return true;
-						}
-						continue;
-
-					default:
-						continue;
-				}
-				}
-			}
-
-		// ALL - no bad matches, return true
-		if (type == GateType.ALL) 
-			return true;
-
-		// ANY - no good matches, return false
-		return false;
-	}
-
-	
-	/**
 	* Update the particle's position on the particle grid given precise coordinates
 	* @param x X coordinate
 	* @param y Y coordinate
@@ -215,7 +153,7 @@ public class Particle {
 	 * Finds if a particle is on the ground or on another grounded particle
 	 * @return boolean 
 	 */
-	public boolean supported() {
+	public boolean isSupported() {
 		return true;
 	}
 	

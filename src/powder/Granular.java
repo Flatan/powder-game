@@ -3,8 +3,6 @@ package powder;
 import java.awt.Color;
 import java.util.function.BiFunction;
 
-import static powder.ParticleGate.*;
-import static powder.GateType.*;
 
 /**
 * Granular
@@ -27,30 +25,8 @@ public class Granular extends Particle {
 	// Good ole particle movin method 
 	@Override
 	public void update() {
-
-		ParticleGate[][] A1 = {
-			{FALSE, null,  null},
-			{FALSE, ____,  null},
-			{null,  TRUE,  null},
-		};
-
-		ParticleGate[][] O1 = {
-			{null,  null,  TRUE},
-			{null,	____,  TRUE},
-			{null,  null,  null},
-		};
-
-		ParticleGate[][] A2 = {
-			{null,  null, FALSE},
-			{null,  ____, FALSE},
-			{null,  TRUE,  null},
-		};
 		
-		ParticleGate[][] O2 = {
-			{TRUE,  null,  null},
-			{TRUE,  ____,  null},
-			{null,  null,  null},
-		};
+
 
 		if (!updated) {
 			updated = true;
@@ -71,19 +47,31 @@ public class Granular extends Particle {
 				color = Color.white;
 			*/
 			
-			if(relGate(A1, ALL) &&
-				relGate(O1, ANY) &&
-				supported()) {
+			//supported();
+			//relGate(A1, ALL);
+			//relGate(O1, ANY);
+			
+			if(!relParticleExists(-1,0)&&
+			   !relParticleExists(-1,-1)&&
+			   (relParticleExists(1,0)||
+				relParticleExists(1,-1))
+			   &&isSupported()
+			  ) {
 						velX = -1;
 					 }
 
-			else if(relGate(A2, ALL) &&
-					 relGate(O2, ANY) &&
-					 supported()) {
+			else if(!relParticleExists(1,0)&&
+					   !relParticleExists(1,-1)&&
+					   (relParticleExists(-1,0)||
+						relParticleExists(-1,-1))
+					   &&isSupported()) {
 						velX = 1;
 					}
 			else
 				velX = 0;
+			
+				
+				
 		}
 	}
 	
@@ -117,11 +105,6 @@ public class Granular extends Particle {
 			// Check if path is blocked by particle
 			Particle obstacle = grid.get((int) (newX + normVelX),(int) (newY + normVelY));
 			
-			//If so, updates blocking particle and checks again
-			if (obstacle != null && !obstacle.updated && obstacle != this) {
-				
-				obstacle.update();
-			}
 			obstacle = grid.get ((int) (newX + normVelX), (int) (newY + normVelY));
 			if (obstacle != null && obstacle != this) {
 				collide(obstacle, 1);
@@ -159,13 +142,13 @@ public class Granular extends Particle {
 	}
 	
 	@Override
-	public boolean supported() {
+	public boolean isSupported() {
 		if (getGridY() <= 0)
 			return true;
 		else if (!relParticleExists(0,-1))
 			return false;
 		else
-			return getRelativeParticle(0,-1).supported();
+			return getRelativeParticle(0,-1).isSupported();
 	}
 	
 
