@@ -31,6 +31,12 @@ public class Board extends JPanel implements Runnable {
     public static int runtimeParticleCount = 0;
     // Test comment 2
 
+    private enum EventType {
+        PARTICLE, FORCE
+    }
+
+    private EventType currentEventT = EventType.PARTICLE;
+
     // Width and height of the window
     private final int B_WIDTH = 600;
     private final int B_HEIGHT = 600;
@@ -112,6 +118,9 @@ public class Board extends JPanel implements Runnable {
 					selectedElement = Particle.class;
 					selectedColor = Color.gray;
 					break;
+                case 't':
+                    selectedElement = Wind.class;
+                    selectedColor = Color.blue;
 				}
 		}
 
@@ -201,21 +210,14 @@ public class Board extends JPanel implements Runnable {
         }
     }
 
-    private void cycle() {
-        try {
-            mouseX = MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x;
-        } catch (IllegalComponentStateException e2) {
-        }
 
-        try {
-            mouseY = MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y;
-        } catch (IllegalComponentStateException e2) {
-        }
+
+    /**
+     * Writes the state of the ParticleGrid to the BufferedImage
+     * */
+    private void updateBufferedImage() {
 
         ParticleGrid grid = Particle.getGrid();
-
-        if (mouseDown)
-            paintParticleCluster(mouseX, mouseY, cursorSize);
 
         Particle.updateGrid();
 
@@ -229,6 +231,44 @@ public class Board extends JPanel implements Runnable {
         }
     }
 
+
+    /**
+     * Executes appropriate screen event based on the state of currentEventT
+     * @param type Type of event
+     */
+    private void dispatchEvent(EventType type) {
+
+        if (mouseDown)
+            switch (type) {
+                case PARTICLE:
+                    paintParticleCluster(mouseX, mouseY, cursorSize);
+                    break;
+
+                case FORCE:
+
+                default:
+                    break;
+            }
+    }
+
+    /**
+     * Collect the current mouse coordinates on the window
+     * */
+    private void getMouseInfo() {
+
+        try {
+            mouseX = MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x;
+        } 
+        catch (IllegalComponentStateException e2) {}
+
+        try {
+            mouseY = MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y;
+        } 
+        catch (IllegalComponentStateException e2) {}
+
+    }
+
+
     // Copied this from a tutorial and don't know what it does; don't mess with it:
     // apparently a better way of making a game loop timer
     @Override
@@ -240,7 +280,9 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            cycle();
+            getMouseInfo();
+            dispatchEvent(currentEventT);
+            updateBufferedImage();
             repaint();
 
             timeDiff = System.currentTimeMillis() - beforeTime;
