@@ -37,25 +37,12 @@ public class Granular extends Particle {
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
-			/*if (slope()>1) {
-				color = Color.red;
-			}
-			else if (slope()<-1) {
-				color = Color.green;
-			}
-			else
-				color = Color.white;
-			*/
-			
-			//supported();
-			//relGate(A1, ALL);
-			//relGate(O1, ANY);
 			
 			if(!relParticleExists(-1,0)&&
 			   !relParticleExists(-1,-1)&&
 			   (relParticleExists(1,0)||
 				relParticleExists(1,-1))
-			   &&isSupported()
+			   &&supported()
 			  ) {
 						velX = -1;
 					 }
@@ -64,7 +51,7 @@ public class Granular extends Particle {
 					   !relParticleExists(1,-1)&&
 					   (relParticleExists(-1,0)||
 						relParticleExists(-1,-1))
-					   &&isSupported()) {
+					   &&supported()) {
 						velX = 1;
 					}
 			else
@@ -142,13 +129,13 @@ public class Granular extends Particle {
 	}
 	
 	@Override
-	public boolean isSupported() {
+	public boolean supported() {
 		if (getGridY() <= 0)
 			return true;
 		else if (!relParticleExists(0,-1))
 			return false;
 		else
-			return getRelativeParticle(0,-1).isSupported();
+			return getRelativeParticle(0,-1).supported();
 	}
 	
 
