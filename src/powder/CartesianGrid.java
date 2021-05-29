@@ -26,8 +26,6 @@ class CartesianGrid<T> extends AbstractCollection<T> {
 
       } catch (Exception e) {
 
-        //System.out.printf("Out of bounds at (%d, %d)", x, y);
-        //System.exit(1);
         return null;
       }
 
@@ -47,25 +45,5 @@ class CartesianGrid<T> extends AbstractCollection<T> {
   public Iterator<T> iterator() {
       return null;
   }
-
-
-  //public static void main(String[] args) {
-//    
-    //String[][] asdf = new String[90][90];
-    //asdf[0][0] = "test";
-//    
-    //CartesianGrid<String> cg = new CartesianGrid<String>(asdf);
-//
-    //cg.set(0, 50, "hohoho");
-//
-    //cg.set(, y, element)
-    //cg.get(0);
-    //System.out.println(cg.get(0,50));
-    //System.out.println(cg.size());
-    //System.out.println(cg.W);
-//
-//
-  //}
-
 
 }

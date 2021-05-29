@@ -97,11 +97,8 @@ public class Board extends JPanel implements Runnable {
 
     // For testing if a single (x,y) coord fits on the screen
     public boolean outOfBounds(int x, int y) {
-
-        return !(x < B_WIDTH && y < B_HEIGHT && x > 0 && y > 0);
-
+		return (x >= B_WIDTH || y >= B_HEIGHT || x < 0 || y < 0);
     }
-
 
     /**
      * Convenience method to initialize a new particle and 
@@ -156,25 +153,11 @@ public class Board extends JPanel implements Runnable {
 
         CartesianGrid<Particle> grid = Particle.getGrid();
         
-
-       /*for(int x = 0; x<B_WIDTH; x++) {
-       	   new Particle(x,(int) (B_HEIGHT-50*Math.sin(x/50.)-300),Color.RED);
-       }*/
-        
-        
-        /*if (mouseDown)
-        	p  = new Particle(mouseX, mouseY);
-        if (p != null)
-        	System.out.println(p.slope());
-        */
-        
-        
         if (mouseDown)
         	paintParticleCluster(mouseX, mouseY, cursorSize);
 
         Particle.updateGrid();
 
-        // Convert the Particle[][] grid to an actual buffered image
         for (int x = 0; x < B_WIDTH; x++) {
         for (int y = B_HEIGHT-1; y >= 0; y--) {
             if (grid.get(x, y) != null)
