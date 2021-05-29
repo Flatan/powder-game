@@ -11,6 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -102,10 +103,18 @@ public class Board extends JPanel implements Runnable {
      * @param x X coordinate
      * @param y Y coordinate
      */
-    private void spawnParticle(int x, int y) {
+    private void spawnParticle(int x, int y, Color color, Class<? extends Particle> elementType) {
 
         ParticleGrid grid = Particle.getGrid();
-        grid.set(x, y, new Granular(x, y, Color.WHITE));
+
+        Particle particle = null;
+        try {
+        	 Constructor<?> cons = elementType.getDeclaredConstructor(int.class,int.class,Color.class);
+			 particle = (Particle) cons.newInstance(x,y,color);
+		} catch (Throwable e) {
+			System.out.println(e);
+		}
+        grid.set(x, y, particle);
     }
 
     // Draw a cluster of particles on the screen given (x, y) coords and a diameter
@@ -128,7 +137,7 @@ public class Board extends JPanel implements Runnable {
                 if (!grid.outOfBounds(x, y))
                 if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                    spawnParticle(x, y);
+                	spawnParticle(x,y,Color.WHITE,Granular.class);
                 }
             }
         }
