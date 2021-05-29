@@ -35,6 +35,9 @@ public class Board extends JPanel implements Runnable {
 
     // Milliseconds per frame:
     private final int DELAY = 25;
+    
+    //Measures the framerate
+    private double fps = 0;
 
     // Mouse conditions
     private int mouseX, mouseY;
@@ -132,6 +135,13 @@ public class Board extends JPanel implements Runnable {
         g2.drawString("Hotkeys:", 0, 20);
         g2.drawString("p - powder", 0, 40);
         g2.drawString("s - solid", 0, 60);
+        
+        
+        if (fps<40)
+        	g2.setColor(Color.red);
+        else
+        	g2.setColor(Color.white);
+        g2.drawString(String.format("FPS: %.2f", fps), 500, 20);
     }
 
     /**
@@ -225,10 +235,13 @@ public class Board extends JPanel implements Runnable {
 
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = DELAY - timeDiff;
-
+            
             if (sleep < 0) {
                 sleep = 2;
+                
             }
+            
+            fps = 1/((sleep+timeDiff)*1e-3);
 
             try {
                 Thread.sleep(sleep);
