@@ -33,7 +33,7 @@ public class Granular extends Particle {
 			velY += gravity;
 
 			
-			
+			updateTemp();
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
@@ -91,7 +91,10 @@ public class Granular extends Particle {
 			}
 			// Check if path is blocked by particle
 			Particle obstacle = grid.get((int) (newX + normVelX),(int) (newY + normVelY));
-			
+			if (obstacle != null && !obstacle.updated && obstacle != this) {
+
+				obstacle.update();
+			}
 			obstacle = grid.get ((int) (newX + normVelX), (int) (newY + normVelY));
 			if (obstacle != null && obstacle != this) {
 				collide(obstacle, 1);

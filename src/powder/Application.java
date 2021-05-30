@@ -1,6 +1,9 @@
 package powder;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.util.TreeMap;
+
 import javax.swing.JFrame;
 
 
@@ -29,7 +32,8 @@ public class Application extends JFrame {
         
         setTitle("Powder Game");    
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        
     }
     
 

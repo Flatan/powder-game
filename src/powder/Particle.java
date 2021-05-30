@@ -2,6 +2,8 @@ package powder;
 
 import java.awt.Color;
 
+import color.ColorGradientMap;
+
 
 /**
  * Particle
@@ -12,8 +14,10 @@ import java.awt.Color;
  */
 public class Particle {
 
-
+	
 	protected static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
+	public static boolean showHeatMap = false;
+	public static ColorGradientMap heatmap = new ColorGradientMap();
 	// Only modified through setters after Particle initialization
 	private int gridX, gridY;
 	private double preciseX, preciseY;
@@ -25,14 +29,18 @@ public class Particle {
 	double velX, velY = 0;
 
 	public Color color = Color.white;
+	public Color displayColor = color;
 
 	double downPush = 0.0;
 	public boolean updated = false;
 	
-	public boolean supported = false;
+	
+	public double temperature=0;
+
+	//Thermal diffusivity:
+	public double thermDiff=0.47;
 
 	Particle(int x, int y) {
-
 		particleID = Board.runtimeParticleCount++;
 		gridX = x;
 		gridY = y;
@@ -48,6 +56,7 @@ public class Particle {
 		preciseX = gridX;
 		preciseY = gridY;
 		this.color = color;
+		displayColor = color;
 	}
 
 	public double getX() {
@@ -114,13 +123,11 @@ public class Particle {
 	 */
 	public void setNewPosition(double x, double y) {
 		if (!grid.outOfBounds((int)x,(int)y)) {
-			grid.set(gridX, gridY, null);
+			grid.move(this,(int)x,(int)y);
 			preciseX = x;
 			preciseY = y;
 			gridX = (int) x;
-			gridY = (int) y;
-			grid.set(gridX, gridY, this);
-			
+			gridY = (int) y;	
 		}
 	}
 
@@ -146,8 +153,38 @@ public class Particle {
 
 
 	public void update() {
-
+		if (!updated) {
+			updated = true;
+			updateTemp();
+		}
 	}
+	
+	/**
+	 * Updates the particle's temperature
+	 */
+	public void updateTemp() {
+		double leftTemp, rightTemp, topTemp, bottomTemp;
+		//if a side is not touching another particle, treats it as a particle of the same temperature
+		leftTemp = relParticleExists(-1,0) ? getRelativeParticle(-1,0).temperature : temperature;
+		rightTemp = relParticleExists(1,0) ? getRelativeParticle(1,0).temperature : temperature;
+		bottomTemp = relParticleExists(0,-1) ? getRelativeParticle(0,-1).temperature : temperature;
+		topTemp = relParticleExists(0,1) ? getRelativeParticle(0,1).temperature : temperature;
+		
+		double xDifference = (leftTemp-temperature)-(temperature-rightTemp);
+		double yDifference = (bottomTemp-temperature)-(temperature-topTemp);
+		
+		
+		temperature += (xDifference+yDifference)*thermDiff;
+		
+
+		if (showHeatMap) {
+
+			displayColor = heatmap.getColor(temperature);
+		}
+		else
+			displayColor = color;
+	}
+	
 	
 	/**
 	 * Finds if a particle is on the ground or on another grounded particle

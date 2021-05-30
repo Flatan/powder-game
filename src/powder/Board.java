@@ -62,6 +62,7 @@ public class Board extends JPanel implements Runnable {
     private Particle p = null;
     private Class<? extends Particle> selectedElement = Granular.class;
     private Color selectedColor = Color.white;
+    private double selectedTemp = 50;
     private int[]bgGrid;
 
     public Board() {
@@ -71,6 +72,10 @@ public class Board extends JPanel implements Runnable {
 
     // Setup initial settings and event listeners
     private void initBoard() {
+    	Particle.heatmap.addColor(0,Color.GREEN);
+    	Particle.heatmap.addColor(50,Color.YELLOW);
+    	Particle.heatmap.addColor(100,Color.RED);
+    	
     	setFocusable(true);
     	this.addKeyListener(ka);
     	
@@ -78,6 +83,7 @@ public class Board extends JPanel implements Runnable {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
+        Particle.grid = grid;
         image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         bgGrid = new int[B_WIDTH * B_HEIGHT];
         
@@ -120,6 +126,21 @@ public class Board extends JPanel implements Runnable {
 					selectedElement = Particle.class;
 					selectedColor = Color.gray;
 					break;
+				case 't':
+					if (Particle.showHeatMap)
+						Particle.showHeatMap = false;
+					else
+						Particle.showHeatMap = true;
+					break;
+				case 'c':
+					selectedTemp = 0;
+					break;
+				case 'w':
+					selectedTemp = 50;
+					break;
+				case 'h':
+					selectedTemp = 100;
+					break;
                 //case 't':
                     //selectedElement = Wind.class;
                     //selectedColor = Color.blue;
@@ -156,13 +177,17 @@ public class Board extends JPanel implements Runnable {
         g2.drawString("Hotkeys:", 0, 20);
         g2.drawString("p - powder", 0, 40);
         g2.drawString("s - solid", 0, 60);
+        g2.drawString("t - toggle heat map display", 0, 80);
+        g2.drawString("c - cold", 0, 100);
+        g2.drawString("w - warm", 0, 120);
+        g2.drawString("h - hot", 0, 140);
         
         
         if (fps<40)
         	g2.setColor(Color.red);
         else
         	g2.setColor(Color.white);
-        g2.drawString(String.format("FPS: %.2f", fps), 500, 20);
+        g2.drawString(String.format("FPS: %.2f", fps), B_WIDTH-100, 20);
     }
 
     /**
@@ -207,7 +232,8 @@ public class Board extends JPanel implements Runnable {
                 if (!grid.outOfBounds(x, y))
                 if (grid.get(x, y) == null)
                 if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                	spawnParticle(x,y,selectedColor,selectedElement);
+                	Particle p = spawnParticle(x,y,selectedColor,selectedElement);
+                	p.temperature = selectedTemp;
                 }
             }
         }
@@ -227,7 +253,7 @@ public class Board extends JPanel implements Runnable {
         image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0,0);
 
         grid.forEachParticle((particle) -> {
-            image.setRGB(particle.getGridX(), B_HEIGHT - 1 - particle.getGridY(), particle.color.getRGB());
+            image.setRGB(particle.getGridX(), B_HEIGHT - 1 - particle.getGridY(), particle.displayColor.getRGB());
         });
     
     }
