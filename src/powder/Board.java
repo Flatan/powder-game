@@ -47,8 +47,8 @@ public class Board extends JPanel implements Runnable {
 
     // Milliseconds per frame:
     private final int DELAY = 25;
-    
-    //Measures the framerate
+
+    // Measures the framerate
     private double fps = 0;
 
     // Mouse conditions
@@ -58,7 +58,7 @@ public class Board extends JPanel implements Runnable {
 
     // Defines the area of powder placement
     private int cursorSize = 20;
-    
+
     private KeyAction ka = new KeyAction();
 
     private BufferedImage image;
@@ -67,8 +67,7 @@ public class Board extends JPanel implements Runnable {
     private Class<? extends Particle> selectedElement = Granular.class;
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
-    private int[]bgGrid;
-    
+    private int[] bgGrid;
 
     public Board() {
 
@@ -77,24 +76,24 @@ public class Board extends JPanel implements Runnable {
 
     // Setup initial settings and event listeners
     private void initBoard() {
-    	resetBoard();
-    	
-    	Particle.heatmap.addColor(0,Color.GREEN);
-    	Particle.heatmap.addColor(50,Color.YELLOW);
-    	Particle.heatmap.addColor(100,Color.RED);
-    	
-    	setFocusable(true);
-    	this.addKeyListener(ka);
-    	
-        
+        resetBoard();
+
+        Particle.heatmap.addColor(0, Color.GREEN);
+        Particle.heatmap.addColor(50, Color.YELLOW);
+        Particle.heatmap.addColor(100, Color.RED);
+
+        setFocusable(true);
+        this.addKeyListener(ka);
+
         addMouseWheelListener(new MouseWheelListener() {
 
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				cursorSize -= 2*e.getWheelRotation();
-				
-			}});
-        
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                cursorSize -= 2 * e.getWheelRotation();
+
+            }
+        });
+
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 Logger.log("mouseDown event");
@@ -107,73 +106,74 @@ public class Board extends JPanel implements Runnable {
             }
         });
     }
-    
+
     private void resetBoard() {
-    	setBackground(Color.BLACK);
-        setPreferredSize(new Dimension((int) (B_WIDTH*scale),(int) (B_HEIGHT*scale)));
+        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
 
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         Particle.grid = grid;
         image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         bgGrid = new int[B_WIDTH * B_HEIGHT];
     }
-    
-    class KeyAction implements KeyListener{
-		@Override
+
+    class KeyAction implements KeyListener {
+        @Override
         public void keyTyped(KeyEvent e) {
         }
 
-        //Dispatch key presses based on state
-		@Override
-		public void keyPressed(KeyEvent e) {
-        
-			switch(e.getKeyChar()) {
-				case 'p':
-					selectedElement = Granular.class;
-					selectedColor = Color.white;
-					break;
-				case 's':
-					selectedElement = Particle.class;
-					selectedColor = Color.gray;
-					break;
-				case 't':
-					if (Particle.showHeatMap)
-						Particle.showHeatMap = false;
-					else
-						Particle.showHeatMap = true;
-					break;
-				case 'c':
-					selectedTemp = 0;
-					break;
-				case 'w':
-					selectedTemp = 50;
-					break;
-				case 'h':
-					selectedTemp = 100;
-					break;
-				case '1':
-					scale = 2;
-					B_WIDTH=300;
-					B_HEIGHT=300;
-					
-					resetBoard();
-					break;
-				case '2':
-					scale = 1;
-					B_WIDTH=600;
-					B_HEIGHT=600;
-			
-					resetBoard();
-					break;
-                //case 't':
-                    //selectedElement = Wind.class;
-                    //selectedColor = Color.blue;
-				}
-		}
+        // Dispatch key presses based on state
+        @Override
+        public void keyPressed(KeyEvent e) {
 
-		@Override
-		public void keyReleased(KeyEvent e) {}
-		
+            switch (e.getKeyChar()) {
+            case 'p':
+                selectedElement = Granular.class;
+                selectedColor = Color.white;
+                break;
+            case 's':
+                selectedElement = Particle.class;
+                selectedColor = Color.gray;
+                break;
+            case 't':
+                if (Particle.showHeatMap)
+                    Particle.showHeatMap = false;
+                else
+                    Particle.showHeatMap = true;
+                break;
+            case 'c':
+                selectedTemp = 0;
+                break;
+            case 'w':
+                selectedTemp = 50;
+                break;
+            case 'h':
+                selectedTemp = 100;
+                break;
+            case '1':
+                scale = 2;
+                B_WIDTH = 300;
+                B_HEIGHT = 300;
+
+                resetBoard();
+                break;
+            case '2':
+                scale = 1;
+                B_WIDTH = 600;
+                B_HEIGHT = 600;
+
+                resetBoard();
+                break;
+            // case 't':
+            // selectedElement = Wind.class;
+            // selectedColor = Color.blue;
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+        }
+
     }
 
     @Override
@@ -196,18 +196,16 @@ public class Board extends JPanel implements Runnable {
 
         // The state of the game grid is drawn to an image buffer,
         // which is then drawn to the screen
-        
+
         AffineTransform transform = new AffineTransform();
         transform.scale(scale, scale);
         g2.setTransform(transform);
         g2.drawImage(image, 0, 0, null);
         g2.drawOval(mouseX - cursorSize / 2, mouseY - cursorSize / 2, cursorSize, cursorSize);
         transform.setToIdentity();
-        
+
         g2.setTransform(transform);
-        
-        
-        
+
         g2.drawString("Hotkeys:", 0, 20);
         g2.drawString("p - powder", 0, 40);
         g2.drawString("s - solid", 0, 60);
@@ -217,13 +215,12 @@ public class Board extends JPanel implements Runnable {
         g2.drawString("h - hot particles", 0, 140);
         g2.drawString("1 - low resolution", 0, 160);
         g2.drawString("2 - high resolution", 0, 180);
-        
-        
-        if (fps<40)
-        	g2.setColor(Color.red);
+
+        if (fps < 40)
+            g2.setColor(Color.red);
         else
-        	g2.setColor(Color.white);
-        g2.drawString(String.format("FPS: %.2f", fps), B_WIDTH*(int)scale-100, 20);
+            g2.setColor(Color.white);
+        g2.drawString(String.format("FPS: %.2f", fps), B_WIDTH * (int) scale - 100, 20);
     }
 
     /**
@@ -239,11 +236,11 @@ public class Board extends JPanel implements Runnable {
 
         Particle particle = null;
         try {
-        	 Constructor<?> cons = elementType.getDeclaredConstructor(int.class,int.class,Color.class);
-			 particle = (Particle) cons.newInstance(x,y,color);
-		} catch (Throwable e) {
-			System.out.println(e);
-		}
+            Constructor<?> cons = elementType.getDeclaredConstructor(int.class, int.class, Color.class);
+            particle = (Particle) cons.newInstance(x, y, color);
+        } catch (Throwable e) {
+            System.out.println(e);
+        }
         grid.set(x, y, particle);
         return particle;
     }
@@ -266,77 +263,74 @@ public class Board extends JPanel implements Runnable {
             for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
                 if (!grid.outOfBounds(x, y))
-                if (grid.get(x, y) == null)
-                if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                	Particle p = spawnParticle(x,y,selectedColor,selectedElement);
-                	p.temperature = selectedTemp;
-                }
+                    if (grid.get(x, y) == null)
+                        if (Math.hypot(x - mx, y - my) <= diameter / 2) {
+                            Particle p = spawnParticle(x, y, selectedColor, selectedElement);
+                            p.temperature = selectedTemp;
+                        }
             }
         }
     }
 
-
-
     /**
      * Writes the state of the ParticleGrid to the BufferedImage
-     * */
+     */
     private void updateBufferedImage() {
 
         ParticleGrid grid = Particle.getGrid();
 
-        Particle.updateGrid();
+        grid.updateParticles();
 
-        image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0,0);
-        
+        image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0, 0);
+
         try {
-        grid.forEachParticle((particle) -> {
-            image.setRGB(particle.X(), B_HEIGHT - 1 - particle.Y(), particle.displayColor.getRGB());
-        });
+            grid.forEachParticle((particle) -> {
+                image.setRGB(particle.X(), B_HEIGHT - 1 - particle.Y(), particle.displayColor.getRGB());
+            });
+        } catch (ArrayIndexOutOfBoundsException e) {
         }
-        catch (ArrayIndexOutOfBoundsException e) {}
-    
-    }
 
+    }
 
     /**
      * Executes appropriate screen event based on the state of currentEventT
+     * 
      * @param type Type of event
      */
     private void dispatchEvent(EventType type) {
 
         if (mouseDown)
             switch (type) {
-                case PARTICLE:
-                    paintParticleCluster(mouseX, mouseY, cursorSize);
-                    break;
+            case PARTICLE:
+                paintParticleCluster(mouseX, mouseY, cursorSize);
+                break;
 
-                case FORCE:
+            case FORCE:
 
-                default:
-                    break;
+            default:
+                break;
             }
     }
 
     /**
      * Collect the current mouse coordinates on the window
-     * */
+     */
     private void getMouseInfo() {
 
         try {
             mouseX = MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x;
-        } 
-        catch (IllegalComponentStateException e2) {}
+        } catch (IllegalComponentStateException e2) {
+        }
 
         try {
             mouseY = MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y;
-        } 
-        catch (IllegalComponentStateException e2) {}
-        
+        } catch (IllegalComponentStateException e2) {
+        }
+
         mouseX /= scale;
         mouseY /= scale;
 
     }
-
 
     // Copied this from a tutorial and don't know what it does; don't mess with it:
     // apparently a better way of making a game loop timer
@@ -356,13 +350,13 @@ public class Board extends JPanel implements Runnable {
 
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = DELAY - timeDiff;
-            
+
             if (sleep < 0) {
                 sleep = 2;
-                
+
             }
-            
-            fps = 1/((sleep+timeDiff)*1e-3);
+
+            fps = 1 / ((sleep + timeDiff) * 1e-3);
 
             try {
                 Thread.sleep(sleep);

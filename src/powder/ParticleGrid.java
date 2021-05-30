@@ -36,10 +36,22 @@ class ParticleGrid extends AbstractCollection<Particle> {
     a[x][a.length - 1 - y] = element;
 
   }
-  
+
   public void move(Particle element, int x, int y) {
-	  a[element.X()][a.length - 1 - element.Y()] = null;
-	  a[x][a.length - 1 - y] = element;
+    a[element.X()][a.length - 1 - element.Y()] = null;
+    a[x][a.length - 1 - y] = element;
+  }
+
+  /**
+   * Grid refresher that is looped through forever when application starts
+   */
+  public void updateParticles() {
+
+    // Iterate through the grid and update every pixel with a Particle
+    forEachParticle(x -> x.update());
+    // Iterate again and reset the updated flag for each Particle at its new
+    // position
+    forEachParticle(x -> x.updated = false);
   }
 
   /**
