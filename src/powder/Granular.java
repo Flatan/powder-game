@@ -46,49 +46,57 @@ public class Granular extends Particle {
 
 	// Calculates the particle's next position
 	public double[] getNextPos() {
-		double currentX = realX();
-		double currentY = realY();
-		double targetX = currentX + velX;
-		double targetY = currentY + velY;
-		double newX = currentX;
-		double newY = currentY;
+		double targetX = realX() + velX;
+		double targetY = realY() + velY;
+		double newX = realX();
+		double newY = realY();
 
 		// normalized velocity vector
 		double normVelX = velX / Math.hypot(velX, velY);
 		double normVelY = velY / Math.hypot(velX, velY);
 
-		double targetDistance = Math.hypot(targetX - currentX, targetY - currentY);
+		double targetDistance = distanceFrom(targetX, targetY);
 
-		while (Math.hypot(newX - currentX, newY - currentY) < targetDistance) {
+		while (distanceFrom(newX, newY) < targetDistance) {
 
 			if (grid.outOfBoundsX(newX + normVelX)) {
 				velX = 0;
-
 				break;
 			}
 			if (grid.outOfBoundsY(newY + normVelY)) {
 				velY = 0;
-
 				break;
 			}
 			// Check if path is blocked by particle
-			Particle obstacle = grid.get((int) (newX + normVelX), (int) (newY + normVelY));
-			if (obstacle != null && !obstacle.updated && obstacle != this) {
 
-				obstacle.update();
+			if (grid.testAbs((int) (newX + normVelX), (int) (newY + normVelY))) {
+				Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
+				if (!obstacle.updated && obstacle != this) {
+					obstacle.update();
+				}
 			}
-			obstacle = grid.get((int) (newX + normVelX), (int) (newY + normVelY));
-			if (obstacle != null && obstacle != this) {
-				collide(obstacle, 1);
-				// velX = obstacle.velX;
-				// velY = obstacle.velY;
-				break;
+			if (grid.testAbs((int) (newX + normVelX), (int) (newY + normVelY))) {
+				Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
+				if (obstacle != this) {
+					collide(obstacle, 1);
+					break;
+				}
 			}
+
+			// Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
+			// if (obstacle != null && !obstacle.updated && obstacle != this) {
+			// obstacle.update();
+			// }
+			// obstacle = grid.getClosest(newX + normVelX, newY + normVelY);
+			// if (obstacle != null && obstacle != this) {
+			// collide(obstacle, 1);
+			// break;
+			// }
 
 			newX += normVelX;
 			newY += normVelY;
 
-			if (Math.hypot(newX - currentX, newY - currentY) >= targetDistance) {
+			if (distanceFrom(newX, newY) >= targetDistance) {
 				newY = targetY;
 				newX = targetX;
 			}

@@ -30,6 +30,14 @@ class ParticleGrid extends AbstractCollection<Particle> {
     return a[x][a.length - 1 - y];
   }
 
+  public Particle getReal(double x, double y) {
+    return get((int) x, (int) y);
+  }
+
+  public boolean testAbs(int x, int y) {
+    return get(x, y) != null;
+  }
+
   /**
    * Inserts a Particle on the grid at the provided cartesian coordinates
    * 

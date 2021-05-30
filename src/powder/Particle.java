@@ -97,6 +97,11 @@ abstract class Particle {
 			return null;
 	}
 
+	public double distanceFrom(double x, double y) {
+		return Math.hypot(x - realX(), y - realY());
+
+	}
+
 	/**
 	 * 
 	 * Checks if a particle exists relative to this one and returns a boolean Takes
