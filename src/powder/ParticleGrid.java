@@ -69,10 +69,10 @@ class ParticleGrid extends AbstractCollection<Particle> {
    */
   public void updateParticles() {
     // Iterate through the grid and update every pixel with a Particle
-    forEachParticle(x -> x.update());
-    // Iterate again and reset the updated flag for each Particle at its new
-    // position
-    forEachParticle(x -> x.updated = false);
+    forEachParticle((x) -> {
+      x.update();
+      x.updated = false;
+    });
   }
 
   /**
