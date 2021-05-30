@@ -1,11 +1,8 @@
 package powder;
 
 import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 class ParticleGrid extends AbstractCollection<Particle> {
 
@@ -41,7 +38,7 @@ class ParticleGrid extends AbstractCollection<Particle> {
   }
   
   public void move(Particle element, int x, int y) {
-	  a[element.getGridX()][a.length - 1 - element.getGridY()] = null;
+	  a[element.X()][a.length - 1 - element.Y()] = null;
 	  a[x][a.length - 1 - y] = element;
   }
 

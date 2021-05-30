@@ -290,7 +290,7 @@ public class Board extends JPanel implements Runnable {
         
         try {
         grid.forEachParticle((particle) -> {
-            image.setRGB(particle.getGridX(), B_HEIGHT - 1 - particle.getGridY(), particle.displayColor.getRGB());
+            image.setRGB(particle.X(), B_HEIGHT - 1 - particle.Y(), particle.displayColor.getRGB());
         });
         }
         catch (ArrayIndexOutOfBoundsException e) {}

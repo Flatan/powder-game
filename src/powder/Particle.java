@@ -12,15 +12,15 @@ import color.ColorGradientMap;
  *
  *
  */
-public class Particle {
+abstract class Particle {
 
 	
 	protected static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
 	public static boolean showHeatMap = false;
 	public static ColorGradientMap heatmap = new ColorGradientMap();
-	// Only modified through setters after Particle initialization
-	private int gridX, gridY;
-	private double preciseX, preciseY;
+
+	private int x, y;
+	private double realx, realy;
 	private int particleID;
 
 	double gravity = -0.5;
@@ -42,37 +42,37 @@ public class Particle {
 
 	Particle(int x, int y) {
 		particleID = Board.runtimeParticleCount++;
-		gridX = x;
-		gridY = y;
-		preciseX = gridX;
-		preciseY = gridY;
+		this.x = x;
+		this.y = y;
+		this.realx = x;
+		this.realy = y;
 	}
 
 	Particle(int x, int y, Color color) {
 
 		particleID = Board.runtimeParticleCount++;
-		gridX = x;
-		gridY = y;
-		preciseX = gridX;
-		preciseY = gridY;
+		this.x = x;
+		this.y = y;
+		this.realx = x;
+		this.realy = y;
 		this.color = color;
 		displayColor = color;
 	}
 
-	public double getX() {
-		return preciseX;
+	public double realX() {
+		return realx;
 	}
 
-	public double getY() {
-		return preciseY;
+	public double realY() {
+		return realy;
 	}
 
-	public int getGridY() {
-		return gridY;
+	public int Y() {
+		return y;
 	}
 
-	public int getGridX() {
-		return gridX;
+	public int X() {
+		return x;
 	}
 
 	/**
@@ -94,9 +94,9 @@ public class Particle {
 	* @param y Relative y position
 	* @return Particle
 	 */
-	public Particle getRelativeParticle(int x, int y) {
-		if (!grid.outOfBounds(gridX + x,gridY + y)) 
-			return grid.get(gridX +x, gridY+y);
+	public Particle getRel(int x, int y) {
+		if (!grid.outOfBounds(X() + x,Y() + y)) 
+			return grid.get(X() +x, Y()+y);
 		else
 			return null;	
 	}
@@ -110,9 +110,9 @@ public class Particle {
 	* @param y Relative y position
 	* @return boolean true if the particle exists else false
 	 */
-	public boolean relParticleExists(int x, int y) {
+	public boolean testRel(int x, int y) {
 
-		return getRelativeParticle(x, y) != null;
+		return getRel(x, y) != null;
 	}
 
 	
@@ -124,10 +124,10 @@ public class Particle {
 	public void setNewPosition(double x, double y) {
 		if (!grid.outOfBounds((int)x,(int)y)) {
 			grid.move(this,(int)x,(int)y);
-			preciseX = x;
-			preciseY = y;
-			gridX = (int) x;
-			gridY = (int) y;	
+			this.realx = x;
+			this.realy = y;
+			this.x = (int) x;
+			this.y = (int) y;	
 		}
 	}
 
@@ -152,12 +152,7 @@ public class Particle {
 	}
 
 
-	public void update() {
-		if (!updated) {
-			updated = true;
-			updateTemp();
-		}
-	}
+	abstract public void update();
 	
 	/**
 	 * Updates the particle's temperature
@@ -165,10 +160,10 @@ public class Particle {
 	public void updateTemp() {
 		double leftTemp, rightTemp, topTemp, bottomTemp;
 		//if a side is not touching another particle, treats it as a particle of the same temperature
-		leftTemp = relParticleExists(-1,0) ? getRelativeParticle(-1,0).temperature : temperature;
-		rightTemp = relParticleExists(1,0) ? getRelativeParticle(1,0).temperature : temperature;
-		bottomTemp = relParticleExists(0,-1) ? getRelativeParticle(0,-1).temperature : temperature;
-		topTemp = relParticleExists(0,1) ? getRelativeParticle(0,1).temperature : temperature;
+		leftTemp = testRel(-1,0) ? getRel(-1,0).temperature : temperature;
+		rightTemp = testRel(1,0) ? getRel(1,0).temperature : temperature;
+		bottomTemp = testRel(0,-1) ? getRel(0,-1).temperature : temperature;
+		topTemp = testRel(0,1) ? getRel(0,1).temperature : temperature;
 		
 		double xDifference = (leftTemp-temperature)-(temperature-rightTemp);
 		double yDifference = (bottomTemp-temperature)-(temperature-topTemp);
@@ -204,18 +199,18 @@ public class Particle {
 	public double slope() {
 		double slope = 0;
 		int scope = 5;
-		if(relParticleExists(0,1)&&relParticleExists(0,-1))
+		if(testRel(0,1)&&testRel(0,-1))
 			return 0;
 		
 		int distToLeftEdge = 0;
 		boolean leftGoesUp = false;
 		for (int x = -1;x>=-scope;x--) {
-			if (relParticleExists(x,0)) {
+			if (testRel(x,0)) {
 				distToLeftEdge = x+1;
 				leftGoesUp = true;
 				break;
 			}
-			if (!relParticleExists(x,-1)) {
+			if (!testRel(x,-1)) {
 				distToLeftEdge = x+1;
 				leftGoesUp = false;
 				break;
@@ -226,12 +221,12 @@ public class Particle {
 		int distToRightEdge = 0;
 		boolean rightGoesUp = false;
 		for (int x = 1;x<=scope;x++) {
-			if (relParticleExists(x,0)) {
+			if (testRel(x,0)) {
 				distToRightEdge = x-1;
 				rightGoesUp = true;
 				break;
 			}
-			if (!relParticleExists(x,-1)) {
+			if (!testRel(x,-1)) {
 				distToRightEdge = x-1;
 				rightGoesUp = false;
 				break;
@@ -249,14 +244,14 @@ public class Particle {
 			slope *= -1;
 		
 		
-		if (Math.abs(slope) == 1 || !relParticleExists(0,-1)) {
-			if(relParticleExists(-1,0)==relParticleExists(1,0))
+		if (Math.abs(slope) == 1 || !testRel(0,-1)) {
+			if(testRel(-1,0)==testRel(1,0))
 				return 0;
 			
 			int distToBottomEdge = 0;
-			boolean onRightSide = relParticleExists(1,0);
+			boolean onRightSide = testRel(1,0);
 			for (int y = -1;y>=-scope;y--) {
-				if (relParticleExists(0,y)) {
+				if (testRel(0,y)) {
 					distToBottomEdge = y+1;
 					break;
 				}
@@ -265,11 +260,11 @@ public class Particle {
 			
 			int distToTopEdge = 0;
 			for (int y = 1;y<=scope;y++) {
-				if (!relParticleExists(1,y)&&onRightSide) {
+				if (!testRel(1,y)&&onRightSide) {
 					distToTopEdge = y-1;
 					break;
 				}
-				else if (!relParticleExists(-1,y)&&!onRightSide) {
+				else if (!testRel(-1,y)&&!onRightSide) {
 					distToTopEdge = y-1;
 					break;
 				}

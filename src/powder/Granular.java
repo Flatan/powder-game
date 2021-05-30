@@ -38,19 +38,19 @@ public class Granular extends Particle {
 			setNewPosition(nextPos[0], nextPos[1]);
 			
 			
-			if(!relParticleExists(-1,0)&&
-			   !relParticleExists(-1,-1)&&
-			   (relParticleExists(1,0)||
-				relParticleExists(1,-1))
+			if(!testRel(-1,0)&&
+			   !testRel(-1,-1)&&
+			   (testRel(1,0)||
+				testRel(1,-1))
 			   &&supported()
 			  ) {
 						velX = -1;
 					 }
 
-			else if(!relParticleExists(1,0)&&
-					   !relParticleExists(1,-1)&&
-					   (relParticleExists(-1,0)||
-						relParticleExists(-1,-1))
+			else if(!testRel(1,0)&&
+					   !testRel(1,-1)&&
+					   (testRel(-1,0)||
+						testRel(-1,-1))
 					   &&supported()) {
 						velX = 1;
 					}
@@ -64,8 +64,8 @@ public class Granular extends Particle {
 	
 	//Calculates the particle's next position
 	public double[] getNextPos() {
-		double currentX = getX();
-		double currentY = getY();
+		double currentX = realX();
+		double currentY = realY();
 		double targetX = currentX + velX;
 		double targetY = currentY + velY;
 		double newX = currentX;
@@ -133,12 +133,12 @@ public class Granular extends Particle {
 	
 	@Override
 	public boolean supported() {
-		if (getGridY() <= 0)
+		if (Y() <= 0)
 			return true;
-		else if (!relParticleExists(0,-1))
+		else if (!testRel(0,-1))
 			return false;
 		else
-			return getRelativeParticle(0,-1).supported();
+			return getRel(0,-1).supported();
 	}
 	
 
