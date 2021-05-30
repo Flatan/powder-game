@@ -132,7 +132,7 @@ public class Board extends JPanel implements Runnable {
                 selectedColor = Color.white;
                 break;
             case 's':
-                selectedElement = Particle.class;
+                selectedElement = Solid.class;
                 selectedColor = Color.gray;
                 break;
             case 't':
