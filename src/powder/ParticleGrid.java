@@ -90,15 +90,34 @@ class ParticleGrid extends AbstractCollection<Particle> {
   }
 
   /**
-   * Checks if arbitrary (x,y) coordinates fall within the bounds of the particle
-   * grid
+   * Checks if arbitrary (x,y) coordinates are invalid
    * 
    * @param x X coordinate
    * @param y Y coordinate
-   * @return boolean true if coordinates fall outside else false
+   * @return boolean true if invalid else false
    */
-  public boolean outOfBounds(int x, int y) {
-    return (x >= W || y >= H || x < 0 || y < 0);
+  public boolean outOfBounds(double x, double y) {
+    return outOfBoundsX(x) || outOfBoundsY(y);
+  }
+
+  /**
+   * Checks if arbitrary y coordinate is invalid
+   * 
+   * @param y
+   * @return boolean true if invalid else false
+   */
+  public boolean outOfBoundsY(double y) {
+    return (y >= H || y < 0);
+  }
+
+  /**
+   * Checks if arbitrary x coordinate is invalid
+   * 
+   * @param x
+   * @return boolean true if invalid else false
+   */
+  public boolean outOfBoundsX(double x) {
+    return (x >= W || x < 0);
   }
 
   /**

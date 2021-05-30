@@ -61,12 +61,12 @@ public class Granular extends Particle {
 
 		while (Math.hypot(newX - currentX, newY - currentY) < targetDistance) {
 
-			if (newX + normVelX >= grid.W || newX + normVelX < 0) {
+			if (grid.outOfBoundsX(newX + normVelX)) {
 				velX = 0;
 
 				break;
 			}
-			if (newY + normVelY >= grid.H || newY + normVelY < 0) {
+			if (grid.outOfBoundsY(newY + normVelY)) {
 				velY = 0;
 
 				break;
