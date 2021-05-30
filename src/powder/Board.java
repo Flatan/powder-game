@@ -14,11 +14,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import color.ColorGradientMap;
 
 /**
  * Board
@@ -37,9 +40,10 @@ public class Board extends JPanel implements Runnable {
 
     private EventType currentEventT = EventType.PARTICLE;
 
-    // Width and height of the window
-    private final int B_WIDTH = 600;
-    private final int B_HEIGHT = 600;
+    private double scale = 1;
+    // Width and height of the grid
+    private int B_WIDTH = 600;
+    private int B_HEIGHT = 600;
 
     // Milliseconds per frame:
     private final int DELAY = 25;
@@ -64,6 +68,7 @@ public class Board extends JPanel implements Runnable {
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
     private int[]bgGrid;
+    
 
     public Board() {
 
@@ -72,6 +77,8 @@ public class Board extends JPanel implements Runnable {
 
     // Setup initial settings and event listeners
     private void initBoard() {
+    	resetBoard();
+    	
     	Particle.heatmap.addColor(0,Color.GREEN);
     	Particle.heatmap.addColor(50,Color.YELLOW);
     	Particle.heatmap.addColor(100,Color.RED);
@@ -79,13 +86,6 @@ public class Board extends JPanel implements Runnable {
     	setFocusable(true);
     	this.addKeyListener(ka);
     	
-        setBackground(Color.BLACK);
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
-
-        ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
-        Particle.grid = grid;
-        image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
-        bgGrid = new int[B_WIDTH * B_HEIGHT];
         
         addMouseWheelListener(new MouseWheelListener() {
 
@@ -106,6 +106,16 @@ public class Board extends JPanel implements Runnable {
                 mouseDown = false;
             }
         });
+    }
+    
+    private void resetBoard() {
+    	setBackground(Color.BLACK);
+        setPreferredSize(new Dimension((int) (B_WIDTH*scale),(int) (B_HEIGHT*scale)));
+
+        ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
+        Particle.grid = grid;
+        image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        bgGrid = new int[B_WIDTH * B_HEIGHT];
     }
     
     class KeyAction implements KeyListener{
@@ -141,6 +151,20 @@ public class Board extends JPanel implements Runnable {
 				case 'h':
 					selectedTemp = 100;
 					break;
+				case '1':
+					scale = 2;
+					B_WIDTH=300;
+					B_HEIGHT=300;
+					
+					resetBoard();
+					break;
+				case '2':
+					scale = 1;
+					B_WIDTH=600;
+					B_HEIGHT=600;
+			
+					resetBoard();
+					break;
                 //case 't':
                     //selectedElement = Wind.class;
                     //selectedColor = Color.blue;
@@ -166,28 +190,40 @@ public class Board extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
+        g2.scale(2, 2);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.WHITE);
 
         // The state of the game grid is drawn to an image buffer,
         // which is then drawn to the screen
+        
+        AffineTransform transform = new AffineTransform();
+        transform.scale(scale, scale);
+        g2.setTransform(transform);
         g2.drawImage(image, 0, 0, null);
         g2.drawOval(mouseX - cursorSize / 2, mouseY - cursorSize / 2, cursorSize, cursorSize);
+        transform.setToIdentity();
+        
+        g2.setTransform(transform);
+        
+        
         
         g2.drawString("Hotkeys:", 0, 20);
         g2.drawString("p - powder", 0, 40);
         g2.drawString("s - solid", 0, 60);
         g2.drawString("t - toggle heat map display", 0, 80);
-        g2.drawString("c - cold", 0, 100);
-        g2.drawString("w - warm", 0, 120);
-        g2.drawString("h - hot", 0, 140);
+        g2.drawString("c - cold particles", 0, 100);
+        g2.drawString("w - warm particles", 0, 120);
+        g2.drawString("h - hot particles", 0, 140);
+        g2.drawString("1 - low resolution", 0, 160);
+        g2.drawString("2 - high resolution", 0, 180);
         
         
         if (fps<40)
         	g2.setColor(Color.red);
         else
         	g2.setColor(Color.white);
-        g2.drawString(String.format("FPS: %.2f", fps), B_WIDTH-100, 20);
+        g2.drawString(String.format("FPS: %.2f", fps), B_WIDTH*(int)scale-100, 20);
     }
 
     /**
@@ -251,10 +287,13 @@ public class Board extends JPanel implements Runnable {
         Particle.updateGrid();
 
         image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0,0);
-
+        
+        try {
         grid.forEachParticle((particle) -> {
             image.setRGB(particle.getGridX(), B_HEIGHT - 1 - particle.getGridY(), particle.displayColor.getRGB());
         });
+        }
+        catch (ArrayIndexOutOfBoundsException e) {}
     
     }
 
@@ -292,6 +331,9 @@ public class Board extends JPanel implements Runnable {
             mouseY = MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y;
         } 
         catch (IllegalComponentStateException e2) {}
+        
+        mouseX /= scale;
+        mouseY /= scale;
 
     }
 
