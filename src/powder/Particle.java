@@ -20,7 +20,7 @@ abstract class Particle {
 	private double realx, realy;
 	private int particleID;
 
-	double gravity = -0.5;
+	static double gravity = -0.5;
 
 	// velocity:
 	double velX, velY = 0;

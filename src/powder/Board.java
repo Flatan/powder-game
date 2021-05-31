@@ -46,7 +46,7 @@ public class Board extends JPanel implements Runnable {
     private int B_HEIGHT = 600;
 
     // Milliseconds per frame:
-    private final int DELAY = 25;
+    private int DELAY = 25;
 
     // Measures the framerate
     private double fps = 0;
@@ -150,19 +150,32 @@ public class Board extends JPanel implements Runnable {
             case 'h':
                 selectedTemp = 100;
                 break;
+            case '0':
+                scale = 60;
+                B_WIDTH = 10;
+                B_HEIGHT = 10;
+                DELAY = 100;
+                resetBoard();
+                break;
             case '1':
+            	Particle.gravity = -0.5;
                 scale = 2;
                 B_WIDTH = 300;
                 B_HEIGHT = 300;
-
+                DELAY = 25;
                 resetBoard();
                 break;
             case '2':
+            	Particle.gravity = -0.5;
                 scale = 1;
                 B_WIDTH = 600;
                 B_HEIGHT = 600;
-
+                DELAY = 25;
                 resetBoard();
+                break;
+            case ' ':
+                testCollison();
+                
                 break;
             // case 't':
             // selectedElement = Wind.class;
@@ -174,6 +187,14 @@ public class Board extends JPanel implements Runnable {
         public void keyReleased(KeyEvent e) {
         }
 
+    }
+    
+    private void testCollison() {
+    	Particle.gravity = 0;
+    	Granular p1 = (Granular) spawnParticle(0,5,Color.WHITE,Granular.class);
+    	p1.velX = 0.1;
+    	Granular p2 = (Granular) spawnParticle(9,5,Color.WHITE,Granular.class);
+    	p2.velX = -0.1;
     }
 
     @Override
