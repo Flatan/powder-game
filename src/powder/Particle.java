@@ -10,7 +10,7 @@ import color.ColorGradientMap;
  *
  *
  */
-abstract class Particle {
+public abstract class Particle {
 
 	protected static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
 	public static boolean showHeatMap = false;
@@ -53,6 +53,23 @@ abstract class Particle {
 		this.realy = y;
 		this.color = color;
 		displayColor = color;
+	}
+
+	static public void setGravity(double g) {
+		Particle.gravity = g;
+	}
+
+	static public double getGravity() {
+		return Particle.gravity;
+	}
+
+	static public void toggleHeatMap() {
+
+		if (showHeatMap) {
+			showHeatMap = false;
+		} else {
+			showHeatMap = true;
+		}
 	}
 
 	public double realX() {

@@ -8,8 +8,6 @@ import java.awt.IllegalComponentStateException;
 
 import java.awt.MouseInfo;
 import java.awt.RenderingHints;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -22,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import color.ColorGradientMap;
+import ui.KeyAction;
 
 /**
  * Board
@@ -76,7 +75,7 @@ public class Board extends JPanel implements Runnable {
 
     // Setup initial settings and event listeners
     private void initBoard() {
-        resetBoard();
+        reset();
 
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
@@ -107,7 +106,70 @@ public class Board extends JPanel implements Runnable {
         });
     }
 
-    private void resetBoard() {
+    /**
+     * Set the current element
+     * 
+     * @param element
+     */
+    public void setSelectedElement(Class<? extends Particle> element) {
+        this.selectedElement = element;
+    }
+
+    /**
+     * Set the color of the current element
+     * 
+     * @param c
+     */
+    public void setSelectedColor(Color c) {
+        this.selectedColor = c;
+    }
+
+    /**
+     * Set the selected temp
+     * 
+     * @param temp
+     */
+    public void setSelectedTemp(double temp) {
+        this.selectedTemp = temp;
+    }
+
+    /**
+     * Set the current scale
+     * 
+     * @param s
+     */
+    public void setScale(double s) {
+        this.scale = s;
+    }
+
+    /**
+     * Set the width of the board
+     * 
+     * @param w
+     */
+    public void setWidth(int w) {
+        this.B_WIDTH = w;
+    }
+
+    /**
+     * Set the height of the board
+     * 
+     * @param h
+     */
+    public void setHeight(int h) {
+        this.B_HEIGHT = h;
+    }
+
+    /**
+     * Set the delay
+     * 
+     * @param delay
+     */
+    public void setDelay(int delay) {
+        this.DELAY = delay;
+    }
+
+    public void reset() {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
 
@@ -117,84 +179,12 @@ public class Board extends JPanel implements Runnable {
         bgGrid = new int[B_WIDTH * B_HEIGHT];
     }
 
-    class KeyAction implements KeyListener {
-        @Override
-        public void keyTyped(KeyEvent e) {
-        }
-
-        // Dispatch key presses based on state
-        @Override
-        public void keyPressed(KeyEvent e) {
-
-            switch (e.getKeyChar()) {
-            case 'p':
-                selectedElement = Granular.class;
-                selectedColor = Color.white;
-                break;
-            case 's':
-                selectedElement = Solid.class;
-                selectedColor = Color.gray;
-                break;
-            case 't':
-                if (Particle.showHeatMap)
-                    Particle.showHeatMap = false;
-                else
-                    Particle.showHeatMap = true;
-                break;
-            case 'c':
-                selectedTemp = 0;
-                break;
-            case 'w':
-                selectedTemp = 50;
-                break;
-            case 'h':
-                selectedTemp = 100;
-                break;
-            case '0':
-                scale = 60;
-                B_WIDTH = 10;
-                B_HEIGHT = 10;
-                DELAY = 100;
-                resetBoard();
-                break;
-            case '1':
-            	Particle.gravity = -0.5;
-                scale = 2;
-                B_WIDTH = 300;
-                B_HEIGHT = 300;
-                DELAY = 25;
-                resetBoard();
-                break;
-            case '2':
-            	Particle.gravity = -0.5;
-                scale = 1;
-                B_WIDTH = 600;
-                B_HEIGHT = 600;
-                DELAY = 25;
-                resetBoard();
-                break;
-            case ' ':
-                testCollison();
-                
-                break;
-            // case 't':
-            // selectedElement = Wind.class;
-            // selectedColor = Color.blue;
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-        }
-
-    }
-    
-    private void testCollison() {
-    	Particle.gravity = 0;
-    	Granular p1 = (Granular) spawnParticle(0,5,Color.WHITE,Granular.class);
-    	p1.velX = 0.1;
-    	Granular p2 = (Granular) spawnParticle(9,5,Color.WHITE,Granular.class);
-    	p2.velX = -0.1;
+    public void testCollison() {
+        Particle.gravity = 0;
+        Granular p1 = (Granular) spawnParticle(0, 5, Color.WHITE, Granular.class);
+        p1.velX = 0.1;
+        Granular p2 = (Granular) spawnParticle(9, 5, Color.WHITE, Granular.class);
+        p2.velX = -0.1;
     }
 
     @Override

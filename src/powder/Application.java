@@ -25,7 +25,7 @@ public class Application extends JFrame {
 
         // add(new Board());
 
-        add(board);
+        add(Application.board);
         setResizable(false);
         pack();
 
