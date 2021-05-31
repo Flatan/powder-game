@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import color.ColorGradientMap;
 import ui.KeyAction;
 import ui.Mouse;
+import ui.Foreground;
 
 /**
  * Board
@@ -80,16 +81,9 @@ public class Board extends JPanel implements Runnable {
         Particle.heatmap.addColor(100, Color.RED);
 
         setFocusable(true);
-        this.addKeyListener(ka);
 
-        addMouseWheelListener(new MouseWheelListener() {
-
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                cursorSize -= 2 * e.getWheelRotation();
-
-            }
-        });
+        addKeyListener(ka);
+        addMouseWheelListener(Mouse.wheelControls);
 
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
@@ -111,6 +105,14 @@ public class Board extends JPanel implements Runnable {
      */
     public void setSelectedElement(Class<? extends Particle> element) {
         this.selectedElement = element;
+    }
+
+    public void setCursorSize(int cursorSize) {
+        this.cursorSize = cursorSize;
+    }
+
+    public int getCursorSize() {
+        return cursorSize;
     }
 
     /**
@@ -171,6 +173,10 @@ public class Board extends JPanel implements Runnable {
         this.DELAY = delay;
     }
 
+    public double getFPS() {
+        return fps;
+    }
+
     public void reset() {
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
@@ -219,21 +225,7 @@ public class Board extends JPanel implements Runnable {
 
         g2.setTransform(transform);
 
-        g2.drawString("Hotkeys:", 0, 20);
-        g2.drawString("p - powder", 0, 40);
-        g2.drawString("s - solid", 0, 60);
-        g2.drawString("t - toggle heat map display", 0, 80);
-        g2.drawString("c - cold particles", 0, 100);
-        g2.drawString("w - warm particles", 0, 120);
-        g2.drawString("h - hot particles", 0, 140);
-        g2.drawString("1 - low resolution", 0, 160);
-        g2.drawString("2 - high resolution", 0, 180);
-
-        if (fps < 40)
-            g2.setColor(Color.red);
-        else
-            g2.setColor(Color.white);
-        g2.drawString(String.format("FPS: %.2f", fps), B_WIDTH * (int) scale - 100, 20);
+        Foreground.draw(g2);
     }
 
     /**
@@ -314,14 +306,14 @@ public class Board extends JPanel implements Runnable {
 
         if (mouseDown)
             switch (type) {
-            case PARTICLE:
-                paintParticleCluster(Mouse.X(), Mouse.Y(), cursorSize);
-                break;
+                case PARTICLE:
+                    paintParticleCluster(Mouse.X(), Mouse.Y(), cursorSize);
+                    break;
 
-            case FORCE:
+                case FORCE:
 
-            default:
-                break;
+                default:
+                    break;
             }
     }
 
