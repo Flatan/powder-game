@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.IllegalComponentStateException;
 
-import java.awt.MouseInfo;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,6 +19,7 @@ import javax.swing.JPanel;
 
 import color.ColorGradientMap;
 import ui.KeyAction;
+import ui.Mouse;
 
 /**
  * Board
@@ -51,7 +50,6 @@ public class Board extends JPanel implements Runnable {
     private double fps = 0;
 
     // Mouse conditions
-    private int mouseX, mouseY;
     private int prevX, prevY;
     private boolean mouseDown = false;
 
@@ -142,6 +140,10 @@ public class Board extends JPanel implements Runnable {
         this.scale = s;
     }
 
+    public double getScale() {
+        return scale;
+    }
+
     /**
      * Set the width of the board
      * 
@@ -212,7 +214,7 @@ public class Board extends JPanel implements Runnable {
         transform.scale(scale, scale);
         g2.setTransform(transform);
         g2.drawImage(image, 0, 0, null);
-        g2.drawOval(mouseX - cursorSize / 2, mouseY - cursorSize / 2, cursorSize, cursorSize);
+        g2.drawOval(Mouse.X() - cursorSize / 2, Mouse.Y() - cursorSize / 2, cursorSize, cursorSize);
         transform.setToIdentity();
 
         g2.setTransform(transform);
@@ -313,7 +315,7 @@ public class Board extends JPanel implements Runnable {
         if (mouseDown)
             switch (type) {
             case PARTICLE:
-                paintParticleCluster(mouseX, mouseY, cursorSize);
+                paintParticleCluster(Mouse.X(), Mouse.Y(), cursorSize);
                 break;
 
             case FORCE:
@@ -321,26 +323,6 @@ public class Board extends JPanel implements Runnable {
             default:
                 break;
             }
-    }
-
-    /**
-     * Collect the current mouse coordinates on the window
-     */
-    private void getMouseInfo() {
-
-        try {
-            mouseX = MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x;
-        } catch (IllegalComponentStateException e2) {
-        }
-
-        try {
-            mouseY = MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y;
-        } catch (IllegalComponentStateException e2) {
-        }
-
-        mouseX /= scale;
-        mouseY /= scale;
-
     }
 
     // Copied this from a tutorial and don't know what it does; don't mess with it:
@@ -354,7 +336,7 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            getMouseInfo();
+            // getMouseInfo();
             dispatchEvent(currentEventT);
             updateBufferedImage();
             repaint();
