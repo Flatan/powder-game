@@ -8,8 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -25,8 +23,12 @@ import ui.Foreground;
 /**
  * Board
  *
- * Displays BufferedImage which is the main visual component
+ * The purpose of the board is to constantly update the buffered image and flush
+ * the next frame to the screen. It passes around a Graphics2D object for other
+ * classes to borrow every iteration but never draws anything independently.
  */
+
+// TODO ^^ Make this true
 
 public class Board extends JPanel implements Runnable {
 
@@ -86,6 +88,7 @@ public class Board extends JPanel implements Runnable {
         addMouseWheelListener(Mouse.wheelControls);
 
         addMouseListener(new MouseAdapter() {
+            // TODO move to ui.Mouse
             public void mousePressed(MouseEvent e) {
                 Logger.log("mouseDown event");
                 mouseDown = true;
@@ -108,10 +111,12 @@ public class Board extends JPanel implements Runnable {
     }
 
     public void setCursorSize(int cursorSize) {
+        // TODO move to ui.Mouse
         this.cursorSize = cursorSize;
     }
 
     public int getCursorSize() {
+        // TODO move to ui.Mouse
         return cursorSize;
     }
 
@@ -142,6 +147,11 @@ public class Board extends JPanel implements Runnable {
         this.scale = s;
     }
 
+    /**
+     * Get the current scale
+     * 
+     * @return
+     */
     public double getScale() {
         return scale;
     }
@@ -173,6 +183,11 @@ public class Board extends JPanel implements Runnable {
         this.DELAY = delay;
     }
 
+    /**
+     * Get the FPS at this exact moment
+     * 
+     * @return
+     */
     public double getFPS() {
         return fps;
     }
@@ -203,7 +218,9 @@ public class Board extends JPanel implements Runnable {
         animator.start();
     }
 
-    // Automatically called whenever the board is redrawn
+    /**
+     * Automatically called whenever the board is redrawn
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -250,8 +267,18 @@ public class Board extends JPanel implements Runnable {
         return particle;
     }
 
-    // Draw a cluster of particles on the screen given (x, y) coords and a diameter
+    /**
+     * Draw a cluster of particles on the screen given (x, y) coords and a diameter
+     * 
+     * @param mx
+     * @param my
+     * @param diameter
+     */
     public void paintParticleCluster(int mx, int my, int diameter) {
+
+        // TODO The only way this method would ever be called is through direct user
+        // input
+        // so maybe belongs in some sort of UIEvents class
 
         ParticleGrid grid = Particle.getGrid();
 
@@ -282,6 +309,8 @@ public class Board extends JPanel implements Runnable {
      */
     private void updateBufferedImage() {
 
+        // TODO bury the fact that the buffered image even exists. All we need is
+        // ParticleGrid().draw(g2). Everything in between is overcomplicating it
         ParticleGrid grid = Particle.getGrid();
 
         grid.updateParticles();
@@ -328,7 +357,6 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            // getMouseInfo();
             dispatchEvent(currentEventT);
             updateBufferedImage();
             repaint();
