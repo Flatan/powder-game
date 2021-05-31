@@ -24,52 +24,52 @@ public class KeyAction implements KeyListener {
         board = Application.board;
 
         switch (e.getKeyChar()) {
-        case 'p':
-            board.setSelectedElement(Granular.class);
-            board.setSelectedColor(Color.white);
-            break;
-        case 's':
-            board.setSelectedElement(Solid.class);
-            board.setSelectedColor(Color.gray);
-            break;
-        case 't':
-            Particle.toggleHeatMap();
-            break;
-        case 'c':
-            board.setSelectedTemp(0);
-            break;
-        case 'w':
-            board.setSelectedTemp(50);
-            break;
-        case 'h':
-            board.setSelectedTemp(100);
-            break;
-        case '0':
-            board.setScale(60);
-            board.setWidth(10);
-            board.setHeight(10);
-            board.setDelay(100);
-            board.reset();
-            break;
-        case '1':
-            Particle.setGravity(-0.5);
-            board.setScale(2);
-            board.setWidth(300);
-            board.setHeight(300);
-            board.setDelay(25);
-            board.reset();
-            break;
-        case '2':
-            Particle.setGravity(-0.5);
-            board.setScale(1);
-            board.setWidth(600);
-            board.setHeight(300);
-            board.setDelay(25);
-            board.reset();
-            break;
-        case ' ':
-            board.testCollison();
-            break;
+            case 'p':
+                board.setSelectedElement(Granular.class);
+                board.setSelectedColor(Color.white);
+                break;
+            case 's':
+                board.setSelectedElement(Solid.class);
+                board.setSelectedColor(Color.gray);
+                break;
+            case 't':
+                Particle.toggleHeatMap();
+                break;
+            case 'c':
+                board.setSelectedTemp(0);
+                break;
+            case 'w':
+                board.setSelectedTemp(50);
+                break;
+            case 'h':
+                board.setSelectedTemp(100);
+                break;
+            case '0':
+                board.setScale(60);
+                board.setWidth(10);
+                board.setHeight(10);
+                board.setDelay(100);
+                board.reset();
+                break;
+            case '1':
+                // Particle.setGravity(-0.5);
+                board.setScale(2);
+                board.setWidth(300);
+                board.setHeight(300);
+                board.setDelay(25);
+                board.reset();
+                break;
+            case '2':
+                // Particle.setGravity(-0.5);
+                board.setScale(1);
+                board.setWidth(600);
+                board.setHeight(600);
+                board.setDelay(25);
+                board.reset();
+                break;
+            case ' ':
+                board.testCollison();
+                break;
         }
     }
 

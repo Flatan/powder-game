@@ -9,7 +9,6 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 
 import javax.swing.JOptionPane;
@@ -188,6 +187,7 @@ public class Board extends JPanel implements Runnable {
 
     public void reset() {
         setBackground(Color.BLACK);
+        Logger.log("Scale: %f", scale);
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
 
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
@@ -231,7 +231,7 @@ public class Board extends JPanel implements Runnable {
         AffineTransform transform = new AffineTransform();
         transform.scale(scale, scale);
         g2.setTransform(transform);
-        // g2.drawImage(image, 0, 0, null);
+
         grid.draw(g2);
 
         g2.drawOval(Mouse.X() - cursorSize / 2, Mouse.Y() - cursorSize / 2, cursorSize, cursorSize);
@@ -300,29 +300,6 @@ public class Board extends JPanel implements Runnable {
             }
         }
     }
-
-    /**
-     * Writes the state of the ParticleGrid to the BufferedImage
-     */
-    // private void updateBufferedImage() {
-    //
-    // TODO bury the fact that the buffered image even exists. All we need is
-    // ParticleGrid().draw(g2). Everything in between is overcomplicating it
-    // ParticleGrid grid = Particle.getGrid();
-    //
-    // grid.updateParticles();
-    //
-    // image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0, 0);
-    //
-    // try {
-    // grid.forEachParticle((particle) -> {
-    // image.setRGB(particle.X(), B_HEIGHT - 1 - particle.Y(),
-    // particle.displayColor.getRGB());
-    // });
-    // } catch (ArrayIndexOutOfBoundsException e) {
-    // }
-    //
-    // }
 
     // Copied this from a tutorial and don't know what it does; don't mess with it:
     // apparently a better way of making a game loop timer
