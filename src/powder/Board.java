@@ -55,7 +55,7 @@ public class Board extends JPanel implements Runnable {
 
     private KeyAction ka = new KeyAction();
 
-    private BufferedImage image;
+    // private BufferedImage image;
     private Thread animator;
     private Particle p = null;
     private Class<? extends Particle> selectedElement = Granular.class;
@@ -192,8 +192,8 @@ public class Board extends JPanel implements Runnable {
 
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         Particle.grid = grid;
-        image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
-        bgGrid = new int[B_WIDTH * B_HEIGHT];
+        // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        // bgGrid = new int[B_WIDTH * B_HEIGHT];
     }
 
     public void testCollison() {
@@ -219,6 +219,7 @@ public class Board extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        ParticleGrid grid = Particle.getGrid();
         Graphics2D g2 = (Graphics2D) g;
         g2.scale(2, 2);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -230,7 +231,9 @@ public class Board extends JPanel implements Runnable {
         AffineTransform transform = new AffineTransform();
         transform.scale(scale, scale);
         g2.setTransform(transform);
-        g2.drawImage(image, 0, 0, null);
+        // g2.drawImage(image, 0, 0, null);
+        grid.draw(g2);
+
         g2.drawOval(Mouse.X() - cursorSize / 2, Mouse.Y() - cursorSize / 2, cursorSize, cursorSize);
         transform.setToIdentity();
 
@@ -301,24 +304,25 @@ public class Board extends JPanel implements Runnable {
     /**
      * Writes the state of the ParticleGrid to the BufferedImage
      */
-    private void updateBufferedImage() {
-
-        // TODO bury the fact that the buffered image even exists. All we need is
-        // ParticleGrid().draw(g2). Everything in between is overcomplicating it
-        ParticleGrid grid = Particle.getGrid();
-
-        grid.updateParticles();
-
-        image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0, 0);
-
-        try {
-            grid.forEachParticle((particle) -> {
-                image.setRGB(particle.X(), B_HEIGHT - 1 - particle.Y(), particle.displayColor.getRGB());
-            });
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-    }
+    // private void updateBufferedImage() {
+    //
+    // TODO bury the fact that the buffered image even exists. All we need is
+    // ParticleGrid().draw(g2). Everything in between is overcomplicating it
+    // ParticleGrid grid = Particle.getGrid();
+    //
+    // grid.updateParticles();
+    //
+    // image.setRGB(0, 0, B_WIDTH, B_HEIGHT, bgGrid, 0, 0);
+    //
+    // try {
+    // grid.forEachParticle((particle) -> {
+    // image.setRGB(particle.X(), B_HEIGHT - 1 - particle.Y(),
+    // particle.displayColor.getRGB());
+    // });
+    // } catch (ArrayIndexOutOfBoundsException e) {
+    // }
+    //
+    // }
 
     // Copied this from a tutorial and don't know what it does; don't mess with it:
     // apparently a better way of making a game loop timer
@@ -331,7 +335,7 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            updateBufferedImage();
+            // updateBufferedImage();
             repaint();
 
             if (mouseDown)

@@ -3,6 +3,8 @@ package powder;
 import java.util.AbstractCollection;
 import java.util.Iterator;
 import java.util.function.Consumer;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
 /**
  * Effectively allows a 2D array of Particles to be used as a cartesian grid.
@@ -12,11 +14,13 @@ class ParticleGrid extends AbstractCollection<Particle> {
   private final Particle[][] a;
   public final int W;
   public final int H;
+  private BufferedImage image;
 
   ParticleGrid(Particle[][] array) {
     a = array;
     W = a.length;
     H = a[0].length;
+    image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
   }
 
   /**
@@ -95,6 +99,26 @@ class ParticleGrid extends AbstractCollection<Particle> {
           action.accept(get(x, y));
       }
     }
+  }
+
+  /**
+   * The single frame drawing entry point used by Board. Rasterizes the 2D array
+   * of Particles into a BufferedImage
+   * 
+   * @param g2 Graphics2D
+   */
+  public void draw(Graphics2D g2) {
+
+    updateParticles();
+    image.setRGB(0, 0, W, H, new int[W * H], 0, 0);
+    try {
+      forEachParticle((particle) -> {
+        image.setRGB(particle.X(), H - 1 - particle.Y(), particle.displayColor.getRGB());
+      });
+    } catch (ArrayIndexOutOfBoundsException e) {
+    }
+
+    g2.drawImage(image, 0, 0, W, H, null);
   }
 
   /**
