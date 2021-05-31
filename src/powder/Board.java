@@ -35,12 +35,6 @@ public class Board extends JPanel implements Runnable {
     public static int runtimeParticleCount = 0;
     // Test comment 2
 
-    private enum EventType {
-        PARTICLE, FORCE
-    }
-
-    private EventType currentEventT = EventType.PARTICLE;
-
     private double scale = 1;
     // Width and height of the grid
     private int B_WIDTH = 600;
@@ -326,26 +320,6 @@ public class Board extends JPanel implements Runnable {
 
     }
 
-    /**
-     * Executes appropriate screen event based on the state of currentEventT
-     * 
-     * @param type Type of event
-     */
-    private void dispatchEvent(EventType type) {
-
-        if (mouseDown)
-            switch (type) {
-                case PARTICLE:
-                    paintParticleCluster(Mouse.X(), Mouse.Y(), cursorSize);
-                    break;
-
-                case FORCE:
-
-                default:
-                    break;
-            }
-    }
-
     // Copied this from a tutorial and don't know what it does; don't mess with it:
     // apparently a better way of making a game loop timer
     @Override
@@ -357,9 +331,11 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            dispatchEvent(currentEventT);
             updateBufferedImage();
             repaint();
+
+            if (mouseDown)
+                paintParticleCluster(Mouse.X(), Mouse.Y(), cursorSize);
 
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = DELAY - timeDiff;
