@@ -21,7 +21,6 @@ public class PaintParticleCluster extends UIEvent {
     int diameter = (int) (M.getCursorSize()/B.getScale());
     int my = Mouse.Y();
     int mx = Mouse.X();
-    System.out.println(my);
 
     ParticleGrid grid = Particle.getGrid();
 
