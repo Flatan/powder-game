@@ -7,12 +7,19 @@ import powder.Board;
 
 public class Foreground {
 
-      public static void draw(Graphics2D g2) {
+      private Mouse M;
+
+      public Foreground() {
+      }
+
+      public void draw(Graphics2D g2) {
 
             Board board = Application.board;
+            M = board.getMouse();
 
-            g2.drawOval(Mouse.X() - board.cursorSize / 2, Mouse.Y() - board.cursorSize / 2, board.cursorSize,
-                        board.cursorSize);
+            int cursorSize = M.getCursorSize();
+
+            g2.drawOval(Mouse.X() - cursorSize / 2, Mouse.Y() - cursorSize / 2, cursorSize, cursorSize);
 
             g2.drawString("Hotkeys:", 0, 20);
             g2.drawString("p - powder", 0, 40);

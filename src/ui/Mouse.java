@@ -18,19 +18,39 @@ import powder.Board;
 
 public class Mouse {
 
-  public static MouseWheelListener wheelControls = new MouseWheelListener() {
+  private int cursorSize = 20;
+
+  public Mouse() {
+  }
+
+  /**
+   * Returns the cursor size
+   * 
+   * @return
+   */
+  public int getCursorSize() {
+    return cursorSize;
+  }
+
+  /**
+   * Sets the cursor size
+   * 
+   * @param cursorSize
+   */
+  public void setCursorSize(int cursorSize) {
+    this.cursorSize = cursorSize;
+  }
+
+  public MouseWheelListener wheelControls = new MouseWheelListener() {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-      Board board = Application.board;
-      int cursorSize = board.getCursorSize();
-      board.setCursorSize(cursorSize - 2 * e.getWheelRotation());
-
+      cursorSize = (cursorSize - 2 * e.getWheelRotation());
     }
 
   };
 
-  public static MouseAdapter adapter = new MouseAdapter() {
+  public MouseAdapter adapter = new MouseAdapter() {
 
     public void mousePressed(MouseEvent e) {
 

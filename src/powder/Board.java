@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
-import java.lang.reflect.Constructor;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -51,6 +50,7 @@ public class Board extends JPanel implements Runnable {
     public int cursorSize = 20;
 
     private KeyAction ka = new KeyAction();
+    private final Mouse M = new Mouse();
 
     // private BufferedImage image;
     private Thread animator;
@@ -58,10 +58,12 @@ public class Board extends JPanel implements Runnable {
     private Class<? extends Particle> selectedElement = Granular.class;
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
+    private Foreground fg = new Foreground();
 
     public Board() {
 
         initBoard();
+
     }
 
     // Setup initial settings and event listeners
@@ -75,8 +77,8 @@ public class Board extends JPanel implements Runnable {
         setFocusable(true);
 
         addKeyListener(ka);
-        addMouseWheelListener(Mouse.wheelControls);
-        addMouseListener(Mouse.adapter);
+        addMouseWheelListener(M.wheelControls);
+        addMouseListener(M.adapter);
     }
 
     /**
@@ -88,14 +90,13 @@ public class Board extends JPanel implements Runnable {
         this.selectedElement = element;
     }
 
-    public void setCursorSize(int cursorSize) {
-        // TODO move to ui.Mouse
-        this.cursorSize = cursorSize;
-    }
-
-    public int getCursorSize() {
-        // TODO move to ui.Mouse
-        return cursorSize;
+    /**
+     * Get the board's mouse object
+     * 
+     * @return
+     */
+    public Mouse getMouse() {
+        return M;
     }
 
     /**
@@ -225,7 +226,7 @@ public class Board extends JPanel implements Runnable {
 
         g2.setTransform(transform);
 
-        Foreground.draw(g2);
+        fg.draw(g2);
     }
 
     /**
@@ -280,7 +281,7 @@ public class Board extends JPanel implements Runnable {
             repaint();
 
             if (mouseDown)
-                paintParticleCluster(Mouse.X(), Mouse.Y(), cursorSize);
+                paintParticleCluster(Mouse.X(), Mouse.Y(), M.getCursorSize());
 
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = DELAY - timeDiff;
