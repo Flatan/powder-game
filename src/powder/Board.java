@@ -44,7 +44,6 @@ public class Board extends JPanel implements Runnable {
 
     // Mouse conditions
     private int prevX, prevY;
-    public boolean mouseDown = false;
 
     // Defines the area of powder placement
     public int cursorSize = 20;
@@ -246,13 +245,6 @@ public class Board extends JPanel implements Runnable {
 
         my = B_HEIGHT - 1 - my;
 
-        if (prevX != mx && prevY != my) {
-            Logger.log("particleCluster (%d,%d)", mx, my);
-        }
-
-        prevX = mx;
-        prevY = my;
-
         for (int x = mx - diameter / 2; x < mx + diameter / 2; x++) {
             for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
@@ -280,7 +272,7 @@ public class Board extends JPanel implements Runnable {
             // updateBufferedImage();
             repaint();
 
-            if (mouseDown)
+            if (M.isDown)
                 paintParticleCluster(Mouse.X(), Mouse.Y(), M.getCursorSize());
 
             timeDiff = System.currentTimeMillis() - beforeTime;

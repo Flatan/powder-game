@@ -19,6 +19,7 @@ import powder.Board;
 public class Mouse {
 
   private int cursorSize = 20;
+  public boolean isDown = false;
 
   public Mouse() {
   }
@@ -55,12 +56,12 @@ public class Mouse {
     public void mousePressed(MouseEvent e) {
 
       Logger.log("mouseDown event");
-      Application.board.mouseDown = true;
+      isDown = true;
     }
 
     public void mouseReleased(MouseEvent e) {
       Logger.log("mouseReleased event");
-      Application.board.mouseDown = false;
+      isDown = false;
     }
 
   };
