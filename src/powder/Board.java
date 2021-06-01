@@ -230,28 +230,6 @@ public class Board extends JPanel implements Runnable {
     }
 
     /**
-     * Convenience method to initialize a new particle and add it to the cartesian
-     * grid
-     * 
-     * @param x X coordinate
-     * @param y Y coordinate
-     */
-    private Particle spawnParticle(int x, int y, Color color, Class<? extends Particle> elementType) {
-
-        ParticleGrid grid = Particle.getGrid();
-
-        Particle particle = null;
-        try {
-            Constructor<?> cons = elementType.getDeclaredConstructor(int.class, int.class, Color.class);
-            particle = (Particle) cons.newInstance(x, y, color);
-        } catch (Throwable e) {
-            System.out.println(e);
-        }
-        grid.set(x, y, particle);
-        return particle;
-    }
-
-    /**
      * Draw a cluster of particles on the screen given (x, y) coords and a diameter
      * 
      * @param mx
