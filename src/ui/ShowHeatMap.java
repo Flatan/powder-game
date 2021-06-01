@@ -18,7 +18,7 @@ public class ShowHeatMap extends UIEvent {
   }
 
   @Override
-  public boolean isActive() {
+  public boolean sendingSignal() {
 
     Board B = Application.getBoard();
     KeyAction K = B.getKeyboard();

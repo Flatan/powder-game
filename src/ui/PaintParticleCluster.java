@@ -40,7 +40,7 @@ public class PaintParticleCluster extends UIEvent {
   }
 
   @Override
-  public boolean isActive() {
+  public boolean sendingSignal() {
 
     Board B = Application.getBoard();
     Mouse M = B.getMouse();

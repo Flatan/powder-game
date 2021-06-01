@@ -9,7 +9,7 @@ abstract public class UIEvent {
 
   }
 
-  public abstract boolean isActive();
+  public abstract boolean sendingSignal();
 
   public abstract void eventOn();
 
