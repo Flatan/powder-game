@@ -48,7 +48,7 @@ public class Board extends JPanel implements Runnable {
     public boolean mouseDown = false;
 
     // Defines the area of powder placement
-    private int cursorSize = 20;
+    public int cursorSize = 20;
 
     private KeyAction ka = new KeyAction();
 
@@ -221,7 +221,6 @@ public class Board extends JPanel implements Runnable {
 
         grid.draw(g2);
 
-        g2.drawOval(Mouse.X() - cursorSize / 2, Mouse.Y() - cursorSize / 2, cursorSize, cursorSize);
         transform.setToIdentity();
 
         g2.setTransform(transform);

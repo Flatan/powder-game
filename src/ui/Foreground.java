@@ -11,6 +11,9 @@ public class Foreground {
 
             Board board = Application.board;
 
+            g2.drawOval(Mouse.X() - board.cursorSize / 2, Mouse.Y() - board.cursorSize / 2, board.cursorSize,
+                        board.cursorSize);
+
             g2.drawString("Hotkeys:", 0, 20);
             g2.drawString("p - powder", 0, 40);
             g2.drawString("s - solid", 0, 60);
