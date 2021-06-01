@@ -65,30 +65,51 @@ public class Mouse {
 
   public static int X() {
 
-    Board B = Application.getBoard();
-
-    try {
-      int mx = MouseInfo.getPointerInfo().getLocation().x - B.getLocationOnScreen().x;
-      mx /= B.getScale();
-      return mx;
-
-    } catch (IllegalComponentStateException e) {
-      return 0;
-    }
+	Board B = Application.getBoard();
+    return (int) (windowX()/B.getScale());
 
   }
 
   public static int Y() {
-
-    Board B = Application.getBoard();
-
-    try {
-      int my = MouseInfo.getPointerInfo().getLocation().y - B.getLocationOnScreen().y;
-      my /= B.getScale();
-      return my;
-    } catch (IllegalComponentStateException e) {
-      return 0;
-    }
+	Board B = Application.getBoard();
+    return (int) (windowY()/B.getScale());
   }
+  
+  
+  /**
+   * Returns the x position of the cursor on the window rather than the grid (i.e. unadjusted for scale)
+   * @return the x position
+   */
+  public static int windowX() {
+
+	    
+	  Board B = Application.getBoard();
+	    try {
+	      int mx = MouseInfo.getPointerInfo().getLocation().x - B.getLocationOnScreen().x;
+	      return mx;
+
+	    } catch (IllegalComponentStateException e) {
+	      return 0;
+	    }
+
+	  }
+  
+  /**
+   * Returns the y position of the cursor on the window rather than the grid (i.e. unadjusted for scale)
+   * @return the y position
+   */
+  public static int windowY() {
+
+	    Board B = Application.getBoard();
+
+	    try {
+	      int my = MouseInfo.getPointerInfo().getLocation().y - B.getLocationOnScreen().y;
+	      return my;
+	    } catch (IllegalComponentStateException e) {
+	      return 0;
+	    }
+	  }
 
 }
+
+

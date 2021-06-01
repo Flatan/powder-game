@@ -21,7 +21,7 @@ public class Foreground {
 
             int cursorSize = M.getCursorSize();
 
-            g2.drawOval(Mouse.X() - cursorSize / 2, Mouse.Y() - cursorSize / 2, cursorSize, cursorSize);
+            g2.drawOval(Mouse.windowX() - cursorSize / 2, Mouse.windowY() - cursorSize / 2, cursorSize, cursorSize);
 
             g2.drawString("Hotkeys:", 0, 20);
             g2.drawString("p - powder", 0, 40);
@@ -37,7 +37,7 @@ public class Foreground {
                   g2.setColor(Color.red);
             else
                   g2.setColor(Color.white);
-            g2.drawString(String.format("FPS: %.2f", B.getFPS()), B.getWidth() * (int) B.getScale() - 100, 20);
+            g2.drawString(String.format("FPS: %.2f", B.getFPS()), B.getWidth() - 100, 20);
       }
 
 }
