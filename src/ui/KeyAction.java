@@ -11,7 +11,7 @@ import powder.Particle;
 
 public class KeyAction implements KeyListener {
 
-    private Board board;
+    private Board B;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -21,54 +21,54 @@ public class KeyAction implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        board = Application.board;
+        B = Application.getBoard();
 
         switch (e.getKeyChar()) {
             case 'p':
-                board.setSelectedElement(Granular.class);
-                board.setSelectedColor(Color.white);
+                B.setSelectedElement(Granular.class);
+                B.setSelectedColor(Color.white);
                 break;
             case 's':
-                board.setSelectedElement(Solid.class);
-                board.setSelectedColor(Color.gray);
+                B.setSelectedElement(Solid.class);
+                B.setSelectedColor(Color.gray);
                 break;
             case 't':
                 Particle.toggleHeatMap();
                 break;
             case 'c':
-                board.setSelectedTemp(0);
+                B.setSelectedTemp(0);
                 break;
             case 'w':
-                board.setSelectedTemp(50);
+                B.setSelectedTemp(50);
                 break;
             case 'h':
-                board.setSelectedTemp(100);
+                B.setSelectedTemp(100);
                 break;
             case '0':
-                board.setScale(60);
-                board.setWidth(10);
-                board.setHeight(10);
-                board.setDelay(100);
-                board.reset();
+                B.setScale(60);
+                B.setWidth(10);
+                B.setHeight(10);
+                B.setDelay(100);
+                B.reset();
                 break;
             case '1':
                 // Particle.setGravity(-0.5);
-                board.setScale(2);
-                board.setWidth(300);
-                board.setHeight(300);
-                board.setDelay(25);
-                board.reset();
+                B.setScale(2);
+                B.setWidth(300);
+                B.setHeight(300);
+                B.setDelay(25);
+                B.reset();
                 break;
             case '2':
                 // Particle.setGravity(-0.5);
-                board.setScale(1);
-                board.setWidth(600);
-                board.setHeight(600);
-                board.setDelay(25);
-                board.reset();
+                B.setScale(1);
+                B.setWidth(600);
+                B.setHeight(600);
+                B.setDelay(25);
+                B.reset();
                 break;
             case ' ':
-                board.testCollison();
+                B.testCollison();
                 break;
         }
     }

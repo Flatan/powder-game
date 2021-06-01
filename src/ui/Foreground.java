@@ -8,14 +8,16 @@ import powder.Board;
 public class Foreground {
 
       private Mouse M;
+      private Board B;
 
       public Foreground() {
+
       }
 
       public void draw(Graphics2D g2) {
 
-            Board board = Application.board;
-            M = board.getMouse();
+            B = Application.getBoard();
+            M = B.getMouse();
 
             int cursorSize = M.getCursorSize();
 
@@ -31,12 +33,11 @@ public class Foreground {
             g2.drawString("1 - low resolution", 0, 160);
             g2.drawString("2 - high resolution", 0, 180);
 
-            if (board.getFPS() < 40)
+            if (B.getFPS() < 40)
                   g2.setColor(Color.red);
             else
                   g2.setColor(Color.white);
-            g2.drawString(String.format("FPS: %.2f", board.getFPS()), board.getWidth() * (int) board.getScale() - 100,
-                        20);
+            g2.drawString(String.format("FPS: %.2f", B.getFPS()), B.getWidth() * (int) B.getScale() - 100, 20);
       }
 
 }

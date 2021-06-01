@@ -14,18 +14,19 @@ import javax.swing.JFrame;
  */
 public class Application extends JFrame {
 
-    public static Board board = new Board();
+    private static Board board = new Board();
 
-    public Application() {
+    private Application() {
         initUI();
     }
 
-    // Initialize a board object and set some window settings
+    /**
+     * Adds the JPanel board to the JFrame application and sets some configuration
+     * settings
+     */
     private void initUI() {
 
-        // add(new Board());
-
-        add(Application.board);
+        add(board);
         setResizable(false);
         pack();
 
@@ -35,7 +36,20 @@ public class Application extends JFrame {
 
     }
 
-    // Application entry point
+    /**
+     * Returns the main application board
+     * 
+     * @return
+     */
+    public static Board getBoard() {
+        return board;
+    }
+
+    /**
+     * Entry point
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
 
         EventQueue.invokeLater(() -> {

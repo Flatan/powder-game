@@ -68,11 +68,11 @@ public class Mouse {
 
   public static int X() {
 
-    Board board = Application.board;
+    Board B = Application.getBoard();
 
     try {
-      int mx = MouseInfo.getPointerInfo().getLocation().x - board.getLocationOnScreen().x;
-      mx /= board.getScale();
+      int mx = MouseInfo.getPointerInfo().getLocation().x - B.getLocationOnScreen().x;
+      mx /= B.getScale();
       return mx;
 
     } catch (IllegalComponentStateException e) {
@@ -83,11 +83,11 @@ public class Mouse {
 
   public static int Y() {
 
-    Board board = Application.board;
+    Board B = Application.getBoard();
 
     try {
-      int my = MouseInfo.getPointerInfo().getLocation().y - board.getLocationOnScreen().y;
-      my /= board.getScale();
+      int my = MouseInfo.getPointerInfo().getLocation().y - B.getLocationOnScreen().y;
+      my /= B.getScale();
       return my;
     } catch (IllegalComponentStateException e) {
       return 0;
