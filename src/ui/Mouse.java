@@ -3,10 +3,14 @@ package ui;
 import java.awt.MouseInfo;
 
 import java.awt.IllegalComponentStateException;
-import powder.Application;
-import powder.Board;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import powder.Logger;
+import powder.Application;
+import powder.Board;
 
 /**
  * Collect the current mouse coordinates on the window
@@ -22,6 +26,21 @@ public class Mouse {
       int cursorSize = board.getCursorSize();
       board.setCursorSize(cursorSize - 2 * e.getWheelRotation());
 
+    }
+
+  };
+
+  public static MouseAdapter adapter = new MouseAdapter() {
+
+    public void mousePressed(MouseEvent e) {
+
+      Logger.log("mouseDown event");
+      Application.board.mouseDown = true;
+    }
+
+    public void mouseReleased(MouseEvent e) {
+      Logger.log("mouseReleased event");
+      Application.board.mouseDown = false;
     }
 
   };

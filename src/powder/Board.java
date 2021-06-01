@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.lang.reflect.Constructor;
 
@@ -47,7 +45,7 @@ public class Board extends JPanel implements Runnable {
 
     // Mouse conditions
     private int prevX, prevY;
-    private boolean mouseDown = false;
+    public boolean mouseDown = false;
 
     // Defines the area of powder placement
     private int cursorSize = 20;
@@ -60,7 +58,6 @@ public class Board extends JPanel implements Runnable {
     private Class<? extends Particle> selectedElement = Granular.class;
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
-    private int[] bgGrid;
 
     public Board() {
 
@@ -79,19 +76,7 @@ public class Board extends JPanel implements Runnable {
 
         addKeyListener(ka);
         addMouseWheelListener(Mouse.wheelControls);
-
-        addMouseListener(new MouseAdapter() {
-            // TODO move to ui.Mouse
-            public void mousePressed(MouseEvent e) {
-                Logger.log("mouseDown event");
-                mouseDown = true;
-            }
-
-            public void mouseReleased(MouseEvent e) {
-                Logger.log("mouseReleased event");
-                mouseDown = false;
-            }
-        });
+        addMouseListener(Mouse.adapter);
     }
 
     /**
