@@ -22,6 +22,7 @@ public class KeyAction implements KeyListener {
     public void keyPressed(KeyEvent e) {
 
         B = Application.getBoard();
+        UIEvent E = B.getUIEvents();
 
         switch (e.getKeyChar()) {
             case 'p':
@@ -33,7 +34,7 @@ public class KeyAction implements KeyListener {
                 B.setSelectedColor(Color.gray);
                 break;
             case 't':
-                Particle.toggleHeatMap();
+                UIEvent.toggleHeatMap();
                 break;
             case 'c':
                 B.setSelectedTemp(0);

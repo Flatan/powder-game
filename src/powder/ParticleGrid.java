@@ -11,7 +11,7 @@ import java.lang.reflect.Constructor;
 /**
  * Effectively allows a 2D array of Particles to be used as a cartesian grid.
  */
-class ParticleGrid extends AbstractCollection<Particle> {
+public class ParticleGrid extends AbstractCollection<Particle> {
 
   private final Particle[][] a;
   public final int W;

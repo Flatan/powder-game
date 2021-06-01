@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import color.ColorGradientMap;
 import ui.KeyAction;
 import ui.Mouse;
+import ui.UIEvent;
 import ui.Foreground;
 
 /**
@@ -42,15 +43,12 @@ public class Board extends JPanel implements Runnable {
     // Measures the framerate
     private double fps = 0;
 
-    // Mouse conditions
-    private int prevX, prevY;
-
     // Defines the area of powder placement
     public int cursorSize = 20;
 
     private KeyAction ka = new KeyAction();
     private final Mouse M = new Mouse();
-
+    private UIEvent E = new UIEvent();
     // private BufferedImage image;
     private Thread animator;
     private Particle p = null;
@@ -72,9 +70,7 @@ public class Board extends JPanel implements Runnable {
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
         Particle.heatmap.addColor(100, Color.RED);
-
         setFocusable(true);
-
         addKeyListener(ka);
         addMouseWheelListener(M.wheelControls);
         addMouseListener(M.adapter);
@@ -89,6 +85,10 @@ public class Board extends JPanel implements Runnable {
         this.selectedElement = element;
     }
 
+    public Class<? extends Particle> getSelectedElement() {
+        return selectedElement;
+    }
+
     /**
      * Get the board's mouse object
      * 
@@ -96,6 +96,10 @@ public class Board extends JPanel implements Runnable {
      */
     public Mouse getMouse() {
         return M;
+    }
+
+    public UIEvent getUIEvents() {
+        return E;
     }
 
     /**
@@ -108,12 +112,30 @@ public class Board extends JPanel implements Runnable {
     }
 
     /**
+     * Get the color of the current element
+     *
+     * @return Color
+     */
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
+
+    /**
      * Set the selected temp
      * 
      * @param temp
      */
     public void setSelectedTemp(double temp) {
         this.selectedTemp = temp;
+    }
+
+    /**
+     * Get the selected temp
+     *
+     * @return double
+     */
+    public double getSelectedTemp() {
+        return selectedTemp;
     }
 
     /**
@@ -228,36 +250,6 @@ public class Board extends JPanel implements Runnable {
         fg.draw(g2);
     }
 
-    /**
-     * Draw a cluster of particles on the screen given (x, y) coords and a diameter
-     * 
-     * @param mx
-     * @param my
-     * @param diameter
-     */
-    public void paintParticleCluster(int mx, int my, int diameter) {
-
-        // TODO The only way this method would ever be called is through direct user
-        // input
-        // so maybe belongs in some sort of UIEvents class
-
-        ParticleGrid grid = Particle.getGrid();
-
-        my = B_HEIGHT - 1 - my;
-
-        for (int x = mx - diameter / 2; x < mx + diameter / 2; x++) {
-            for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
-
-                if (!grid.outOfBounds(x, y))
-                    if (grid.get(x, y) == null)
-                        if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                            Particle p = grid.spawnParticle(x, y, selectedColor, selectedElement);
-                            p.temperature = selectedTemp;
-                        }
-            }
-        }
-    }
-
     // Copied this from a tutorial and don't know what it does; don't mess with it:
     // apparently a better way of making a game loop timer
     @Override
@@ -269,11 +261,8 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            // updateBufferedImage();
+            E.paintParticleCluster();
             repaint();
-
-            if (M.isDown)
-                paintParticleCluster(Mouse.X(), Mouse.Y(), M.getCursorSize());
 
             timeDiff = System.currentTimeMillis() - beforeTime;
             sleep = DELAY - timeDiff;

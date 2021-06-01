@@ -8,7 +8,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import powder.Logger;
 import powder.Application;
 import powder.Board;
 
@@ -20,6 +19,7 @@ public class Mouse {
 
   private int cursorSize = 20;
   public boolean isDown = false;
+  private Board B = Application.getBoard();
 
   public Mouse() {
   }
@@ -54,14 +54,11 @@ public class Mouse {
   public MouseAdapter adapter = new MouseAdapter() {
 
     public void mousePressed(MouseEvent e) {
-
-      Logger.log("mouseDown event");
-      isDown = true;
+      Application.getBoard().getUIEvents().activate();
     }
 
     public void mouseReleased(MouseEvent e) {
-      Logger.log("mouseReleased event");
-      isDown = false;
+      Application.getBoard().getUIEvents().deactivate();
     }
 
   };
