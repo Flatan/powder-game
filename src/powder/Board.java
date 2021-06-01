@@ -283,15 +283,12 @@ public class Board extends JPanel implements Runnable {
         while (true) {
 
             for (int i = 0; i < UIevents.size(); i++) {
-
-                    UIEvent instance = UIevents.get(i);
-                    if (instance.sendingSignal()) {
-                        instance.eventOn();
-                    } else {
-                        instance.eventOff();
-                    }
+                UIEvent instance = UIevents.get(i);
+                if (instance.sendingSignal()) {
+                    instance.eventOn();
+                } else {
+                    instance.eventOff();
                 }
-
             }
 
             repaint();
