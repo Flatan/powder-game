@@ -176,16 +176,18 @@ public class Board extends JPanel implements Runnable {
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
 
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
+
         Particle.grid = grid;
         // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         // bgGrid = new int[B_WIDTH * B_HEIGHT];
     }
 
     public void testCollison() {
+        ParticleGrid grid = Particle.getGrid();
         Particle.gravity = 0;
-        Granular p1 = (Granular) spawnParticle(0, 5, Color.WHITE, Granular.class);
+        Granular p1 = (Granular) grid.spawnParticle(0, 5, Color.WHITE, Granular.class);
         p1.velX = 0.1;
-        Granular p2 = (Granular) spawnParticle(9, 5, Color.WHITE, Granular.class);
+        Granular p2 = (Granular) grid.spawnParticle(9, 5, Color.WHITE, Granular.class);
         p2.velX = -0.1;
     }
 
@@ -279,7 +281,7 @@ public class Board extends JPanel implements Runnable {
                 if (!grid.outOfBounds(x, y))
                     if (grid.get(x, y) == null)
                         if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                            Particle p = spawnParticle(x, y, selectedColor, selectedElement);
+                            Particle p = grid.spawnParticle(x, y, selectedColor, selectedElement);
                             p.temperature = selectedTemp;
                         }
             }

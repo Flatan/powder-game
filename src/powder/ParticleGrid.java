@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
+import java.awt.Color;
+import java.lang.reflect.Constructor;
 
 /**
  * Effectively allows a 2D array of Particles to be used as a cartesian grid.
@@ -119,6 +121,27 @@ class ParticleGrid extends AbstractCollection<Particle> {
     }
 
     g2.drawImage(image, 0, 0, W, H, null);
+  }
+
+  /**
+   * Initialize a new particle on the grid of a specific type
+   * 
+   * @param x           X coordinate
+   * @param y           Y coordinate
+   * @param elementType Class which extends Particle
+   * 
+   */
+  public Particle spawnParticle(int x, int y, Color color, Class<? extends Particle> elementType) {
+
+    Particle particle = null;
+    try {
+      Constructor<?> cons = elementType.getDeclaredConstructor(int.class, int.class, Color.class);
+      particle = (Particle) cons.newInstance(x, y, color);
+    } catch (Throwable e) {
+      System.out.println(e);
+    }
+    set(x, y, particle);
+    return particle;
   }
 
   /**
