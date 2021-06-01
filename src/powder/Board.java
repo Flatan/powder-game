@@ -57,7 +57,7 @@ public class Board extends JPanel implements Runnable {
     private Particle p = null;
 
     private Class<? extends Particle> selectedElement = Granular.class;
-    private ArrayList<Class<? extends UIEvent>> UIevents = new ArrayList<Class<? extends UIEvent>>();
+    private ArrayList<UIEvent> UIevents = new ArrayList<UIEvent>();
 
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
@@ -206,7 +206,12 @@ public class Board extends JPanel implements Runnable {
 
     private void connectEvent(Class<? extends UIEvent> event) {
 
-        UIevents.add(event);
+        try {
+            UIEvent instance = event.getDeclaredConstructor().newInstance();
+            UIevents.add(instance);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     public void reset() {
@@ -279,15 +284,12 @@ public class Board extends JPanel implements Runnable {
 
             for (int i = 0; i < UIevents.size(); i++) {
 
-                try {
-
-                    UIEvent instance = UIevents.get(i).getDeclaredConstructor().newInstance();
+                    UIEvent instance = UIevents.get(i);
                     if (instance.sendingSignal()) {
                         instance.eventOn();
                     } else {
                         instance.eventOff();
                     }
-                } catch (Exception e) {
                 }
 
             }
