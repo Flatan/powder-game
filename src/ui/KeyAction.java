@@ -7,11 +7,43 @@ import powder.Board;
 import powder.Granular;
 import powder.Solid;
 import powder.Application;
-import powder.Particle;
 
 public class KeyAction implements KeyListener {
 
     private Board B;
+    private char lastKeyPressed;
+    private char prevKeyPressed = Character.MIN_VALUE;
+    private int sameKeyCount = 1;
+
+    public char lastKeyPressed() {
+        return lastKeyPressed;
+    }
+
+    public char prevKeyPressed() {
+        return prevKeyPressed;
+    }
+
+    public int keyRepeated(char c) {
+
+        if (lastKeyPressed == c) {
+            return sameKeyCount;
+        }
+        return 0;
+    }
+
+    public boolean keyToggled(char c) {
+
+        if (keyRepeated(c) % 2 == 1) {
+            return true;
+        }
+
+        if (lastKeyPressed == c && (lastKeyPressed != prevKeyPressed)) {
+            System.out.println(keyRepeated(c));
+            return true;
+        }
+
+        return false;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -22,7 +54,16 @@ public class KeyAction implements KeyListener {
     public void keyPressed(KeyEvent e) {
 
         B = Application.getBoard();
-        UIEvent E = B.getUIEvents();
+        // UIEvent E = B.getUIEvents();
+
+        prevKeyPressed = lastKeyPressed;
+        lastKeyPressed = e.getKeyChar();
+
+        if (lastKeyPressed == prevKeyPressed) {
+            sameKeyCount++;
+        } else {
+            sameKeyCount = 1;
+        }
 
         switch (e.getKeyChar()) {
             case 'p':
@@ -34,7 +75,7 @@ public class KeyAction implements KeyListener {
                 B.setSelectedColor(Color.gray);
                 break;
             case 't':
-                UIEvent.toggleHeatMap();
+                // UIEvent.toggleHeatMap();
                 break;
             case 'c':
                 B.setSelectedTemp(0);

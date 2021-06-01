@@ -54,11 +54,11 @@ public class Mouse {
   public MouseAdapter adapter = new MouseAdapter() {
 
     public void mousePressed(MouseEvent e) {
-      Application.getBoard().getUIEvents().activate();
+      isDown = true;
     }
 
     public void mouseReleased(MouseEvent e) {
-      Application.getBoard().getUIEvents().deactivate();
+      isDown = false;
     }
 
   };

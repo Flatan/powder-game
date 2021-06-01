@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,6 +15,8 @@ import javax.swing.JPanel;
 import color.ColorGradientMap;
 import ui.KeyAction;
 import ui.Mouse;
+import ui.PaintParticleCluster;
+import ui.ShowHeatMap;
 import ui.UIEvent;
 import ui.Foreground;
 
@@ -48,11 +51,14 @@ public class Board extends JPanel implements Runnable {
 
     private KeyAction ka = new KeyAction();
     private final Mouse M = new Mouse();
-    private UIEvent E = new UIEvent();
+    // private UIEvent E = new UIEvent();
     // private BufferedImage image;
     private Thread animator;
     private Particle p = null;
+
     private Class<? extends Particle> selectedElement = Granular.class;
+    private ArrayList<Class<? extends UIEvent>> UIevents = new ArrayList<Class<? extends UIEvent>>();
+
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
     private Foreground fg = new Foreground();
@@ -66,6 +72,9 @@ public class Board extends JPanel implements Runnable {
     // Setup initial settings and event listeners
     private void initBoard() {
         reset();
+
+        connectEvent(PaintParticleCluster.class);
+        connectEvent(ShowHeatMap.class);
 
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
@@ -98,9 +107,12 @@ public class Board extends JPanel implements Runnable {
         return M;
     }
 
-    public UIEvent getUIEvents() {
-        return E;
+    public KeyAction getKeyboard() {
+        return ka;
     }
+    // public UIEvent getUIEvents() {
+    // return E;
+    // }
 
     /**
      * Set the color of the current element
@@ -192,6 +204,11 @@ public class Board extends JPanel implements Runnable {
         return fps;
     }
 
+    private void connectEvent(Class<? extends UIEvent> event) {
+
+        UIevents.add(event);
+    }
+
     public void reset() {
         setBackground(Color.BLACK);
         Logger.log("Scale: %f", scale);
@@ -236,7 +253,6 @@ public class Board extends JPanel implements Runnable {
 
         // The state of the game grid is drawn to an image buffer,
         // which is then drawn to the screen
-
         AffineTransform transform = new AffineTransform();
         transform.scale(scale, scale);
         g2.setTransform(transform);
@@ -261,7 +277,21 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            E.paintParticleCluster();
+            for (int i = 0; i < UIevents.size(); i++) {
+
+                try {
+
+                    UIEvent instance = UIevents.get(i).getDeclaredConstructor().newInstance();
+                    if (instance.isActive()) {
+                        instance.eventOn();
+                    } else {
+                        instance.eventOff();
+                    }
+                } catch (Exception e) {
+                }
+
+            }
+
             repaint();
 
             timeDiff = System.currentTimeMillis() - beforeTime;
