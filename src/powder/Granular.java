@@ -38,8 +38,7 @@ public class Granular extends Particle {
 
 			else if (!testRel(1, 0) && !testRel(1, -1) && (testRel(-1, 0) || testRel(-1, -1)) && supported()) {
 				velX = 1;
-			}
-			else {
+			} else {
 				velX = 0;
 			}
 
@@ -115,18 +114,17 @@ public class Granular extends Particle {
 	 *              higher for fun bouncy effect
 	 */
 	public void collide(Particle other, double cR) {
-	
+
 		BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
-		
+
 		double tempVelX = velX;
 		double tempVelY = velY;
-		
+
 		velX = newVel.apply(velX, other.velX);
 		velY = newVel.apply(velY, other.velY);
 
 		other.velX = newVel.apply(other.velX, tempVelX);
 		other.velY = newVel.apply(other.velY, tempVelY);
-
 
 	}
 

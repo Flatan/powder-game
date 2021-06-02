@@ -1,4 +1,4 @@
-package powder;
+package core;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import color.ColorGradientMap;
 import ui.KeyAction;
@@ -19,6 +22,8 @@ import ui.PaintParticleCluster;
 import ui.ShowHeatMap;
 import ui.UIEvent;
 import ui.Foreground;
+import ui.GlobalSettings;
+import powder.*;
 
 /**
  * Board
@@ -75,6 +80,7 @@ public class Board extends JPanel implements Runnable {
 
         connectEvent(PaintParticleCluster.class);
         connectEvent(ShowHeatMap.class);
+        connectEvent(GlobalSettings.class);
 
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
@@ -216,23 +222,11 @@ public class Board extends JPanel implements Runnable {
 
     public void reset() {
         setBackground(Color.BLACK);
-        Logger.log("Scale: %f", scale);
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
-
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
-
         Particle.grid = grid;
         // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         // bgGrid = new int[B_WIDTH * B_HEIGHT];
-    }
-
-    public void testCollison() {
-        ParticleGrid grid = Particle.getGrid();
-        Particle.gravity = 0;
-        Granular p1 = (Granular) grid.spawnParticle(0, 5, Color.WHITE, Granular.class);
-        p1.velX = 0.1;
-        Granular p2 = (Granular) grid.spawnParticle(9, 5, Color.WHITE, Granular.class);
-        p2.velX = -0.1;
     }
 
     @Override
@@ -277,26 +271,53 @@ public class Board extends JPanel implements Runnable {
     public void run() {
 
         long beforeTime, timeDiff, sleep;
+        char prevInstance = Character.MIN_VALUE;
+
+        HashSet<UIEvent> ActiveEventBuffer = new HashSet<UIEvent>();
 
         beforeTime = System.currentTimeMillis();
 
         while (true) {
 
-            
-            for (UIEvent instance: UIevents) {
-            	if (instance.sendingSignal()) {
-                    instance.eventOn();
+            // Allows the KeyPressed() event to deliver the key only once
+            // by immediately switching instanceBuffer back to "MIN_VALUE"
+            // (char placeholder for "null")
+            if (ka.instanceBuffer == prevInstance) {
+                ka.instanceBuffer = Character.MIN_VALUE;
+            } else {
+                prevInstance = ka.instanceBuffer;
+            }
+
+            // Stream each UIEvent if its "sendingSignal()" gate is open
+            for (UIEvent E : UIevents) {
+                if (E.sendingSignal()) {
+
+                    if (!ActiveEventBuffer.contains(E)) {
+                        E.eventOn(true);
+                        ActiveEventBuffer.add(E);
+                    } else {
+                        E.eventOn(false);
+                    }
                 } else {
-                    instance.eventOff();
+
+                    if (ActiveEventBuffer.contains(E)) {
+                        E.eventOff(true);
+                        ActiveEventBuffer.remove(E);
+                    } else {
+                        E.eventOff(false);
+                    }
                 }
             }
-            
-            //The particles can't be updated from within the paintComponent method because
-            //for some dumb reason repaint() doesn't wait to finish running before the program continues on
-            //and it breaks the framerate counter so I had to move updateParticles() out here
-            
-            //Also potentially means the drawing of buffered image could be causing lag not registered by
-            //the counter but idk
+
+            // The particles can't be updated from within the paintComponent method because
+            // for some dumb reason repaint() doesn't wait to finish running before the
+            // program continues on
+            // and it breaks the framerate counter so I had to move updateParticles() out
+            // here
+
+            // Also potentially means the drawing of buffered image could be causing lag not
+            // registered by
+            // the counter but idk
             Particle.getGrid().updateParticles();
             repaint();
 
