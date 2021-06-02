@@ -20,7 +20,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   private BufferedImage image;
   private HashSet<Particle> particles = new HashSet<Particle>();
 
-  ParticleGrid(Particle[][] array) {
+  public ParticleGrid(Particle[][] array) {
     a = array;
     W = a.length;
     H = a[0].length;

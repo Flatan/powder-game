@@ -1,32 +1,32 @@
 package ui;
 
 import powder.*;
+import core.*;
 
 /**
  * PaintParticleCluster
  */
-public class PaintParticleCluster extends UIEvent {
+public class PaintParticleCluster implements UIEvent {
 
   @Override
-  public void eventOff() {
+  public void eventOff(boolean justEnded) {
 
   }
 
   @Override
-  public void eventOn() {
+  public void eventOn(boolean justStarted) {
 
     Board B = Application.getBoard();
     Mouse M = B.getMouse();
 
-    int diameter = (int) (M.getCursorSize()/B.getScale());
+    int diameter = (int) (M.getCursorSize() / B.getScale());
     int my = Mouse.Y();
     int mx = Mouse.X();
 
     ParticleGrid grid = Particle.getGrid();
 
-    my = (int) (B.getHeight()/B.getScale() - 1 - my);
-    
-    
+    my = (int) (B.getHeight() / B.getScale() - 1 - my);
+
     for (int x = mx - diameter / 2; x < mx + diameter / 2; x++) {
       for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
@@ -42,7 +42,6 @@ public class PaintParticleCluster extends UIEvent {
 
   @Override
   public boolean sendingSignal() {
-
     Board B = Application.getBoard();
     Mouse M = B.getMouse();
 
