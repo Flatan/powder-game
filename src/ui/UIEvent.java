@@ -3,16 +3,13 @@ package ui;
 import powder.Board;
 import powder.*;
 
-abstract public class UIEvent {
+/**
+ * UIEvent
+ */
+public interface UIEvent {
+  public boolean sendingSignal();
 
-  public UIEvent() {
+  public void eventOn();
 
-  }
-
-  public abstract boolean sendingSignal();
-
-  public abstract void eventOn();
-
-  public abstract void eventOff();
-
+  public void eventOff();
 }

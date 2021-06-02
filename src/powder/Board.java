@@ -282,21 +282,23 @@ public class Board extends JPanel implements Runnable {
 
         while (true) {
 
-            
-            for (UIEvent instance: UIevents) {
-            	if (instance.sendingSignal()) {
+            for (UIEvent instance : UIevents) {
+                if (instance.sendingSignal()) {
                     instance.eventOn();
                 } else {
                     instance.eventOff();
                 }
             }
-            
-            //The particles can't be updated from within the paintComponent method because
-            //for some dumb reason repaint() doesn't wait to finish running before the program continues on
-            //and it breaks the framerate counter so I had to move updateParticles() out here
-            
-            //Also potentially means the drawing of buffered image could be causing lag not registered by
-            //the counter but idk
+
+            // The particles can't be updated from within the paintComponent method because
+            // for some dumb reason repaint() doesn't wait to finish running before the
+            // program continues on
+            // and it breaks the framerate counter so I had to move updateParticles() out
+            // here
+
+            // Also potentially means the drawing of buffered image could be causing lag not
+            // registered by
+            // the counter but idk
             Particle.getGrid().updateParticles();
             repaint();
 

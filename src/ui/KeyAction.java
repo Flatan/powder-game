@@ -3,6 +3,8 @@ package ui;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+
 import powder.Board;
 import powder.Granular;
 import powder.Solid;
@@ -14,6 +16,7 @@ public class KeyAction implements KeyListener {
     private char lastKeyPressed;
     private char prevKeyPressed = Character.MIN_VALUE;
     private int sameKeyCount = 1;
+    private HashSet<Character> keyBuffer = new HashSet<Character>();
 
     public char lastKeyPressed() {
         return lastKeyPressed;
@@ -33,15 +36,9 @@ public class KeyAction implements KeyListener {
 
     public boolean keyToggled(char c) {
 
-        if (keyRepeated(c) % 2 == 1) {
+        if (keyBuffer.contains(c)) {
             return true;
         }
-
-        if (lastKeyPressed == c && (lastKeyPressed != prevKeyPressed)) {
-            System.out.println(keyRepeated(c));
-            return true;
-        }
-
         return false;
     }
 
@@ -54,7 +51,13 @@ public class KeyAction implements KeyListener {
     public void keyPressed(KeyEvent e) {
 
         B = Application.getBoard();
-        // UIEvent E = B.getUIEvents();
+        char keyChar = e.getKeyChar();
+
+        if (keyBuffer.contains(keyChar)) {
+            keyBuffer.remove(keyChar);
+        } else {
+            keyBuffer.add(keyChar);
+        }
 
         prevKeyPressed = lastKeyPressed;
         lastKeyPressed = e.getKeyChar();

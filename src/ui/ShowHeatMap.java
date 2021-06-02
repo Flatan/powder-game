@@ -5,7 +5,7 @@ import powder.*;
 /**
  * ToggleHeatMap
  */
-public class ShowHeatMap extends UIEvent {
+public class ShowHeatMap implements UIEvent {
 
   @Override
   public void eventOff() {
