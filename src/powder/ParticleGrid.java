@@ -111,7 +111,6 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    */
   public void draw(Graphics2D g2) {
 
-    updateParticles();
     image.setRGB(0, 0, W, H, new int[W * H], 0, 0);
     try {
       forEachParticle((particle) -> {
