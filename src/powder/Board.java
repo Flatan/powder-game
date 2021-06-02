@@ -79,6 +79,11 @@ public class Board extends JPanel implements Runnable {
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
         Particle.heatmap.addColor(100, Color.RED);
+        
+        Particle.slopemap.addColor(-5, Color.RED);
+        Particle.slopemap.addColor(0, Color.WHITE);
+        Particle.slopemap.addColor(5, Color.GREEN);
+        
         setFocusable(true);
         addKeyListener(ka);
         addMouseWheelListener(M.wheelControls);

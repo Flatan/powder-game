@@ -23,9 +23,13 @@ public class Granular extends Particle {
 	// Good ole particle movin method
 	@Override
 	public void update() {
-
+		
 		if (!updated) {
 			updated = true;
+			
+			dispSlope();
+			
+			
 			velY += gravity;
 
 			updateTemp();
@@ -34,13 +38,12 @@ public class Granular extends Particle {
 
 			if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1)) && supported()) {
 				velX = -1;
+				velY=0;
 			}
 
 			else if (!testRel(1, 0) && !testRel(1, -1) && (testRel(-1, 0) || testRel(-1, -1)) && supported()) {
 				velX = 1;
-			}
-			else {
-				velX = 0;
+				velY=0;
 			}
 
 		}
@@ -81,6 +84,7 @@ public class Granular extends Particle {
 				Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
 				if (obstacle != this) {
 					collide(obstacle, 1);
+					obstacle.update();
 					break;
 				}
 			}

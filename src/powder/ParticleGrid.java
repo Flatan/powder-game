@@ -1,6 +1,7 @@
 package powder;
 
 import java.util.AbstractCollection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   public final int W;
   public final int H;
   private BufferedImage image;
+  private HashSet<Particle> particles = new HashSet<Particle>();
 
   ParticleGrid(Particle[][] array) {
     a = array;
@@ -52,6 +54,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param p Particle
    */
   public void set(int x, int y, Particle p) {
+	particles.add(p);
     a[x][a.length - 1 - y] = p;
   }
 
@@ -83,10 +86,10 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    */
   public void updateParticles() {
     // Iterate through the grid and update every pixel with a Particle
-    forEachParticle((x) -> {
-      x.update();
-      x.updated = false;
-    });
+    forEachParticle(x -> x.update());
+    
+    
+    forEachParticle(x -> x.updated = false);
   }
 
   /**
@@ -95,6 +98,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param action A lambda expression
    */
   public void forEachParticle(Consumer<Particle> action) {
+ 
     for (int x = 0; x < W; x++) {
       for (int y = 0; y < H; y++) {
         if (get(x, y) != null)

@@ -15,6 +15,7 @@ public abstract class Particle {
 	protected static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
 	public static boolean showHeatMap = false;
 	public static ColorGradientMap heatmap = new ColorGradientMap();
+	public static ColorGradientMap slopemap = new ColorGradientMap();
 
 	private int x, y;
 	private double realx, realy;
@@ -190,6 +191,18 @@ public abstract class Particle {
 	 */
 	public boolean supported() {
 		return true;
+	}
+	
+	public void dispSlope() {
+		double m = getAboveSlope();
+		color = slopemap.getColor(m);
+	}
+	
+	public double getAboveSlope() {
+		if (testRel(0,1))
+			return getRel(0,1).getAboveSlope();
+		else
+			return slope();
 	}
 	
 	/**
