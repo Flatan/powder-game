@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import powder.Board;
 import powder.Granular;
@@ -13,30 +14,40 @@ import powder.Application;
 public class KeyAction implements KeyListener {
 
     private Board B;
-    private char lastKeyPressed;
-    private char prevKeyPressed = Character.MIN_VALUE;
-    private int sameKeyCount = 1;
-    private HashSet<Character> keyBuffer = new HashSet<Character>();
+    private char c = Character.MIN_VALUE;
+    private HashSet<Character> toggleBuffer = new HashSet<Character>();
+    private Hashtable<Character, Integer> countBuffer = new Hashtable<Character, Integer>();
 
+    /**
+     * Returns the last key pressed by the user. Will return Character.MIN_VALUE as
+     * a placeholder for "null".
+     * 
+     * @return char
+     */
     public char lastKeyPressed() {
-        return lastKeyPressed;
+        return c;
     }
 
-    public char prevKeyPressed() {
-        return prevKeyPressed;
-    }
+    /**
+     * Returns the number of times a key has been repeated in a row
+     * 
+     * @param c the character to check
+     * @return int repeat count
+     */
 
     public int keyRepeated(char c) {
-
-        if (lastKeyPressed == c) {
-            return sameKeyCount;
-        }
-        return 0;
+        return countBuffer.getOrDefault(c, 0);
     }
 
+    /**
+     * Tests if a given key is currently toggled
+     * 
+     * @param c the character to test against
+     * @return boolean true if toggled false if not
+     */
     public boolean keyToggled(char c) {
 
-        if (keyBuffer.contains(c)) {
+        if (toggleBuffer.contains(c)) {
             return true;
         }
         return false;
@@ -51,24 +62,22 @@ public class KeyAction implements KeyListener {
     public void keyPressed(KeyEvent e) {
 
         B = Application.getBoard();
-        char keyChar = e.getKeyChar();
+        char c = e.getKeyChar();
 
-        if (keyBuffer.contains(keyChar)) {
-            keyBuffer.remove(keyChar);
+        if (countBuffer.containsKey(c)) {
+            countBuffer.replace(c, countBuffer.get(c) + 1);
         } else {
-            keyBuffer.add(keyChar);
+            countBuffer.clear();
+            countBuffer.put(c, 1);
         }
 
-        prevKeyPressed = lastKeyPressed;
-        lastKeyPressed = e.getKeyChar();
-
-        if (lastKeyPressed == prevKeyPressed) {
-            sameKeyCount++;
+        if (toggleBuffer.contains(c)) {
+            toggleBuffer.remove(c);
         } else {
-            sameKeyCount = 1;
+            toggleBuffer.add(c);
         }
 
-        switch (e.getKeyChar()) {
+        switch (c) {
             case 'p':
                 B.setSelectedElement(Granular.class);
                 B.setSelectedColor(Color.white);
