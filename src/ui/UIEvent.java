@@ -1,15 +1,12 @@
 package ui;
 
-import powder.Board;
-import powder.*;
-
 /**
  * UIEvent
  */
 public interface UIEvent {
   public boolean sendingSignal();
 
-  public void eventOn();
+  public void eventOn(boolean justStarted);
 
-  public void eventOff();
+  public void eventOff(boolean justEnded);
 }

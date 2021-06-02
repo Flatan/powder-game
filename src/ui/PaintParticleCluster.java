@@ -1,6 +1,7 @@
 package ui;
 
 import powder.*;
+import core.*;
 
 /**
  * PaintParticleCluster
@@ -8,12 +9,12 @@ import powder.*;
 public class PaintParticleCluster implements UIEvent {
 
   @Override
-  public void eventOff() {
+  public void eventOff(boolean justEnded) {
 
   }
 
   @Override
-  public void eventOn() {
+  public void eventOn(boolean justStarted) {
 
     Board B = Application.getBoard();
     Mouse M = B.getMouse();

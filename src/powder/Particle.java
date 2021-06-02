@@ -3,6 +3,8 @@ package powder;
 import java.awt.Color;
 import color.ColorGradientMap;
 
+import core.Board;
+
 /**
  * Particle
  *
@@ -12,7 +14,7 @@ import color.ColorGradientMap;
  */
 public abstract class Particle {
 
-	protected static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
+	public static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
 	public static boolean showHeatMap = false;
 	public static ColorGradientMap heatmap = new ColorGradientMap();
 
@@ -20,10 +22,10 @@ public abstract class Particle {
 	private double realx, realy;
 	private int particleID;
 
-	static double gravity = -0.5;
+	public static double gravity = -0.5;
 
 	// velocity:
-	double velX, velY = 0;
+	public double velX, velY = 0;
 
 	public Color color = Color.white;
 	public Color displayColor = color;
