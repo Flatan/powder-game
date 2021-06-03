@@ -2,8 +2,8 @@ package ui;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
-import powder.Application;
-import powder.Board;
+import core.Application;
+import core.Board;
 
 public class Foreground {
 

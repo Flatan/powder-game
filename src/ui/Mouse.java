@@ -8,8 +8,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import powder.Application;
-import powder.Board;
+import core.*;
 
 /**
  * Collect the current mouse coordinates on the window
@@ -42,6 +41,9 @@ public class Mouse {
     this.cursorSize = cursorSize;
   }
 
+  /**
+   * MouseWheelListener object that attaches to the Board
+   */
   public MouseWheelListener wheelControls = new MouseWheelListener() {
 
     @Override
@@ -51,6 +53,9 @@ public class Mouse {
 
   };
 
+  /**
+   * MouseAdapter object that attaches to the Board
+   */
   public MouseAdapter adapter = new MouseAdapter() {
 
     public void mousePressed(MouseEvent e) {
@@ -63,53 +68,63 @@ public class Mouse {
 
   };
 
+  /**
+   * Returns the mouse's X value on the window divided by the current scale factor
+   * 
+   * @return int
+   */
   public static int X() {
 
-	Board B = Application.getBoard();
-    return (int) (windowX()/B.getScale());
+    Board B = Application.getBoard();
+    return (int) (windowX() / B.getScale());
 
   }
 
-  public static int Y() {
-	Board B = Application.getBoard();
-    return (int) (windowY()/B.getScale());
-  }
-  
-  
   /**
-   * Returns the x position of the cursor on the window rather than the grid (i.e. unadjusted for scale)
+   * Returns the mouse's Y value on the window divided by the current scale factor
+   *
+   * @return int
+   */
+  public static int Y() {
+    Board B = Application.getBoard();
+    return (int) (windowY() / B.getScale());
+  }
+
+  /**
+   * Returns the x position of the cursor on the window rather than the grid (i.e.
+   * unadjusted for scale)
+   * 
    * @return the x position
    */
   public static int windowX() {
 
-	    
-	  Board B = Application.getBoard();
-	    try {
-	      int mx = MouseInfo.getPointerInfo().getLocation().x - B.getLocationOnScreen().x;
-	      return mx;
+    Board B = Application.getBoard();
+    try {
+      int mx = MouseInfo.getPointerInfo().getLocation().x - B.getLocationOnScreen().x;
+      return mx;
 
-	    } catch (IllegalComponentStateException e) {
-	      return 0;
-	    }
+    } catch (IllegalComponentStateException e) {
+      return 0;
+    }
 
-	  }
-  
+  }
+
   /**
-   * Returns the y position of the cursor on the window rather than the grid (i.e. unadjusted for scale)
+   * Returns the y position of the cursor on the window rather than the grid (i.e.
+   * unadjusted for scale)
+   * 
    * @return the y position
    */
   public static int windowY() {
 
-	    Board B = Application.getBoard();
+    Board B = Application.getBoard();
 
-	    try {
-	      int my = MouseInfo.getPointerInfo().getLocation().y - B.getLocationOnScreen().y;
-	      return my;
-	    } catch (IllegalComponentStateException e) {
-	      return 0;
-	    }
-	  }
+    try {
+      int my = MouseInfo.getPointerInfo().getLocation().y - B.getLocationOnScreen().y;
+      return my;
+    } catch (IllegalComponentStateException e) {
+      return 0;
+    }
+  }
 
 }
-
-
