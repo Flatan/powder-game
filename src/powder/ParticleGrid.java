@@ -54,8 +54,10 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param p Particle
    */
   public void set(int x, int y, Particle p) {
-	particles.add(p);
-    a[x][a.length - 1 - y] = p;
+	if (!testAbs(x,y)) {
+		particles.add(p);
+	    a[x][a.length - 1 - y] = p;
+	 }
   }
 
   /**

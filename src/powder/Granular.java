@@ -53,10 +53,10 @@ public class Granular extends Particle {
 
 	// Calculates the particle's next position
 	public double[] getNextPos() {
-		double targetX = realX() + velX;
-		double targetY = realY() + velY;
-		double newX = realX();
-		double newY = realY();
+		double targetX = X() + velX;
+		double targetY = Y() + velY;
+		double newX = X();
+		double newY = Y();
 
 		// normalized velocity vector
 		double normVelX = velX / Math.hypot(velX, velY);

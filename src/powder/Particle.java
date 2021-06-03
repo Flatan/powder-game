@@ -20,7 +20,6 @@ public abstract class Particle {
 	public static ColorGradientMap slopemap = new ColorGradientMap();
 
 	private int x, y;
-	private double realx, realy;
 	private int particleID;
 
 	public static double gravity = -0.5;
@@ -43,8 +42,6 @@ public abstract class Particle {
 		particleID = Board.runtimeParticleCount++;
 		this.x = x;
 		this.y = y;
-		this.realx = x;
-		this.realy = y;
 	}
 
 	Particle(int x, int y, Color color) {
@@ -52,8 +49,6 @@ public abstract class Particle {
 		particleID = Board.runtimeParticleCount++;
 		this.x = x;
 		this.y = y;
-		this.realx = x;
-		this.realy = y;
 		this.color = color;
 		displayColor = color;
 	}
@@ -73,14 +68,6 @@ public abstract class Particle {
 		} else {
 			showHeatMap = true;
 		}
-	}
-
-	public double realX() {
-		return realx;
-	}
-
-	public double realY() {
-		return realy;
 	}
 
 	public int Y() {
@@ -118,7 +105,7 @@ public abstract class Particle {
 	}
 
 	public double distanceFrom(double x, double y) {
-		return Math.hypot(x - realX(), y - realY());
+		return Math.hypot(x - X(), y - Y());
 
 	}
 
@@ -145,8 +132,6 @@ public abstract class Particle {
 	public void setNewPosition(double x, double y) {
 		if (!grid.outOfBounds((int) x, (int) y)) {
 			grid.move(this, (int) x, (int) y);
-			this.realx = x;
-			this.realy = y;
 			this.x = (int) x;
 			this.y = (int) y;
 		}
