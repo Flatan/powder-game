@@ -39,6 +39,7 @@ public class Granular extends Particle {
 			if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1)) && supported()) {
 				velX = -1;
 				velY=0;
+				
 			}
 
 			else if (!testRel(1, 0) && !testRel(1, -1) && (testRel(-1, 0) || testRel(-1, -1)) && supported()) {
