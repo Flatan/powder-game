@@ -23,6 +23,7 @@ import ui.ShowHeatMap;
 import ui.UIEvent;
 import ui.Foreground;
 import ui.GlobalSettings;
+import ui.*;
 import powder.*;
 
 /**
@@ -81,6 +82,7 @@ public class Board extends JPanel implements Runnable {
         connectEvent(PaintParticleCluster.class);
         connectEvent(ShowHeatMap.class);
         connectEvent(GlobalSettings.class);
+        connectEvent(Spinner.class);
 
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
