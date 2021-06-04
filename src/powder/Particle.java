@@ -24,10 +24,10 @@ public abstract class Particle {
 	private double realx, realy;
 	private int particleID;
 
-	public static Vector2D gravity = new Vector2D(0,-0.5);
+	public static Vector2D gravity = new Vector2D(0, -0.5);
 
 	// velocity:
-	public Vector2D vel = new Vector2D(0,0);
+	public Vector2D vel = new Vector2D(0, 0);
 
 	public Color color = Color.white;
 	public Color displayColor = color;
@@ -112,10 +112,7 @@ public abstract class Particle {
 	 * @return Particle
 	 */
 	public Particle getRel(int x, int y) {
-		if (!grid.outOfBounds(X() + x, Y() + y))
-			return grid.get(X() + x, Y() + y);
-		else
-			return null;
+		return grid.get(X() + x, Y() + y);
 	}
 
 	public double distanceFrom(double x, double y) {
@@ -144,15 +141,11 @@ public abstract class Particle {
 	 * @param y Y coordinate
 	 */
 	public void setNewPosition(double x, double y) {
-		if (!grid.outOfBounds((int) x, (int) y)) {
-
-			if (grid.move(this, (int) x, (int) y)) {
-				this.realx = x;
-				this.realy = y;
-				this.x = (int) x;
-				this.y = (int) y;
-			}
-
+		if (grid.move(this, (int) x, (int) y)) {
+			this.realx = x;
+			this.realy = y;
+			this.x = (int) x;
+			this.y = (int) y;
 		}
 	}
 
@@ -198,19 +191,19 @@ public abstract class Particle {
 	public boolean supported() {
 		return true;
 	}
-	
+
 	public void dispSlope() {
 		double m = getAboveSlope();
 		color = slopemap.getColor(m);
 	}
-	
+
 	public double getAboveSlope() {
-		if (testRel(0,1))
-			return getRel(0,1).getAboveSlope();
+		if (testRel(0, 1))
+			return getRel(0, 1).getAboveSlope();
 		else
 			return slope();
 	}
-	
+
 	/**
 	 * Calculates the slope of the surface below the particle.
 	 * 

@@ -34,12 +34,24 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param y Y coordinate
    * @return Particle
    */
-  public Particle get(int x, int y) {
+
+  private Particle _get(int x, int y) {
+
+    if (outOfBounds(x, y)) {
+      return null;
+    }
+
     return a[x][a.length - 1 - y];
   }
 
+  public Particle get(int x, int y) {
+
+    return _get(x, y);
+  }
+
   public Particle get(double x, double y) {
-    return a[(int) x][a.length - 1 - (int) y];
+
+    return _get((int) x, (int) y);
   }
 
   public boolean test(double x, double y) {
@@ -60,13 +72,13 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    */
 
   public boolean set(int x, int y, Particle p) {
-	if (test(x,y))
-		return false;
-	else {
-		particles.add(p);
-	    a[x][a.length - 1 - y] = p;
-	    return true;
-	 }
+    if (test(x, y) || outOfBounds(x, y))
+      return false;
+    else {
+      particles.add(p);
+      a[x][a.length - 1 - y] = p;
+      return true;
+    }
 
   }
 
@@ -90,9 +102,9 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return whether move was successful
    */
   public boolean move(Particle p, int x, int y) {
-	if (test(x,y)) {
-		return false;
-	}
+    if (test(x, y) || outOfBounds(x, y)) {
+      return false;
+    }
     delete(x, y, p);
     set(x, y, p);
     return true;
@@ -105,8 +117,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     // Iterate through the grid and update every pixel with a Particle
 
     forEachParticle(x -> x.update());
-    
-    
+
     forEachParticle(x -> x.updated = false);
   }
 
@@ -138,7 +149,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param action A lambda expression
    */
   public void forEachParticle(Consumer<Particle> action) {
- 
+
     for (int x = 0; x < W; x++) {
       for (int y = 0; y < H; y++) {
         if (get(x, y) != null)
