@@ -32,6 +32,7 @@ public class Foreground {
             g2.drawString("h - hot particles", 0, 140);
             g2.drawString("1 - low resolution", 0, 160);
             g2.drawString("2 - high resolution", 0, 180);
+            g2.drawString("q - quit", 0, 200);
 
             if (B.getFPS() < 40)
                   g2.setColor(Color.red);
