@@ -96,6 +96,28 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     });
   }
 
+  public boolean computeIfPresent(double x, double y, Consumer<Particle> action) {
+
+    Particle p = get(x, y);
+    if (p != null) {
+      action.accept(p);
+      return true;
+    }
+    return false;
+
+  }
+
+  public boolean computeIfPresent(int x, int y, Consumer<Particle> action) {
+
+    Particle p = get(x, y);
+    if (p != null) {
+      action.accept(p);
+      return true;
+    }
+    return false;
+
+  }
+
   /**
    * Helper method for mapping a function to every particle on the grid
    * 

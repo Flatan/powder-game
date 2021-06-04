@@ -68,31 +68,25 @@ public class Granular extends Particle {
 				velY = 0;
 				break;
 			}
+
 			// Check if path is blocked by particle
 
-			if (grid.test(newX + normVelX, newY + normVelY)) {
-				Particle obstacle = grid.get(newX + normVelX, newY + normVelY);
+			grid.computeIfPresent(newX + normVelX, newY + normVelY, (obstacle) -> {
+
 				if (!obstacle.updated && obstacle != this) {
 					obstacle.update();
 				}
-			}
-			if (grid.test(newX + normVelX, newY + normVelY)) {
-				Particle obstacle = grid.get(newX + normVelX, newY + normVelY);
+			});
+
+			boolean collided = grid.computeIfPresent(newX + normVelX, newY + normVelY, (obstacle) -> {
+
 				if (obstacle != this) {
 					collide(obstacle, 1);
-					break;
 				}
-			}
+			});
 
-			// Particle obstacle = grid.get(newX + normVelX, newY + normVelY);
-			// if (obstacle != null && !obstacle.updated && obstacle != this) {
-			// obstacle.update();
-			// }
-			// obstacle = grid.getClosest(newX + normVelX, newY + normVelY);
-			// if (obstacle != null && obstacle != this) {
-			// collide(obstacle, 1);
-			// break;
-			// }
+			if (collided)
+				break;
 
 			newX += normVelX;
 			newY += normVelY;
