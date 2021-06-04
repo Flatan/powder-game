@@ -41,21 +41,22 @@ public class SurfacePoint {
 	public Vector2D getNormal() {
 		double angle;
 		switch (solidOn) {
-		case ABOVE:
-			angle = Math.atan(-1/slope)+Math.PI/2;
-			break;
 		case BELOW:
-			angle = Math.atan(-1/slope)-Math.PI/2;
+			angle = Math.atan(slope)+Math.PI/2;
 			break;
-		case RIGHT:
-			angle = Math.atan(slope);
+		case ABOVE:
+			angle = Math.atan(slope)-Math.PI/2;
 			break;
 		case LEFT:
-			angle = Math.atan(slope)-Math.PI;
+			angle = Math.atan(-1/slope);
+			break;
+		case RIGHT:
+			angle = Math.atan(-1/slope)+Math.PI;
 			break;
 		default:
 			return new Vector2D();
 		}
+		
 		return new Vector2D(Math.cos(angle),Math.sin(angle));
 		
 	}

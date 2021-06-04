@@ -84,8 +84,9 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return whether move was successful
    */
   public boolean move(Particle p, int x, int y) {
-	if (testAbs(x,y))
+	if (testAbs(x,y)) {
 		return false;
+	}
     delete(x, y, p);
     set(x, y, p);
     return true;

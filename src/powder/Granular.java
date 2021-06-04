@@ -34,30 +34,32 @@ public class Granular extends Particle {
 			dispSlope();
 			
 			
-			vel.add(gravity);
-			
-			if (!testRel(0,1) && (!testRel(1,0) || !testRel(-1,0))) {
-			double m = slope();
-			SurfacePoint surf = new SurfacePoint(m,SurfacePoint.Side.BELOW);
-			Vector2D normalForce = surf.getNormal();
-			normalForce.multiply(gravity.dotProduct(surf.getNormal()));
-			
-			vel.add(normalForce);
-			}
-			System.out.println(vel);
 
 			updateTemp();
 			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
+			vel.add(gravity);
+			
+			if (!testRel(0,1) && (testRel(1,0) || testRel(-1,0) || testRel(0,-1))) {
+			double m = slope();
+			SurfacePoint surf = new SurfacePoint(m,SurfacePoint.Side.BELOW);
+			Vector2D normalForce = surf.getNormal();
+			normalForce.multiply(Math.abs(gravity.dotProduct(surf.getNormal())));
+			
+			System.out.println(m);
+			System.out.println(normalForce);
+			vel.add(normalForce);
+			}
+			
 			Random rnd = new Random();
-			if (!testRel(-1,0) && !testRel(1,0) && supported()) {
+			/*if (!testRel(-1,0) && !testRel(1,0) && supported()) {
 				if (rnd.nextBoolean())
 					setNewPosition(X()+1, Y());
 				else
 					setNewPosition(X()-1, Y());
-			}
+			}*/
 
 			/*if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1)) && supported()) {
 				vel = new Vector2D(-1,0);
