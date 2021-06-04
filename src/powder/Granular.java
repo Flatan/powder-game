@@ -31,7 +31,7 @@ public class Granular extends Particle {
 		if (!updated) {
 			updated = true;
 			
-			dispSlope();
+			//dispSlope();
 			
 			
 
@@ -42,24 +42,24 @@ public class Granular extends Particle {
 			
 			vel.add(gravity);
 			
-			if (!testRel(0,1) && (testRel(1,0) || testRel(-1,0) || testRel(0,-1))) {
+			if (!testRel(0,1) && supported()) {
 			double m = slope();
 			SurfacePoint surf = new SurfacePoint(m,SurfacePoint.Side.BELOW);
 			Vector2D normalForce = surf.getNormal();
 			normalForce.multiply(Math.abs(gravity.dotProduct(surf.getNormal())));
 			
-			System.out.println(m);
-			System.out.println(normalForce);
+			//System.out.println(m);
+			//System.out.println(normalForce);
 			vel.add(normalForce);
 			}
 			
 			Random rnd = new Random();
-			/*if (!testRel(-1,0) && !testRel(1,0) && supported()) {
+			if (!testRel(-1,0) && !testRel(1,0) && supported()) {
 				if (rnd.nextBoolean())
 					setNewPosition(X()+1, Y());
 				else
 					setNewPosition(X()-1, Y());
-			}*/
+			}
 
 			/*if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1)) && supported()) {
 				vel = new Vector2D(-1,0);
@@ -97,7 +97,7 @@ public class Granular extends Particle {
 				break;
 			}
 			// Check if path is blocked by particle
-
+			
 			if (grid.testAbs((int) (newX + normVel.x), (int) (newY + normVel.y))) {
 				Particle obstacle = grid.getReal(newX + normVel.x, newY + normVel.y);
 				if (!obstacle.updated && obstacle != this) {

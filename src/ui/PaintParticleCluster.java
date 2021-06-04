@@ -7,7 +7,7 @@ import core.*;
  * PaintParticleCluster
  */
 public class PaintParticleCluster implements UIEvent {
-	final boolean singleParticle = true;
+	final boolean singleParticle = false;
 
   @Override
   public void eventOff(boolean justEnded) {
