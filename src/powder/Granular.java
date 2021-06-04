@@ -34,20 +34,20 @@ public class Granular extends Particle {
 			//dispSlope();
 			
 			
-
+			vel.add(gravity);
 			updateTemp();
 			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
-			vel.add(gravity);
+			//Vector2D netForce = new Vector2D();
 			
 			if (!testRel(0,1) && supported()) {
+
 			double m = slope();
 			SurfacePoint surf = new SurfacePoint(m,SurfacePoint.Side.BELOW);
 			Vector2D normalForce = surf.getNormal();
 			normalForce.multiply(Math.abs(gravity.dotProduct(surf.getNormal())));
-			
 			//System.out.println(m);
 			//System.out.println(normalForce);
 			vel.add(normalForce);
@@ -77,10 +77,10 @@ public class Granular extends Particle {
 	// Calculates the particle's next position
 	public double[] getNextPos() {
 
-		double targetX = X() + vel.x;
-		double targetY = Y() + vel.y;
-		double newX = X();
-		double newY = Y();
+		double targetX = realX() + vel.x;
+		double targetY = realY() + vel.y;
+		double newX = realX();
+		double newY = realY();
 
 
 		// normalized velocity vector
