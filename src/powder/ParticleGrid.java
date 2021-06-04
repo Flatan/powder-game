@@ -54,6 +54,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param p Particle
    * @return whether set was successful
    */
+
   public boolean set(int x, int y, Particle p) {
 	if (testAbs(x,y))
 		return false;
@@ -62,6 +63,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
 	    a[x][a.length - 1 - y] = p;
 	    return true;
 	 }
+
   }
 
   /**
