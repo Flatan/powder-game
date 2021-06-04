@@ -3,6 +3,8 @@ package core;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
+import math.Vector2D;
+
 // Test comment
 
 //Better test comment
@@ -25,7 +27,6 @@ public class Application extends JFrame {
      * settings
      */
     private void initUI() {
-
         add(board);
         setResizable(false);
         pack();

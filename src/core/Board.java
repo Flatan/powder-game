@@ -87,6 +87,11 @@ public class Board extends JPanel implements Runnable {
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
         Particle.heatmap.addColor(100, Color.RED);
+        
+        Particle.slopemap.addColor(-5, Color.RED);
+        Particle.slopemap.addColor(0, Color.WHITE);
+        Particle.slopemap.addColor(5, Color.GREEN);
+        
         setFocusable(true);
         addKeyListener(ka);
         addMouseWheelListener(M.wheelControls);
@@ -227,6 +232,11 @@ public class Board extends JPanel implements Runnable {
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         Particle.grid = grid;
+        
+        /*for (int x = 1; x<B_WIDTH; x++) {
+        	grid.spawnParticle(x,x,Color.RED,Solid.class);
+        }*/
+
         // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         // bgGrid = new int[B_WIDTH * B_HEIGHT];
     }

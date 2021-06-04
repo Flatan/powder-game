@@ -4,6 +4,7 @@ import java.awt.Color;
 import color.ColorGradientMap;
 
 import core.Board;
+import math.Vector2D;
 
 /**
  * Particle
@@ -17,15 +18,16 @@ public abstract class Particle {
 	public static ParticleGrid grid = new ParticleGrid(new Particle[600][600]);
 	public static boolean showHeatMap = false;
 	public static ColorGradientMap heatmap = new ColorGradientMap();
+	public static ColorGradientMap slopemap = new ColorGradientMap();
 
 	private int x, y;
 	private double realx, realy;
 	private int particleID;
 
-	public static double gravity = -0.5;
+	public static Vector2D gravity = new Vector2D(0,-0.5);
 
 	// velocity:
-	public double velX, velY = 0;
+	public Vector2D vel = new Vector2D(0,0);
 
 	public Color color = Color.white;
 	public Color displayColor = color;
@@ -57,11 +59,11 @@ public abstract class Particle {
 		displayColor = color;
 	}
 
-	static public void setGravity(double g) {
+	static public void setGravity(Vector2D g) {
 		Particle.gravity = g;
 	}
 
-	static public double getGravity() {
+	static public Vector2D getGravity() {
 		return Particle.gravity;
 	}
 
@@ -143,11 +145,14 @@ public abstract class Particle {
 	 */
 	public void setNewPosition(double x, double y) {
 		if (!grid.outOfBounds((int) x, (int) y)) {
-			grid.move(this, (int) x, (int) y);
-			this.realx = x;
-			this.realy = y;
-			this.x = (int) x;
-			this.y = (int) y;
+
+			if (grid.move(this, (int) x, (int) y)) {
+				this.realx = x;
+				this.realy = y;
+				this.x = (int) x;
+				this.y = (int) y;
+			}
+
 		}
 	}
 
@@ -192,6 +197,109 @@ public abstract class Particle {
 	 */
 	public boolean supported() {
 		return true;
+	}
+	
+	public void dispSlope() {
+		double m = getAboveSlope();
+		color = slopemap.getColor(m);
+	}
+	
+	public double getAboveSlope() {
+		if (testRel(0,1))
+			return getRel(0,1).getAboveSlope();
+		else
+			return slope();
+	}
+	
+	/**
+	 * Calculates the slope of the surface below the particle.
+	 * 
+	 * Also I hate this method and never want to mess with it again. I hope I never
+	 * have to fix something with it.
+	 * 
+	 * @return slope
+	 */
+	public double slope() {
+		double slope = 0;
+		int scope = 5;
+		if (testRel(0, 1) && testRel(0, -1))
+			return 0;
+
+		int distToLeftEdge = 0;
+		boolean leftGoesUp = false;
+		for (int x = -1; x >= -scope; x--) {
+			if (testRel(x, 0)) {
+				distToLeftEdge = x + 1;
+				leftGoesUp = true;
+				break;
+			}
+			if (!testRel(x, -1)) {
+				distToLeftEdge = x + 1;
+				leftGoesUp = false;
+				break;
+			}
+		}
+		distToLeftEdge = Math.abs(distToLeftEdge);
+
+		int distToRightEdge = 0;
+		boolean rightGoesUp = false;
+		for (int x = 1; x <= scope; x++) {
+			if (testRel(x, 0)) {
+				distToRightEdge = x - 1;
+				rightGoesUp = true;
+				break;
+			}
+			if (!testRel(x, -1)) {
+				distToRightEdge = x - 1;
+				rightGoesUp = false;
+				break;
+			}
+		}
+		distToRightEdge = Math.abs(distToRightEdge);
+
+		if (leftGoesUp == rightGoesUp)
+			return 0;
+
+		int totalRun = distToLeftEdge + distToRightEdge + 1;
+
+		slope = 1. / totalRun;
+		if (!rightGoesUp)
+			slope *= -1;
+
+		if (Math.abs(slope) == 1 || !testRel(0, -1)) {
+			if (testRel(-1, 0) == testRel(1, 0))
+				return 0;
+
+			int distToBottomEdge = 0;
+			boolean onRightSide = testRel(1, 0);
+			for (int y = -1; y >= -scope; y--) {
+				if (testRel(0, y)) {
+					distToBottomEdge = y + 1;
+					break;
+				}
+			}
+			distToBottomEdge = Math.abs(distToBottomEdge);
+
+			int distToTopEdge = 0;
+			for (int y = 1; y <= scope; y++) {
+				if (!testRel(1, y) && onRightSide) {
+					distToTopEdge = y - 1;
+					break;
+				} else if (!testRel(-1, y) && !onRightSide) {
+					distToTopEdge = y - 1;
+					break;
+				}
+			}
+			distToTopEdge = Math.abs(distToTopEdge);
+
+			int totalRise = distToBottomEdge + distToTopEdge + 1;
+			slope = totalRise;
+			if (!onRightSide)
+				slope *= -1;
+		}
+
+		return slope;
+
 	}
 
 }
