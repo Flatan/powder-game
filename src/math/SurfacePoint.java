@@ -3,13 +3,13 @@ package math;
  * Represents a point along a surface
  */
 public class SurfacePoint {
-	enum Side {ABOVE, BELOW, LEFT, RIGHT}
+	public enum Side {ABOVE, BELOW, LEFT, RIGHT}
 	private double slope = 0;
 	
 	//The side of the surface that is solid
 	private Side solidOn = Side.ABOVE;
 	
-	SurfacePoint(double slope, Side side){
+	public SurfacePoint(double slope, Side side){
 		this.slope = slope;
 		solidOn = side;
 	}
@@ -21,7 +21,7 @@ public class SurfacePoint {
 	 * @param slope
 	 * @param side
 	 */
-	SurfacePoint(double slope, Vector2D side){
+	public SurfacePoint(double slope, Vector2D side){
 		this.slope = slope;
 		if (side.y > 0)
 			solidOn = Side.ABOVE;

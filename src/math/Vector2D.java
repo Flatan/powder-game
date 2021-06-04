@@ -18,6 +18,15 @@ public class Vector2D {
 		y+=addend.y;
 	}
 	
+	/**
+	 * multiplies the vector by a scalar
+	 * @param multiplier
+	 */
+	public void multiply(double multiplier) {
+		x *= multiplier;
+		y *= multiplier;
+	}
+	
 	public double dotProduct(Vector2D multiplier) {
 		return x*multiplier.x + y*multiplier.y;
 	}
@@ -36,4 +45,10 @@ public class Vector2D {
 	public double angle() {
 		return Math.atan2(x, y);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("[%.3f, %.3f]", x,y);
+	}
+	
 }

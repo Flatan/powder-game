@@ -233,10 +233,11 @@ public class Board extends JPanel implements Runnable {
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         Particle.grid = grid;
         
-        
-        for (int x = 0; x<B_WIDTH; x++) {
+       
+        for (int x = 1; x<B_WIDTH; x++) {
         	grid.spawnParticle(x,x,Color.RED,Solid.class);
         }
+
         // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         // bgGrid = new int[B_WIDTH * B_HEIGHT];
     }
