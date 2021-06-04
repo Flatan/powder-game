@@ -36,6 +36,8 @@ public class GlobalSettings implements UIEvent {
         B.setSelectedElement(Solid.class);
         B.setSelectedColor(Color.gray);
         break;
+      case 'q':
+        System.exit(0);
       case '0':
         B.setScale(60);
         B.setWidth(10);

@@ -34,6 +34,8 @@ public abstract class Particle {
 
 	double downPush = 0.0;
 	public boolean updated = false;
+	
+	boolean dynamic = true;
 
 	public double temperature = 0;
 

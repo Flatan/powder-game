@@ -34,14 +34,14 @@ public class Granular extends Particle {
 			//dispSlope();
 			
 			
-			vel.add(gravity);
+			
 			updateTemp();
 			
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 			
 			//Vector2D netForce = new Vector2D();
-			
+			vel.add(gravity);
 			if (!testRel(0,1) && supported()) {
 
 			double m = slope();
@@ -77,10 +77,10 @@ public class Granular extends Particle {
 	// Calculates the particle's next position
 	public double[] getNextPos() {
 
-		double targetX = realX() + vel.x;
-		double targetY = realY() + vel.y;
-		double newX = realX();
-		double newY = realY();
+		double targetX = X() + vel.x;
+		double targetY = Y() + vel.y;
+		double newX = X();
+		double newY = Y();
 
 
 		// normalized velocity vector
@@ -99,15 +99,18 @@ public class Granular extends Particle {
 				break;
 			}
 			// Check if path is blocked by particle
+
 			
-			if (grid.testAbs((int) (newX + normVel.x), (int) (newY + normVel.y))) {
-				Particle obstacle = grid.getReal(newX + normVel.x, newY + normVel.y);
+			if (grid.test((int) (newX + normVel.x), (int) (newY + normVel.y))) {
+				Particle obstacle = grid.get(newX + normVel.x, newY + normVel.y);
 				if (!obstacle.updated && obstacle != this) {
 					obstacle.update();
 				}
 			}
-			if (grid.testAbs((int) (newX + normVel.x), (int) (newY + normVel.y))) {
-				Particle obstacle = grid.getReal(newX + normVel.x, newY + normVel.y);
+
+			if (grid.test((int) (newX + normVel.x), (int) (newY + normVel.y))) {
+				Particle obstacle = grid.get(newX + normVel.x, newY + normVel.y);
+
 				if (obstacle != this) {
 					collide(obstacle, 1);
 					obstacle.update();
@@ -115,7 +118,7 @@ public class Granular extends Particle {
 				}
 			}
 
-			// Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
+			// Particle obstacle = grid.get(newX + normVelX, newY + normVelY);
 			// if (obstacle != null && !obstacle.updated && obstacle != this) {
 			// obstacle.update();
 			// }
@@ -145,7 +148,8 @@ public class Granular extends Particle {
 	 *              higher for fun bouncy effect
 	 */
 	public void collide(Particle other, double cR) {
-
+		
+		if (other.dynamic) {
 		BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
 
 		double tempVelX = vel.x;
@@ -156,6 +160,9 @@ public class Granular extends Particle {
 
 		other.vel.x = newVel.apply(other.vel.x, tempVelX);
 		other.vel.y = newVel.apply(other.vel.y, tempVelY);
+		}
+		else
+			vel = new Vector2D(0,0);
 
 	}
 
