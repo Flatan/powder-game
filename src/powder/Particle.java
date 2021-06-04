@@ -131,9 +131,10 @@ public abstract class Particle {
 	 */
 	public void setNewPosition(double x, double y) {
 		if (!grid.outOfBounds((int) x, (int) y)) {
-			grid.move(this, (int) x, (int) y);
-			this.x = (int) x;
-			this.y = (int) y;
+			if (grid.move(this, (int) x, (int) y)) {
+				this.x = (int) x;
+				this.y = (int) y;
+			}
 		}
 	}
 

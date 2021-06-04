@@ -52,11 +52,15 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param x X coordinate
    * @param y Y coordinate
    * @param p Particle
+   * @return whether set was successful
    */
-  public void set(int x, int y, Particle p) {
-	if (!testAbs(x,y)) {
+  public boolean set(int x, int y, Particle p) {
+	if (testAbs(x,y))
+		return false;
+	else {
 		particles.add(p);
 	    a[x][a.length - 1 - y] = p;
+	    return true;
 	 }
   }
 
@@ -77,10 +81,14 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param x
    * @param y
    * @param p
+   * @return whether move was successful
    */
-  public void move(Particle p, int x, int y) {
+  public boolean move(Particle p, int x, int y) {
+	if (testAbs(x,y))
+		return false;
     delete(x, y, p);
     set(x, y, p);
+    return true;
   }
 
   /**
