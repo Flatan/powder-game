@@ -36,11 +36,15 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     return a[x][a.length - 1 - y];
   }
 
-  public Particle getReal(double x, double y) {
-    return get((int) x, (int) y);
+  public Particle get(double x, double y) {
+    return a[(int) x][a.length - 1 - (int) y];
   }
 
-  public boolean testAbs(int x, int y) {
+  public boolean test(double x, double y) {
+    return get(x, y) != null;
+  }
+
+  public boolean test(int x, int y) {
     return get(x, y) != null;
   }
 
@@ -85,6 +89,9 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     // Iterate through the grid and update every pixel with a Particle
     forEachParticle((x) -> {
       x.update();
+    });
+
+    forEachParticle((x) -> {
       x.updated = false;
     });
   }
