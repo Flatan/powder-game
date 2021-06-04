@@ -4,6 +4,7 @@ import java.awt.Color;
 import color.ColorGradientMap;
 
 import core.Board;
+import math.Vector2D;
 
 /**
  * Particle
@@ -22,10 +23,10 @@ public abstract class Particle {
 	private int x, y;
 	private int particleID;
 
-	public static double gravity = -0.5;
+	public static Vector2D gravity = new Vector2D(0,-0.5);
 
 	// velocity:
-	public double velX, velY = 0;
+	public Vector2D vel = new Vector2D(0,0);
 
 	public Color color = Color.white;
 	public Color displayColor = color;
@@ -53,11 +54,11 @@ public abstract class Particle {
 		displayColor = color;
 	}
 
-	static public void setGravity(double g) {
+	static public void setGravity(Vector2D g) {
 		Particle.gravity = g;
 	}
 
-	static public double getGravity() {
+	static public Vector2D getGravity() {
 		return Particle.gravity;
 	}
 

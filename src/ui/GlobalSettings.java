@@ -4,6 +4,7 @@ package ui;
 import java.awt.Color;
 
 import core.*;
+import math.Vector2D;
 import powder.*;
 
 /**
@@ -13,11 +14,11 @@ public class GlobalSettings implements UIEvent {
 
   public void testCollison() {
     ParticleGrid grid = Particle.getGrid();
-    Particle.gravity = 0;
+    Particle.gravity = new Vector2D();
     Granular p1 = (Granular) grid.spawnParticle(0, 5, Color.WHITE, Granular.class);
-    p1.velX = 0.1;
+    p1.vel = new Vector2D(0.1,0);
     Granular p2 = (Granular) grid.spawnParticle(9, 5, Color.WHITE, Granular.class);
-    p2.velX = -0.1;
+    p2.vel = new Vector2D(-0.1,0);
   }
 
   @Override

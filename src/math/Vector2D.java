@@ -13,8 +13,9 @@ public class Vector2D {
 		this.y = y;
 	}
 	
-	public Vector2D add(Vector2D addend) {
-		return new Vector2D(x+addend.x,y+addend.y);
+	public void add(Vector2D addend) {
+		x+=addend.x;
+		y+=addend.y;
 	}
 	
 	public double dotProduct(Vector2D multiplier) {

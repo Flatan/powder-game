@@ -3,6 +3,8 @@ package powder;
 import java.awt.Color;
 import java.util.function.BiFunction;
 
+import math.Vector2D;
+
 /**
  * Granular
  *
@@ -30,21 +32,19 @@ public class Granular extends Particle {
 			dispSlope();
 			
 			
-			velY += gravity;
+			vel.add(gravity);
 
 			updateTemp();
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
 
 			if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1)) && supported()) {
-				velX = -1;
-				velY=0;
+				vel = new Vector2D(-1,0);
 				
 			}
 
 			else if (!testRel(1, 0) && !testRel(1, -1) && (testRel(-1, 0) || testRel(-1, -1)) && supported()) {
-				velX = 1;
-				velY=0;
+				vel = new Vector2D(1,0);
 
 			}
 
@@ -53,37 +53,36 @@ public class Granular extends Particle {
 
 	// Calculates the particle's next position
 	public double[] getNextPos() {
-		double targetX = X() + velX;
-		double targetY = Y() + velY;
+		double targetX = X() + vel.x;
+		double targetY = Y() + vel.y;
 		double newX = X();
 		double newY = Y();
 
 		// normalized velocity vector
-		double normVelX = velX / Math.hypot(velX, velY);
-		double normVelY = velY / Math.hypot(velX, velY);
+		Vector2D normVel = vel.normalizedVect();
 
 		double targetDistance = distanceFrom(targetX, targetY);
 
 		while (distanceFrom(newX, newY) < targetDistance) {
 
-			if (grid.outOfBoundsX(newX + normVelX)) {
-				velX = 0;
+			if (grid.outOfBoundsX(newX + normVel.x)) {
+				vel.x = 0;
 				break;
 			}
-			if (grid.outOfBoundsY(newY + normVelY)) {
-				velY = 0;
+			if (grid.outOfBoundsY(newY + normVel.y)) {
+				vel.y = 0;
 				break;
 			}
 			// Check if path is blocked by particle
 
-			if (grid.testAbs((int) (newX + normVelX), (int) (newY + normVelY))) {
-				Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
+			if (grid.testAbs((int) (newX + normVel.x), (int) (newY + normVel.y))) {
+				Particle obstacle = grid.getReal(newX + normVel.x, newY + normVel.y);
 				if (!obstacle.updated && obstacle != this) {
 					obstacle.update();
 				}
 			}
-			if (grid.testAbs((int) (newX + normVelX), (int) (newY + normVelY))) {
-				Particle obstacle = grid.getReal(newX + normVelX, newY + normVelY);
+			if (grid.testAbs((int) (newX + normVel.x), (int) (newY + normVel.y))) {
+				Particle obstacle = grid.getReal(newX + normVel.x, newY + normVel.y);
 				if (obstacle != this) {
 					collide(obstacle, 1);
 					obstacle.update();
@@ -101,8 +100,8 @@ public class Granular extends Particle {
 			// break;
 			// }
 
-			newX += normVelX;
-			newY += normVelY;
+			newX += normVel.x;
+			newY += normVel.y;
 
 			if (distanceFrom(newX, newY) >= targetDistance) {
 				newY = targetY;
@@ -124,14 +123,14 @@ public class Granular extends Particle {
 
 		BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
 
-		double tempVelX = velX;
-		double tempVelY = velY;
+		double tempVelX = vel.x;
+		double tempVelY = vel.y;
 
-		velX = newVel.apply(velX, other.velX);
-		velY = newVel.apply(velY, other.velY);
+		vel.x = newVel.apply(vel.x, other.vel.x);
+		vel.y = newVel.apply(vel.y, other.vel.y);
 
-		other.velX = newVel.apply(other.velX, tempVelX);
-		other.velY = newVel.apply(other.velY, tempVelY);
+		other.vel.x = newVel.apply(other.vel.x, tempVelX);
+		other.vel.y = newVel.apply(other.vel.y, tempVelY);
 
 	}
 
