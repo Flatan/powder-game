@@ -10,7 +10,7 @@ public class Resolution implements UIEvent {
   @Override
   public void draw(TextBuffer t, Graphics2D g) {
     t.add("r - toggle resolution");
-    t.flush(0, 60);
+    t.flush(0, 50);
 
   }
 

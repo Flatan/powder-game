@@ -88,14 +88,21 @@ public class UI {
             }
 
             /**
+             * Internal flush(). Empties the queue into g.drawString()
+             */
+            private void _flush() {
+                  while (!q.isEmpty()) {
+                        y += fs + vertSpacing;
+                        g.drawString(q.remove(), x + padX, y + padY);
+                  }
+            }
+
+            /**
              * Draw the contents of the buffer to the interally stored Graphics2D object.
              * When no x,y position is given, continue from the previous position
              */
             public void flush() {
-                  while (!q.isEmpty()) {
-                        g.drawString(q.remove(), x + padX, y + padY);
-                        y += fs + vertSpacing;
-                  }
+                  _flush();
             }
 
             /**
@@ -106,13 +113,9 @@ public class UI {
              * @param y
              */
             public void flush(int x, int y) {
-                  y += fs + vertSpacing;
-                  while (!q.isEmpty()) {
-                        g.drawString(q.remove(), x + padX, y + padY);
-                        y += fs + vertSpacing;
-                  }
                   this.x = x;
                   this.y = y;
+                  _flush();
             }
       }
 
