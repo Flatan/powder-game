@@ -1,6 +1,7 @@
 package ui;
 
 import powder.*;
+import ui.UI.DrawQueue;
 import core.*;
 
 /**
@@ -8,6 +9,10 @@ import core.*;
  */
 public class PaintParticleCluster implements UIEvent {
   final boolean onlyOne = false;
+
+  @Override
+  public void draw(DrawQueue Q) {
+  }
 
   @Override
   public void eventOff(boolean justEnded) {

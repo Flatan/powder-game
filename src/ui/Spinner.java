@@ -1,6 +1,7 @@
 package ui;
 
 import powder.*;
+import ui.UI.DrawQueue;
 import core.*;
 
 /**
@@ -10,6 +11,10 @@ import core.*;
  */
 public class Spinner implements UIEvent {
   int iteration = 0;
+
+  @Override
+  public void draw(DrawQueue Q) {
+  }
 
   @Override
   public void eventOff(boolean justEnded) {

@@ -21,7 +21,7 @@ import ui.Mouse;
 import ui.PaintParticleCluster;
 import ui.ShowHeatMap;
 import ui.UIEvent;
-import ui.Foreground;
+import ui.UI;
 import ui.GlobalSettings;
 import ui.*;
 import powder.*;
@@ -67,7 +67,7 @@ public class Board extends JPanel implements Runnable {
 
     private Color selectedColor = Color.white;
     private double selectedTemp = 50;
-    private Foreground fg = new Foreground();
+    private UI ui;
 
     public Board() {
 
@@ -79,19 +79,16 @@ public class Board extends JPanel implements Runnable {
     private void initBoard() {
         reset();
 
-        connectEvent(PaintParticleCluster.class);
-        connectEvent(ShowHeatMap.class);
-        connectEvent(GlobalSettings.class);
-        connectEvent(Spinner.class);
+        ui = new UI(this);
 
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
         Particle.heatmap.addColor(100, Color.RED);
-        
+
         Particle.slopemap.addColor(-5, Color.RED);
         Particle.slopemap.addColor(0, Color.WHITE);
         Particle.slopemap.addColor(5, Color.GREEN);
-        
+
         setFocusable(true);
         addKeyListener(ka);
         addMouseWheelListener(M.wheelControls);
@@ -123,9 +120,15 @@ public class Board extends JPanel implements Runnable {
     public KeyAction getKeyboard() {
         return ka;
     }
-    // public UIEvent getUIEvents() {
-    // return E;
-    // }
+
+    /**
+     * Get the initialized UI events
+     * 
+     * @return
+     */
+    public ArrayList<UIEvent> getConnectedEvents() {
+        return UIevents;
+    }
 
     /**
      * Set the color of the current element
@@ -217,7 +220,7 @@ public class Board extends JPanel implements Runnable {
         return fps;
     }
 
-    private void connectEvent(Class<? extends UIEvent> event) {
+    public void connectEvent(Class<? extends UIEvent> event) {
 
         try {
             UIEvent instance = event.getDeclaredConstructor().newInstance();
@@ -232,10 +235,11 @@ public class Board extends JPanel implements Runnable {
         setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
         ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
         Particle.grid = grid;
-        
-        /*for (int x = 1; x<B_WIDTH; x++) {
-        	grid.spawnParticle(x,x,Color.RED,Solid.class);
-        }*/
+
+        /*
+         * for (int x = 1; x<B_WIDTH; x++) {
+         * grid.spawnParticle(x,x,Color.RED,Solid.class); }
+         */
 
         // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
         // bgGrid = new int[B_WIDTH * B_HEIGHT];
@@ -274,7 +278,7 @@ public class Board extends JPanel implements Runnable {
 
         g2.setTransform(transform);
 
-        fg.draw(g2);
+        ui.draw(g2);
     }
 
     // Copied this from a tutorial and don't know what it does; don't mess with it:

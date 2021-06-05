@@ -1,12 +1,23 @@
 package ui;
 
 import powder.*;
+import ui.UI.DrawQueue;
 import core.*;
 
 /**
  * ToggleHeatMap
  */
 public class ShowHeatMap implements UIEvent {
+
+  @Override
+  public void draw(DrawQueue Q) {
+    Q.add("――――――――――――――――");
+    Q.add("t - toggle heat map display");
+    Q.add("c - cold particles");
+    Q.add("w - warm particles");
+    Q.add("h - hot particles");
+    Q.flush();
+  }
 
   @Override
   public void eventOff(boolean justEnded) {

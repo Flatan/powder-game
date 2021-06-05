@@ -6,11 +6,18 @@ import java.awt.Color;
 import core.*;
 import math.Vector2D;
 import powder.*;
+import ui.UI.DrawQueue;
 
 /**
  * GlobalSettings
  */
 public class GlobalSettings implements UIEvent {
+
+  @Override
+  public void draw(DrawQueue Q) {
+    // TODO Auto-generated method stub
+
+  }
 
   public void testCollison() {
     ParticleGrid grid = Particle.getGrid();
