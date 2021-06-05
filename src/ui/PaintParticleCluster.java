@@ -29,19 +29,17 @@ public class PaintParticleCluster implements UIEvent {
     my = (int) (B.getHeight() / B.getScale() - 1 - my);
 
     if (onlyOne) {
-      Particle p = grid.spawnParticle(mx, my, B.getSelectedColor(), B.getSelectedElement());
+      Particle p = grid.spawn(mx, my, B.getSelectedColor(), B.getSelectedElement());
       p.temperature = B.getSelectedTemp();
     } else
 
       for (int x = mx - diameter / 2; x < mx + diameter / 2; x++) {
         for (int y = my - diameter / 2; y < my + diameter / 2; y++) {
 
-          if (!grid.outOfBounds(x, y))
-            if (grid.get(x, y) == null)
-              if (Math.hypot(x - mx, y - my) <= diameter / 2) {
-                Particle p = grid.spawnParticle(x, y, B.getSelectedColor(), B.getSelectedElement());
-                p.temperature = B.getSelectedTemp();
-              }
+          if (Math.hypot(x - mx, y - my) <= diameter / 2) {
+            Particle p = grid.spawn(x, y, B.getSelectedColor(), B.getSelectedElement());
+            p.temperature = B.getSelectedTemp();
+          }
         }
       }
   }

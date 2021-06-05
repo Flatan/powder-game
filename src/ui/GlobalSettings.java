@@ -15,10 +15,10 @@ public class GlobalSettings implements UIEvent {
   public void testCollison() {
     ParticleGrid grid = Particle.getGrid();
     Particle.gravity = new Vector2D();
-    Granular p1 = (Granular) grid.spawnParticle(0, 5, Color.WHITE, Granular.class);
-    p1.vel = new Vector2D(0.1,0);
-    Granular p2 = (Granular) grid.spawnParticle(9, 5, Color.WHITE, Granular.class);
-    p2.vel = new Vector2D(-0.1,0);
+    Granular p1 = (Granular) grid.spawn(0, 5, Color.WHITE, Granular.class);
+    p1.vel = new Vector2D(0.1, 0);
+    Granular p2 = (Granular) grid.spawn(9, 5, Color.WHITE, Granular.class);
+    p2.vel = new Vector2D(-0.1, 0);
   }
 
   @Override

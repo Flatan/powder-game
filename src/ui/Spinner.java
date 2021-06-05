@@ -41,7 +41,7 @@ public class Spinner implements UIEvent {
 
       for (int y = B.getHeight() / 2 - 10 + posy; y < B.getHeight() / 2 + 10 + posy; y++) {
 
-        Particle p = grid.spawnParticle(x, y, B.getSelectedColor(), B.getSelectedElement());
+        Particle p = grid.spawn(x, y, B.getSelectedColor(), B.getSelectedElement());
         p.temperature = B.getSelectedTemp();
       }
     }

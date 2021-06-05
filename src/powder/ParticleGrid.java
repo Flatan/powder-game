@@ -185,7 +185,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param elementType Class which extends Particle
    * 
    */
-  public Particle spawnParticle(int x, int y, Color color, Class<? extends Particle> elementType) {
+  public Particle spawn(int x, int y, Color color, Class<? extends Particle> elementType) {
 
     Particle particle = null;
     try {
