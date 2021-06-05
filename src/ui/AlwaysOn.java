@@ -6,16 +6,40 @@ import java.awt.Color;
 import core.*;
 import math.Vector2D;
 import powder.*;
-import ui.UI.DrawQueue;
+
+import java.awt.Graphics2D;
+import ui.UI.TextBuffer;
 
 /**
- * GlobalSettings
+ * AlwaysOn
  */
-public class GlobalSettings implements UIEvent {
+public class AlwaysOn implements UIEvent {
 
   @Override
-  public void draw(DrawQueue Q) {
-    // TODO Auto-generated method stub
+  public void draw(TextBuffer t, Graphics2D g) {
+
+    Board B = Application.getBoard();
+
+    t.add("q - quit");
+    t.add("p - powder");
+    t.add("s - solid");
+    t.flush(0, 0);
+
+    if (B.getFPS() < 40)
+      g.setColor(Color.red);
+    else
+      g.setColor(Color.white);
+
+    t.addPair("FPS: ", B.getFPS());
+    t.flush(B.getWidth() - 200, 0);
+
+    g.setColor(Color.white);
+
+    t.addPair("Spawn count: ", Board.runtimeParticleCount);
+    t.flush();
+
+    int cursorSize = UI.mouse.getCursorSize();
+    g.drawOval(UI.mouse.windowX() - cursorSize / 2, UI.mouse.windowY() - cursorSize / 2, cursorSize, cursorSize);
 
   }
 
@@ -29,12 +53,11 @@ public class GlobalSettings implements UIEvent {
   }
 
   @Override
-  public void eventOn(boolean justStarted) {
+  public void on(boolean once) {
 
     Board B = Application.getBoard();
-    KeyAction K = B.getKeyboard();
 
-    switch (K.keyPressed()) {
+    switch (UI.keyboard.keyPressed()) {
       case 'p':
         B.setSelectedElement(Granular.class);
         B.setSelectedColor(Color.white);
@@ -45,27 +68,6 @@ public class GlobalSettings implements UIEvent {
         break;
       case 'q':
         System.exit(0);
-      case '0':
-        B.setScale(60);
-        B.setWidth(10);
-        B.setHeight(10);
-        B.setDelay(100);
-        B.reset();
-        break;
-      case '1':
-        B.setScale(2);
-        B.setWidth(300);
-        B.setHeight(300);
-        B.setDelay(25);
-        B.reset();
-        break;
-      case '2':
-        B.setScale(1);
-        B.setWidth(600);
-        B.setHeight(600);
-        B.setDelay(25);
-        B.reset();
-        break;
       case ' ':
         testCollison();
         break;
@@ -73,11 +75,11 @@ public class GlobalSettings implements UIEvent {
   }
 
   @Override
-  public void eventOff(boolean justEnded) {
+  public void off(boolean once) {
   }
 
   @Override
-  public boolean sendingSignal() {
+  public boolean trigger() {
     return true;
   }
 

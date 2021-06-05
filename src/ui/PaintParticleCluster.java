@@ -1,7 +1,8 @@
 package ui;
 
 import powder.*;
-import ui.UI.DrawQueue;
+import ui.UI.TextBuffer;
+import java.awt.Graphics2D;
 import core.*;
 
 /**
@@ -11,27 +12,26 @@ public class PaintParticleCluster implements UIEvent {
   final boolean onlyOne = false;
 
   @Override
-  public void draw(DrawQueue Q) {
+  public void draw(TextBuffer t, Graphics2D g) {
   }
 
   @Override
-  public void eventOff(boolean justEnded) {
+  public void off(boolean once) {
 
   }
 
   @Override
-  public void eventOn(boolean justStarted) {
+  public void on(boolean once) {
 
     Board B = Application.getBoard();
-    Mouse M = B.getMouse();
 
-    int diameter = (int) (M.getCursorSize() / B.getScale());
-    int my = Mouse.Y();
-    int mx = Mouse.X();
+    int diameter = (int) (UI.mouse.getCursorSize() / B.getScale());
+    int my;
+    int mx = UI.mouse.X();
 
     ParticleGrid grid = Particle.getGrid();
 
-    my = (int) (B.getHeight() / B.getScale() - 1 - my);
+    my = (int) (B.getHeight() / B.getScale() - 1 - UI.mouse.Y());
 
     if (onlyOne) {
       Particle p = grid.spawn(mx, my, B.getSelectedColor(), B.getSelectedElement());
@@ -50,11 +50,9 @@ public class PaintParticleCluster implements UIEvent {
   }
 
   @Override
-  public boolean sendingSignal() {
-    Board B = Application.getBoard();
-    Mouse M = B.getMouse();
+  public boolean trigger() {
 
-    return M.isDown;
+    return UI.mouse.isDown;
   }
 
 }

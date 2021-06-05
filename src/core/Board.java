@@ -11,19 +11,12 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 
-import color.ColorGradientMap;
-import ui.KeyAction;
+import ui.Keyboard;
 import ui.Mouse;
-import ui.PaintParticleCluster;
-import ui.ShowHeatMap;
 import ui.UIEvent;
 import ui.UI;
-import ui.GlobalSettings;
-import ui.*;
 import powder.*;
 
 /**
@@ -55,7 +48,7 @@ public class Board extends JPanel implements Runnable {
     // Defines the area of powder placement
     public int cursorSize = 20;
 
-    private KeyAction ka = new KeyAction();
+    private Keyboard ka = new Keyboard();
     private final Mouse M = new Mouse();
     // private UIEvent E = new UIEvent();
     // private BufferedImage image;
@@ -90,9 +83,6 @@ public class Board extends JPanel implements Runnable {
         Particle.slopemap.addColor(5, Color.GREEN);
 
         setFocusable(true);
-        addKeyListener(ka);
-        addMouseWheelListener(M.wheelControls);
-        addMouseListener(M.adapter);
     }
 
     /**
@@ -117,7 +107,7 @@ public class Board extends JPanel implements Runnable {
         return M;
     }
 
-    public KeyAction getKeyboard() {
+    public Keyboard getKeyboard() {
         return ka;
     }
 
@@ -306,21 +296,21 @@ public class Board extends JPanel implements Runnable {
 
             // Stream each UIEvent if its "sendingSignal()" gate is open
             for (UIEvent E : UIevents) {
-                if (E.sendingSignal()) {
+                if (E.trigger()) {
 
                     if (!ActiveEventBuffer.contains(E)) {
-                        E.eventOn(true);
+                        E.on(true);
                         ActiveEventBuffer.add(E);
                     } else {
-                        E.eventOn(false);
+                        E.on(false);
                     }
                 } else {
 
                     if (ActiveEventBuffer.contains(E)) {
-                        E.eventOff(true);
+                        E.off(true);
                         ActiveEventBuffer.remove(E);
                     } else {
-                        E.eventOff(false);
+                        E.off(false);
                     }
                 }
             }

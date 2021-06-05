@@ -7,7 +7,7 @@ import java.util.Hashtable;
 
 import core.*;
 
-public class KeyAction implements KeyListener {
+public class Keyboard implements KeyListener {
 
     private Board B;
     private char c = Character.MIN_VALUE;

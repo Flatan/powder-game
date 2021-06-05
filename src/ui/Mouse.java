@@ -73,7 +73,7 @@ public class Mouse {
    * 
    * @return int
    */
-  public static int X() {
+  public int X() {
 
     Board B = Application.getBoard();
     return (int) (windowX() / B.getScale());
@@ -85,7 +85,7 @@ public class Mouse {
    *
    * @return int
    */
-  public static int Y() {
+  public int Y() {
     Board B = Application.getBoard();
     return (int) (windowY() / B.getScale());
   }
@@ -96,7 +96,7 @@ public class Mouse {
    * 
    * @return the x position
    */
-  public static int windowX() {
+  public int windowX() {
 
     Board B = Application.getBoard();
     try {
@@ -115,7 +115,7 @@ public class Mouse {
    * 
    * @return the y position
    */
-  public static int windowY() {
+  public int windowY() {
 
     Board B = Application.getBoard();
 
