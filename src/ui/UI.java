@@ -12,6 +12,7 @@ public class UI {
       private Mouse M;
       private Board B;
 
+      // todo docs
       HashSet<Integer> positionBuffer = new HashSet<Integer>();
       Graphics2D g2;
 
