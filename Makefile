@@ -3,4 +3,4 @@
 
 buildrun:
 	javac -d ./bin/ ./src/powder/* ./src/color/* ./src/ui/* ./src/core/* ./src/math/*
-	java core.Application
+	cd bin/ && java core.Application
