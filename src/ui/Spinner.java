@@ -24,9 +24,9 @@ public class Spinner implements UIEvent {
   @Override
   public void on(boolean once) {
 
-    Board B = Application.getBoard();
+    Board B = Application.board;
 
-    ParticleGrid grid = Particle.getGrid();
+    ParticleGrid grid = Application.grid;
 
     iteration++;
 
@@ -44,8 +44,8 @@ public class Spinner implements UIEvent {
 
       for (int y = B.getHeight() / 2 - 10 + posy; y < B.getHeight() / 2 + 10 + posy; y++) {
 
-        Particle p = grid.spawn(x, y, B.getSelectedColor(), B.getSelectedElement());
-        p.temperature = B.getSelectedTemp();
+        Particle p = grid.spawn(x, y, ParticleFactory.color, ParticleFactory.element);
+        p.temperature = 50;
       }
     }
 
@@ -54,7 +54,7 @@ public class Spinner implements UIEvent {
   @Override
   public boolean trigger() {
 
-    return UI.keyboard.keyToggled('s');
+    return UI.keyboard.keyToggled('n');
 
   }
 

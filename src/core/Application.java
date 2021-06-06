@@ -3,7 +3,7 @@ package core;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-import math.Vector2D;
+import powder.ParticleGrid;
 
 // Test comment
 
@@ -16,7 +16,12 @@ import math.Vector2D;
  */
 public class Application extends JFrame {
 
-    private static Board board = new Board();
+    public static int scale = 1;
+    private static int WinH = 600;
+    private static int WinW = 600;
+
+    public static final Board board = new Board(WinW, WinH);
+    public static final ParticleGrid grid = new ParticleGrid(WinW, WinH);
 
     private Application() {
         initUI();
@@ -35,15 +40,6 @@ public class Application extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    }
-
-    /**
-     * Returns the main application board
-     * 
-     * @return
-     */
-    public static Board getBoard() {
-        return board;
     }
 
     /**

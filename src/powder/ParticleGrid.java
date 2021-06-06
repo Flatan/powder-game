@@ -4,9 +4,13 @@ import java.util.AbstractCollection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
+
+import core.Application;
+
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.lang.reflect.Constructor;
 
 /**
@@ -14,16 +18,23 @@ import java.lang.reflect.Constructor;
  */
 public class ParticleGrid extends AbstractCollection<Particle> {
 
-  private final Particle[][] a;
-  public final int W;
-  public final int H;
+  private Particle[][] a;
+  private int W;
+  private int H;
   private BufferedImage image;
   private HashSet<Particle> particles = new HashSet<Particle>();
 
-  public ParticleGrid(Particle[][] array) {
-    a = array;
-    W = a.length;
-    H = a[0].length;
+  public ParticleGrid(int W, int H) {
+    a = new Particle[W][H];
+    this.W = W;
+    this.H = H;
+    image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
+  }
+
+  public void reset(int W, int H) {
+    a = new Particle[W][H];
+    this.W = W;
+    this.H = H;
     image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
   }
 
@@ -83,17 +94,6 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   }
 
   /**
-   * Deletes a Particle on the grid at the provided cartesian coordinates
-   * 
-   * @param x
-   * @param y
-   * @param p
-   */
-  public void delete(int x, int y, Particle p) {
-    a[p.X()][a.length - 1 - p.Y()] = null;
-  }
-
-  /**
    * Moves a Particle from its current location to provided cartesian coordinates.
    * 
    * @param x
@@ -105,7 +105,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     if (test(x, y) || outOfBounds(x, y)) {
       return false;
     }
-    delete(x, y, p);
+    a[p.X()][a.length - 1 - p.Y()] = null;
     set(x, y, p);
     return true;
   }
@@ -166,6 +166,10 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    */
   public void draw(Graphics2D g2) {
 
+    AffineTransform transform = new AffineTransform();
+    transform.scale(Application.scale, Application.scale);
+    g2.setTransform(transform);
+
     image.setRGB(0, 0, W, H, new int[W * H], 0, 0);
     try {
       forEachParticle((particle) -> {
@@ -175,6 +179,8 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     }
 
     g2.drawImage(image, 0, 0, W, H, null);
+    transform.setToIdentity();
+    g2.setTransform(transform);
   }
 
   /**

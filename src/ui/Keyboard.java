@@ -66,7 +66,7 @@ public class Keyboard implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        B = Application.getBoard();
+        B = Application.board;
         this.c = e.getKeyChar();
 
         // Watches for keys pressed multiple times in a row

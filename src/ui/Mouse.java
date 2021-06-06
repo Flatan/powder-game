@@ -18,7 +18,7 @@ public class Mouse {
 
   private int cursorSize = 20;
   public boolean isDown = false;
-  private Board B = Application.getBoard();
+  private Board B = Application.board;
 
   public Mouse() {
   }
@@ -75,8 +75,7 @@ public class Mouse {
    */
   public int X() {
 
-    Board B = Application.getBoard();
-    return (int) (windowX() / B.getScale());
+    return (int) (windowX() / Application.scale);
 
   }
 
@@ -86,8 +85,7 @@ public class Mouse {
    * @return int
    */
   public int Y() {
-    Board B = Application.getBoard();
-    return (int) (windowY() / B.getScale());
+    return (int) (windowY() / Application.scale);
   }
 
   /**
@@ -98,7 +96,7 @@ public class Mouse {
    */
   public int windowX() {
 
-    Board B = Application.getBoard();
+    Board B = Application.board;
     try {
       int mx = MouseInfo.getPointerInfo().getLocation().x - B.getLocationOnScreen().x;
       return mx;
@@ -117,7 +115,7 @@ public class Mouse {
    */
   public int windowY() {
 
-    Board B = Application.getBoard();
+    Board B = Application.board;
 
     try {
       int my = MouseInfo.getPointerInfo().getLocation().y - B.getLocationOnScreen().y;

@@ -20,15 +20,15 @@ public class UI {
       HashSet<Integer> positionBuffer = new HashSet<Integer>();
       Graphics2D g2;
 
-      static final Keyboard keyboard = new Keyboard();
-      static final Mouse mouse = new Mouse();
+      public static final Keyboard keyboard = new Keyboard();
+      public static final Mouse mouse = new Mouse();
 
       public UI(Board B) {
             this.B = B;
             B.addKeyListener(UI.keyboard);
             B.addMouseWheelListener(UI.mouse.wheelControls);
             B.addMouseListener(UI.mouse.adapter);
-            B.connectEvent(PaintParticleCluster.class);
+            B.connectEvent(ParticleFactory.class);
             B.connectEvent(ShowHeatMap.class);
             B.connectEvent(AlwaysOn.class);
             B.connectEvent(Spinner.class);
@@ -64,18 +64,21 @@ public class UI {
              * @param key
              * @param value
              */
-            public void addPair(String key, double value) {
+            public TextBuffer addPair(String key, double value) {
                   q.add(String.format((key + "%.2f"), value));
+                  return this;
             }
 
             /**
+             *
              * Simplifies formatting a key value pair where the value is an int
              * 
              * @param key
              * @param value
              */
-            public void addPair(String key, int value) {
+            public TextBuffer addPair(String key, int value) {
                   q.add(String.format((key + "%d"), value));
+                  return this;
             }
 
             /**
@@ -83,8 +86,9 @@ public class UI {
              * 
              * @param str
              */
-            public void add(String str) {
+            public TextBuffer add(String str) {
                   q.add(str);
+                  return this;
             }
 
             /**

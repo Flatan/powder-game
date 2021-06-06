@@ -12,7 +12,7 @@ public class ShowHeatMap implements UIEvent {
 
   @Override
   public void draw(TextBuffer t, Graphics2D g) {
-    Board B = Application.getBoard();
+    Board B = Application.board;
 
     t.add("――――――――――――――――");
     t.add("t - toggle heat map display");
@@ -30,17 +30,17 @@ public class ShowHeatMap implements UIEvent {
   @Override
   public void on(boolean once) {
 
-    Board B = Application.getBoard();
+    Board B = Application.board;
 
     switch (UI.keyboard.keyPressed()) {
       case 'c':
-        B.setSelectedTemp(0);
+        ParticleFactory.temp = 0;
         break;
       case 'w':
-        B.setSelectedTemp(50);
+        ParticleFactory.temp = 50;
         break;
       case 'h':
-        B.setSelectedTemp(100);
+        ParticleFactory.temp = 100;
         break;
     }
 

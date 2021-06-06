@@ -3,6 +3,9 @@ package ui;
 import core.Application;
 import core.Board;
 import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Dimension;
+
 import ui.UI.TextBuffer;
 
 public class Resolution implements UIEvent {
@@ -10,22 +13,22 @@ public class Resolution implements UIEvent {
   @Override
   public void draw(TextBuffer t, Graphics2D g) {
     t.add("r - toggle resolution");
-    t.flush(0, 50);
+    t.flush(0, 70);
 
   }
 
   @Override
   public void on(boolean once) {
 
-    Board B = Application.getBoard();
+    Board B = Application.board;
 
-    B.setScale(2);
-    B.setWidth(300);
-    B.setHeight(300);
+    Application.scale = 2;
     B.setDelay(25);
 
     if (once) {
-      B.reset();
+      B.setPreferredSize(new Dimension(300 * 2, 300 * 2));
+      B.setBackground(Color.BLACK);
+      Application.grid.reset(300, 300);
     }
 
   }
@@ -33,15 +36,15 @@ public class Resolution implements UIEvent {
   @Override
   public void off(boolean once) {
 
-    Board B = Application.getBoard();
+    Board B = Application.board;
 
-    B.setScale(1);
-    B.setWidth(600);
-    B.setHeight(600);
+    Application.scale = 1;
     B.setDelay(25);
 
     if (once) {
-      B.reset();
+      B.setPreferredSize(new Dimension(600, 600));
+      B.setBackground(Color.BLACK);
+      Application.grid.reset(600, 600);
     }
 
   }
