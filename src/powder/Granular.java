@@ -55,9 +55,9 @@ public class Granular extends Particle {
 			Random rnd = new Random();
 			if (!testRel(-1, 0) && !testRel(1, 0) && supported()) {
 				if (rnd.nextBoolean())
-					setNewPosition(X() + 1, Y());
+					setNewPosition(this.x + 1, this.y);
 				else
-					setNewPosition(X() - 1, Y());
+					setNewPosition(this.x - 1, this.y);
 			}
 
 			/*
@@ -154,7 +154,7 @@ public class Granular extends Particle {
 
 	@Override
 	public boolean supported() {
-		if (Y() <= 0)
+		if (this.y <= 0)
 			return true;
 		else if (!testRel(0, -1))
 			return false;
