@@ -3,6 +3,7 @@ package powder;
 import java.util.AbstractCollection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import core.Application;
@@ -12,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 
 /**
  * Effectively allows a 2D array of Particles to be used as a cartesian grid.
@@ -22,6 +24,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   private int W;
   private int H;
   private BufferedImage image;
+  private Arena arena = new Arena();
   private HashSet<Particle> particles = new HashSet<Particle>();
 
   public ParticleGrid(int W, int H) {
@@ -86,7 +89,8 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     if (test(x, y) || outOfBounds(x, y))
       return false;
     else {
-      particles.add(p);
+      p.x = x;
+      p.y = y;
       a[x][a.length - 1 - y] = p;
       return true;
     }
@@ -102,12 +106,72 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return whether move was successful
    */
   public boolean move(Particle p, int x, int y) {
-    if (test(x, y) || outOfBounds(x, y)) {
+
+    int py = p.Y();
+    int px = p.X();
+
+    if (set(x, y, p)) {
+      a[px][a.length - 1 - py] = null;
+      return true;
+    }
+    return false;
+  }
+
+  private class Coord {
+    int x;
+    int y;
+
+    Coord(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+      if (obj instanceof Coord) {
+        Coord c = (Coord) obj;
+        return (c.x == this.x && c.y == this.y);
+      }
       return false;
     }
-    a[p.X()][a.length - 1 - p.Y()] = null;
-    set(x, y, p);
-    return true;
+
+    @Override
+    public int hashCode() {
+      return x >>> 2 ^ y;
+    }
+  }
+
+  private class Arena {
+
+    HashSet<Particle[]> colliders;
+
+    Arena() {
+      colliders = new HashSet<Particle[]>();
+    }
+
+    void add(Particle[] p) {
+      colliders.add(p);
+    }
+
+    void process() {
+
+      Random r = new Random();
+      for (Particle[] p : colliders) {
+
+        if (r.nextBoolean()) {
+
+          p[0].vel.x = 1;
+          p[1].vel.x = -1;
+        } else {
+
+          p[0].vel.x = -1;
+          p[1].vel.x = 1;
+        }
+      }
+
+      colliders = new HashSet<Particle[]>();
+    }
   }
 
   /**
@@ -116,9 +180,36 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   public void updateParticles() {
     // Iterate through the grid and update every pixel with a Particle
 
-    forEachParticle(x -> x.update());
+    HashMap<Coord, Particle> register = new HashMap<Coord, Particle>();
 
-    forEachParticle(x -> x.updated = false);
+    forEachParticle((p) -> {
+      // p.vel.y -= 0.1;
+      p.nx = (int) (p.X() + p.vel.x);
+      p.ny = (int) (p.Y() + p.vel.y);
+
+      register.put(new Coord(p.nx, p.ny), p);
+
+    });
+
+    forEachParticle((p) -> {
+
+      if (test(p.nx, p.ny)) {
+        arena.add(new Particle[] { register.get(new Coord(p.nx, p.ny)), p });
+      }
+    });
+
+    register.clear();
+    arena.process();
+
+    forEachParticle((p) -> {
+
+      p.nx = (int) (p.X() + p.vel.x);
+      p.ny = (int) (p.Y() + p.vel.y);
+
+      move(p, p.nx, p.ny);
+
+    });
+
   }
 
   public boolean computeIfPresent(double x, double y, Consumer<Particle> action) {

@@ -20,7 +20,8 @@ public abstract class Particle {
 	public static ColorGradientMap slopemap = new ColorGradientMap();
 
 	public ParticleGrid grid = Application.grid;
-	private int x, y;
+	public int x, y;
+	public int nx, ny;
 	private double realx, realy;
 	private int particleID;
 
