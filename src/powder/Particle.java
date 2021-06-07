@@ -85,14 +85,6 @@ public abstract class Particle {
 		return realy;
 	}
 
-	public int Y() {
-		return y;
-	}
-
-	public int X() {
-		return x;
-	}
-
 	/**
 	 * getID returns a unique particle identifier that can be used for logging
 	 * 
@@ -114,7 +106,7 @@ public abstract class Particle {
 	 */
 	public Particle getRel(int x, int y) {
 
-		return grid.get(X() + x, Y() + y);
+		return grid.get(this.x + x, this.y + y);
 	}
 
 	public double distanceFrom(double x, double y) {

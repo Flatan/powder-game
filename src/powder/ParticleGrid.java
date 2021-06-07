@@ -109,8 +109,8 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    */
   public boolean move(Particle p, int x, int y) {
 
-    int py = p.Y();
-    int px = p.X();
+    int py = p.y;
+    int px = p.x;
 
     if (set(x, y, p)) {
       a[px][a.length - 1 - py] = null;
@@ -164,20 +164,16 @@ public class ParticleGrid extends AbstractCollection<Particle> {
         if (r.nextBoolean()) {
 
           p[0].vel.x = -1;
-          // p[1].vel.x = -1;
+          p[0].vel.y = 1;
+
         } else {
 
           p[0].vel.x = 1;
-          // p[1].vel.x = 1;
         }
 
         if (p[0] instanceof Border || p[1] instanceof Border) {
           p[0].vel.x = 0;
           p[0].vel.y = 0;
-          p[1].vel.x = 0;
-          p[1].vel.y = 0;
-        }
-        if (p[1] instanceof Border) {
           p[1].vel.x = 0;
           p[1].vel.y = 0;
         }
@@ -191,7 +187,6 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * Invokes the update() method for each Particle on the grid
    */
   public void updateParticles() {
-    HashMap<Coord, Particle> register = new HashMap<Coord, Particle>();
 
     while (!spawnQueue.isEmpty()) {
       Particle p = spawnQueue.removeLast();
@@ -199,36 +194,29 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     }
 
     forEachParticle((p) -> {
-      // p.vel.y -= 0.1;
-      p.nx = (int) (p.X() + p.vel.x);
-      p.ny = (int) (p.Y() + p.vel.y);
-
-      register.put(new Coord(p.nx, p.ny), p);
+      p.nx = (int) (p.x + p.vel.x);
+      p.ny = (int) (p.y + p.vel.y);
 
     });
 
     forEachParticle((p) -> {
-
       if (test(p.nx, p.ny)) {
-        arena.add(new Particle[] { register.get(new Coord(p.nx, p.ny)), p });
+        arena.add(new Particle[] { get(p.nx, p.ny), p });
       }
     });
 
-    register.clear();
     arena.process();
 
     forEachParticle((p) -> {
 
-      p.nx = (int) (p.X() + p.vel.x);
-      p.ny = (int) (p.Y() + p.vel.y);
+      p.nx = (int) (p.x + p.vel.x);
+      p.ny = (int) (p.y + p.vel.y);
 
       move(p, p.nx, p.ny);
 
       if (!(p instanceof Border)) {
 
-        if (p.vel.y == 0) {
-          p.vel.y = -1;
-        }
+        p.vel.y += -0.1;
       }
 
     });
@@ -265,7 +253,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     image.setRGB(0, 0, W, H, new int[W * H], 0, 0);
     try {
       forEachParticle((particle) -> {
-        image.setRGB(particle.X(), H - 1 - particle.Y(), particle.displayColor.getRGB());
+        image.setRGB(particle.x, H - 1 - particle.y, particle.displayColor.getRGB());
       });
     } catch (ArrayIndexOutOfBoundsException e) {
     }
