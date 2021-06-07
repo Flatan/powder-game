@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.ArrayDeque;
 
 /**
  * Effectively allows a 2D array of Particles to be used as a cartesian grid.
@@ -26,6 +27,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   private BufferedImage image;
   private Arena arena = new Arena();
   private HashSet<Particle> particles = new HashSet<Particle>();
+  private ArrayDeque<Particle> spawnQueue = new ArrayDeque<Particle>();
 
   public ParticleGrid(int W, int H) {
     a = new Particle[W][H];
@@ -161,15 +163,15 @@ public class ParticleGrid extends AbstractCollection<Particle> {
 
         if (r.nextBoolean()) {
 
-          p[0].vel.x = 1;
-          p[1].vel.x = -1;
+          p[0].vel.x = -1;
+          // p[1].vel.x = -1;
         } else {
 
-          p[0].vel.x = -1;
-          p[1].vel.x = 1;
+          p[0].vel.x = 1;
+          // p[1].vel.x = 1;
         }
 
-        if (p[0] instanceof Border) {
+        if (p[0] instanceof Border || p[1] instanceof Border) {
           p[0].vel.x = 0;
           p[0].vel.y = 0;
           p[1].vel.x = 0;
@@ -189,9 +191,12 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * Invokes the update() method for each Particle on the grid
    */
   public void updateParticles() {
-    // Iterate through the grid and update every pixel with a Particle
-
     HashMap<Coord, Particle> register = new HashMap<Coord, Particle>();
+
+    while (!spawnQueue.isEmpty()) {
+      Particle p = spawnQueue.removeLast();
+      set(p.x, p.y, p);
+    }
 
     forEachParticle((p) -> {
       // p.vel.y -= 0.1;
@@ -219,29 +224,14 @@ public class ParticleGrid extends AbstractCollection<Particle> {
 
       move(p, p.nx, p.ny);
 
+      if (!(p instanceof Border)) {
+
+        if (p.vel.y == 0) {
+          p.vel.y = -1;
+        }
+      }
+
     });
-
-  }
-
-  public boolean computeIfPresent(double x, double y, Consumer<Particle> action) {
-
-    Particle p = get(x, y);
-    if (p != null) {
-      action.accept(p);
-      return true;
-    }
-    return false;
-
-  }
-
-  public boolean computeIfPresent(int x, int y, Consumer<Particle> action) {
-
-    Particle p = get(x, y);
-    if (p != null) {
-      action.accept(p);
-      return true;
-    }
-    return false;
 
   }
 
@@ -302,7 +292,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     } catch (Throwable e) {
       System.out.println(e);
     }
-    set(x, y, particle);
+    spawnQueue.add(particle);
     return particle;
   }
 
