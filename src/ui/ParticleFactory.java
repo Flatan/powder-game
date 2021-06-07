@@ -33,6 +33,28 @@ public class ParticleFactory implements UIEvent {
     }
   }
 
+  public static void spawnRect(int x1, int y1, int x2, int y2, int stroke) {
+
+    for (int i = x1; i < x2; i++) {
+
+      for (int j = y1; j < y2; j++) {
+
+        if (i > stroke && i < x2 - stroke - 1) {
+
+          if (j < stroke || j > y2 - stroke - 1) {
+
+          } else {
+            continue;
+          }
+
+        }
+
+        Particle p = Application.grid.spawn(i, j, color, element);
+        p.temperature = temp;
+      }
+    }
+  }
+
   @Override
   public void draw(TextBuffer t, Graphics2D g) {
 
@@ -59,6 +81,7 @@ public class ParticleFactory implements UIEvent {
     switch (shape) {
       case CIRCLE:
         spawnCircle(mx, my, diameter);
+
         break;
 
       case SQUARE:

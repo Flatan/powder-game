@@ -168,6 +168,17 @@ public class ParticleGrid extends AbstractCollection<Particle> {
           p[0].vel.x = -1;
           p[1].vel.x = 1;
         }
+
+        if (p[0] instanceof Border) {
+          p[0].vel.x = 0;
+          p[0].vel.y = 0;
+          p[1].vel.x = 0;
+          p[1].vel.y = 0;
+        }
+        if (p[1] instanceof Border) {
+          p[1].vel.x = 0;
+          p[1].vel.y = 0;
+        }
       }
 
       colliders = new HashSet<Particle[]>();

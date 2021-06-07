@@ -54,6 +54,14 @@ public class AlwaysOn implements UIEvent {
   @Override
   public void on(boolean once) {
 
+    if (once) {
+      ParticleFactory.element = Border.class;
+      ParticleFactory.color = Color.gray;
+      ParticleFactory.spawnRect(0, 0, 600, 600, 3);
+      ParticleFactory.element = Granular.class;
+      ParticleFactory.color = Color.white;
+    }
+
     if (UI.keyboard.keyRepeated('a') % 2 == 1) {
       ParticleFactory.shape = Shape.ONE;
       UI.mouse.setCursorSize(3);
