@@ -1,6 +1,8 @@
 package ui;
 
 import powder.*;
+import ui.UI.TextBuffer;
+import java.awt.Graphics2D;
 import core.*;
 
 /**
@@ -9,25 +11,36 @@ import core.*;
 public class ShowHeatMap implements UIEvent {
 
   @Override
-  public void eventOff(boolean justEnded) {
+  public void draw(TextBuffer t, Graphics2D g) {
+    Board B = Application.board;
+
+    t.add("――――――――――――――――");
+    t.add("t - toggle heat map display");
+    t.add("c - cold particles");
+    t.add("w - warm particles");
+    t.add("h - hot particles");
+    t.flush(B.getWidth() - 200, 60);
+  }
+
+  @Override
+  public void off(boolean once) {
     Particle.showHeatMap = false;
   }
 
   @Override
-  public void eventOn(boolean justStarted) {
+  public void on(boolean once) {
 
-    Board B = Application.getBoard();
-    KeyAction K = B.getKeyboard();
+    Board B = Application.board;
 
-    switch (K.keyPressed()) {
+    switch (UI.keyboard.keyPressed()) {
       case 'c':
-        B.setSelectedTemp(0);
+        ParticleFactory.temp = 0;
         break;
       case 'w':
-        B.setSelectedTemp(50);
+        ParticleFactory.temp = 50;
         break;
       case 'h':
-        B.setSelectedTemp(100);
+        ParticleFactory.temp = 100;
         break;
     }
 
@@ -35,11 +48,9 @@ public class ShowHeatMap implements UIEvent {
   }
 
   @Override
-  public boolean sendingSignal() {
+  public boolean trigger() {
 
-    KeyAction K = Application.getBoard().getKeyboard();
-
-    return K.keyToggled('t');
+    return UI.keyboard.keyToggled('t');
 
   }
 

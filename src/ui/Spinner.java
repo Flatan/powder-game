@@ -1,6 +1,8 @@
 package ui;
 
 import powder.*;
+import ui.UI.TextBuffer;
+import java.awt.Graphics2D;
 import core.*;
 
 /**
@@ -12,20 +14,21 @@ public class Spinner implements UIEvent {
   int iteration = 0;
 
   @Override
-  public void eventOff(boolean justEnded) {
+  public void draw(TextBuffer t, Graphics2D g) {
   }
 
   @Override
-  public void eventOn(boolean justStarted) {
+  public void off(boolean once) {
+  }
 
-    Board B = Application.getBoard();
-    KeyAction K = B.getKeyboard();
+  @Override
+  public void on(boolean once) {
 
-    ParticleGrid grid = Particle.getGrid();
+    Board B = Application.board;
+
+    ParticleGrid grid = Application.grid;
 
     iteration++;
-
-    int size = 5;
 
     int factor = 150;
 
@@ -41,19 +44,17 @@ public class Spinner implements UIEvent {
 
       for (int y = B.getHeight() / 2 - 10 + posy; y < B.getHeight() / 2 + 10 + posy; y++) {
 
-        Particle p = grid.spawnParticle(x, y, B.getSelectedColor(), B.getSelectedElement());
-        p.temperature = B.getSelectedTemp();
+        Particle p = grid.spawn(x, y, ParticleFactory.color, ParticleFactory.element);
+        p.temperature = 50;
       }
     }
 
   }
 
   @Override
-  public boolean sendingSignal() {
+  public boolean trigger() {
 
-    KeyAction K = Application.getBoard().getKeyboard();
-
-    return K.keyToggled('r');
+    return UI.keyboard.keyToggled('n');
 
   }
 

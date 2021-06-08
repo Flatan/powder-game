@@ -27,49 +27,50 @@ public class Granular extends Particle {
 	// Good ole particle movin method
 	@Override
 	public void update() {
-		
+
 		if (!updated) {
 			updated = true;
-			
-			//dispSlope();
-			
-			
-			
+
+			// dispSlope();
+
+			vel.add(gravity);
 			updateTemp();
-			
+
 			double[] nextPos = getNextPos();
 			setNewPosition(nextPos[0], nextPos[1]);
-			
-			//Vector2D netForce = new Vector2D();
-			vel.add(gravity);
-			if (!testRel(0,1) && supported()) {
 
-			double m = slope();
-			SurfacePoint surf = new SurfacePoint(m,SurfacePoint.Side.BELOW);
-			Vector2D normalForce = surf.getNormal();
-			normalForce.multiply(Math.abs(gravity.dotProduct(surf.getNormal())));
-			//System.out.println(m);
-			//System.out.println(normalForce);
-			vel.add(normalForce);
+			// Vector2D netForce = new Vector2D();
+
+			if (!testRel(0, 1) && supported()) {
+
+				double m = slope();
+				SurfacePoint surf = new SurfacePoint(m, SurfacePoint.Side.BELOW);
+				Vector2D normalForce = surf.getNormal();
+				normalForce.multiply(Math.abs(gravity.dotProduct(surf.getNormal())));
+				// System.out.println(m);
+				// System.out.println(normalForce);
+				vel.add(normalForce);
 			}
-			
+
 			Random rnd = new Random();
-			if (!testRel(-1,0) && !testRel(1,0) && supported()) {
+			if (!testRel(-1, 0) && !testRel(1, 0) && supported()) {
 				if (rnd.nextBoolean())
-					setNewPosition(X()+1, Y());
+					setNewPosition(this.x + 1, this.y);
 				else
-					setNewPosition(X()-1, Y());
+					setNewPosition(this.x - 1, this.y);
 			}
 
-			/*if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1)) && supported()) {
-				vel = new Vector2D(-1,0);
-				
-			}
-
-			else if (!testRel(1, 0) && !testRel(1, -1) && (testRel(-1, 0) || testRel(-1, -1)) && supported()) {
-				vel = new Vector2D(1,0);
-
-			}*/
+			/*
+			 * if (!testRel(-1, 0) && !testRel(-1, -1) && (testRel(1, 0) || testRel(1, -1))
+			 * && supported()) { vel = new Vector2D(-1,0);
+			 * 
+			 * }
+			 * 
+			 * else if (!testRel(1, 0) && !testRel(1, -1) && (testRel(-1, 0) || testRel(-1,
+			 * -1)) && supported()) { vel = new Vector2D(1,0);
+			 * 
+			 * }
+			 */
 
 		}
 	}
@@ -77,11 +78,10 @@ public class Granular extends Particle {
 	// Calculates the particle's next position
 	public double[] getNextPos() {
 
-		double targetX = X() + vel.x;
-		double targetY = Y() + vel.y;
-		double newX = X();
-		double newY = Y();
-
+		double targetX = x + vel.x;
+		double targetY = y + vel.y;
+		double newX = x;
+		double newY = y;
 
 		// normalized velocity vector
 		Vector2D normVel = vel.normalizedVect();
@@ -98,35 +98,25 @@ public class Granular extends Particle {
 				vel.y = 0;
 				break;
 			}
+
 			// Check if path is blocked by particle
 
-			
-			if (grid.test((int) (newX + normVel.x), (int) (newY + normVel.y))) {
-				Particle obstacle = grid.get(newX + normVel.x, newY + normVel.y);
+			grid.computeIfPresent(newX + normVel.x, newY + normVel.y, (obstacle) -> {
+
 				if (!obstacle.updated && obstacle != this) {
 					obstacle.update();
 				}
-			}
+			});
 
-			if (grid.test((int) (newX + normVel.x), (int) (newY + normVel.y))) {
-				Particle obstacle = grid.get(newX + normVel.x, newY + normVel.y);
+			boolean collided = grid.computeIfPresent(newX + normVel.x, newY + normVel.y, (obstacle) -> {
 
 				if (obstacle != this) {
 					collide(obstacle, 1);
-					obstacle.update();
-					break;
 				}
-			}
+			});
 
-			// Particle obstacle = grid.get(newX + normVelX, newY + normVelY);
-			// if (obstacle != null && !obstacle.updated && obstacle != this) {
-			// obstacle.update();
-			// }
-			// obstacle = grid.getClosest(newX + normVelX, newY + normVelY);
-			// if (obstacle != null && obstacle != this) {
-			// collide(obstacle, 1);
-			// break;
-			// }
+			if (collided)
+				break;
 
 			newX += normVel.x;
 			newY += normVel.y;
@@ -148,27 +138,26 @@ public class Granular extends Particle {
 	 *              higher for fun bouncy effect
 	 */
 	public void collide(Particle other, double cR) {
-		
+
 		if (other.dynamic) {
-		BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
+			BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
 
-		double tempVelX = vel.x;
-		double tempVelY = vel.y;
+			double tempVelX = vel.x;
+			double tempVelY = vel.y;
 
-		vel.x = newVel.apply(vel.x, other.vel.x);
-		vel.y = newVel.apply(vel.y, other.vel.y);
+			vel.x = newVel.apply(vel.x, other.vel.x);
+			vel.y = newVel.apply(vel.y, other.vel.y);
 
-		other.vel.x = newVel.apply(other.vel.x, tempVelX);
-		other.vel.y = newVel.apply(other.vel.y, tempVelY);
-		}
-		else
-			vel = new Vector2D(0,0);
+			other.vel.x = newVel.apply(other.vel.x, tempVelX);
+			other.vel.y = newVel.apply(other.vel.y, tempVelY);
+		} else
+			vel = new Vector2D(0, 0);
 
 	}
 
 	@Override
 	public boolean supported() {
-		if (Y() <= 0)
+		if (this.y <= 0)
 			return true;
 		else if (!testRel(0, -1))
 			return false;

@@ -1,12 +1,17 @@
 package ui;
 
+import ui.UI.TextBuffer;
+import java.awt.Graphics2D;
+
 /**
  * UIEvent
  */
 public interface UIEvent {
-  public boolean sendingSignal();
+  public boolean trigger();
 
-  public void eventOn(boolean justStarted);
+  public void on(boolean once);
 
-  public void eventOff(boolean justEnded);
+  public void off(boolean once);
+
+  public void draw(TextBuffer t, Graphics2D g);
 }

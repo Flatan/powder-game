@@ -6,24 +6,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 
-import color.ColorGradientMap;
-import ui.KeyAction;
-import ui.Mouse;
-import ui.PaintParticleCluster;
-import ui.ShowHeatMap;
 import ui.UIEvent;
-import ui.Foreground;
-import ui.GlobalSettings;
-import ui.*;
+import ui.UI;
 import powder.*;
 
 /**
@@ -34,17 +24,12 @@ import powder.*;
  * classes to borrow every iteration but never draws anything independently.
  */
 
-// TODO ^^ Make this true
-
 public class Board extends JPanel implements Runnable {
 
     public static int runtimeParticleCount = 0;
-    // Test comment 2
 
-    private double scale = 1;
-    // Width and height of the grid
-    private int B_WIDTH = 600;
-    private int B_HEIGHT = 600;
+    private int W;
+    private int H;
 
     // Milliseconds per frame:
     private int DELAY = 25;
@@ -52,24 +37,14 @@ public class Board extends JPanel implements Runnable {
     // Measures the framerate
     private double fps = 0;
 
-    // Defines the area of powder placement
-    public int cursorSize = 20;
-
-    private KeyAction ka = new KeyAction();
-    private final Mouse M = new Mouse();
-    // private UIEvent E = new UIEvent();
-    // private BufferedImage image;
     private Thread animator;
-    private Particle p = null;
-
-    private Class<? extends Particle> selectedElement = Granular.class;
     private ArrayList<UIEvent> UIevents = new ArrayList<UIEvent>();
 
-    private Color selectedColor = Color.white;
-    private double selectedTemp = 50;
-    private Foreground fg = new Foreground();
+    private UI ui;
 
-    public Board() {
+    public Board(int W, int H) {
+        this.W = W;
+        this.H = H;
 
         initBoard();
 
@@ -77,108 +52,29 @@ public class Board extends JPanel implements Runnable {
 
     // Setup initial settings and event listeners
     private void initBoard() {
-        reset();
+        setBackground(Color.BLACK);
+        setPreferredSize(new Dimension((int) (W * Application.scale), (int) (H * Application.scale)));
 
-        connectEvent(PaintParticleCluster.class);
-        connectEvent(ShowHeatMap.class);
-        connectEvent(GlobalSettings.class);
-        connectEvent(Spinner.class);
+        ui = new UI(this);
 
         Particle.heatmap.addColor(0, Color.GREEN);
         Particle.heatmap.addColor(50, Color.YELLOW);
         Particle.heatmap.addColor(100, Color.RED);
-        
+
         Particle.slopemap.addColor(-5, Color.RED);
         Particle.slopemap.addColor(0, Color.WHITE);
         Particle.slopemap.addColor(5, Color.GREEN);
-        
+
         setFocusable(true);
-        addKeyListener(ka);
-        addMouseWheelListener(M.wheelControls);
-        addMouseListener(M.adapter);
     }
 
     /**
-     * Set the current element
-     * 
-     * @param element
-     */
-    public void setSelectedElement(Class<? extends Particle> element) {
-        this.selectedElement = element;
-    }
-
-    public Class<? extends Particle> getSelectedElement() {
-        return selectedElement;
-    }
-
-    /**
-     * Get the board's mouse object
+     * Get the initialized UI events
      * 
      * @return
      */
-    public Mouse getMouse() {
-        return M;
-    }
-
-    public KeyAction getKeyboard() {
-        return ka;
-    }
-    // public UIEvent getUIEvents() {
-    // return E;
-    // }
-
-    /**
-     * Set the color of the current element
-     * 
-     * @param c
-     */
-    public void setSelectedColor(Color c) {
-        this.selectedColor = c;
-    }
-
-    /**
-     * Get the color of the current element
-     *
-     * @return Color
-     */
-    public Color getSelectedColor() {
-        return selectedColor;
-    }
-
-    /**
-     * Set the selected temp
-     * 
-     * @param temp
-     */
-    public void setSelectedTemp(double temp) {
-        this.selectedTemp = temp;
-    }
-
-    /**
-     * Get the selected temp
-     *
-     * @return double
-     */
-    public double getSelectedTemp() {
-        return selectedTemp;
-    }
-
-    /**
-     * Set the current scale
-     * 
-     * @param s
-     */
-    public void setScale(double s) {
-        this.scale = s;
-    }
-
-    /**
-     * Get the current scale
-     * 
-     * @return
-     */
-    public double getScale() {
-        return scale;
+    public ArrayList<UIEvent> getConnectedEvents() {
+        return UIevents;
     }
 
     /**
@@ -187,7 +83,7 @@ public class Board extends JPanel implements Runnable {
      * @param w
      */
     public void setWidth(int w) {
-        this.B_WIDTH = w;
+        this.W = w;
     }
 
     /**
@@ -196,7 +92,7 @@ public class Board extends JPanel implements Runnable {
      * @param h
      */
     public void setHeight(int h) {
-        this.B_HEIGHT = h;
+        this.H = h;
     }
 
     /**
@@ -217,7 +113,7 @@ public class Board extends JPanel implements Runnable {
         return fps;
     }
 
-    private void connectEvent(Class<? extends UIEvent> event) {
+    public void connectEvent(Class<? extends UIEvent> event) {
 
         try {
             UIEvent instance = event.getDeclaredConstructor().newInstance();
@@ -227,24 +123,9 @@ public class Board extends JPanel implements Runnable {
         }
     }
 
-    public void reset() {
-        setBackground(Color.BLACK);
-        setPreferredSize(new Dimension((int) (B_WIDTH * scale), (int) (B_HEIGHT * scale)));
-        ParticleGrid grid = new ParticleGrid(new Particle[B_WIDTH][B_HEIGHT]);
-        Particle.grid = grid;
-        
-        for (int x = 1; x<B_WIDTH; x++) {
-        	grid.spawnParticle(x,x/2,Color.RED,Solid.class);
-        }
-
-        // image = new BufferedImage(B_WIDTH, B_HEIGHT, BufferedImage.TYPE_INT_RGB);
-        // bgGrid = new int[B_WIDTH * B_HEIGHT];
-    }
-
     @Override
     public void addNotify() {
         super.addNotify();
-
         animator = new Thread(this);
         animator.start();
     }
@@ -256,25 +137,13 @@ public class Board extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        ParticleGrid grid = Particle.getGrid();
         Graphics2D g2 = (Graphics2D) g;
         g2.scale(2, 2);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.WHITE);
 
-        // The state of the game grid is drawn to an image buffer,
-        // which is then drawn to the screen
-        AffineTransform transform = new AffineTransform();
-        transform.scale(scale, scale);
-        g2.setTransform(transform);
-
-        grid.draw(g2);
-
-        transform.setToIdentity();
-
-        g2.setTransform(transform);
-
-        fg.draw(g2);
+        Application.grid.draw(g2);
+        ui.draw(g2);
     }
 
     // Copied this from a tutorial and don't know what it does; don't mess with it:
@@ -294,29 +163,30 @@ public class Board extends JPanel implements Runnable {
             // Allows the KeyPressed() event to deliver the key only once
             // by immediately switching instanceBuffer back to "MIN_VALUE"
             // (char placeholder for "null")
-            if (ka.instanceBuffer == prevInstance) {
-                ka.instanceBuffer = Character.MIN_VALUE;
+
+            if (UI.keyboard.instanceBuffer == prevInstance) {
+                UI.keyboard.instanceBuffer = Character.MIN_VALUE;
             } else {
-                prevInstance = ka.instanceBuffer;
+                prevInstance = UI.keyboard.instanceBuffer;
             }
 
-            // Stream each UIEvent if its "sendingSignal()" gate is open
+            // Stream each UIEvent if its ".trigger()" gate is open
             for (UIEvent E : UIevents) {
-                if (E.sendingSignal()) {
+                if (E.trigger()) {
 
                     if (!ActiveEventBuffer.contains(E)) {
-                        E.eventOn(true);
+                        E.on(true);
                         ActiveEventBuffer.add(E);
                     } else {
-                        E.eventOn(false);
+                        E.on(false);
                     }
                 } else {
 
                     if (ActiveEventBuffer.contains(E)) {
-                        E.eventOff(true);
+                        E.off(true);
                         ActiveEventBuffer.remove(E);
                     } else {
-                        E.eventOff(false);
+                        E.off(false);
                     }
                 }
             }
@@ -330,7 +200,7 @@ public class Board extends JPanel implements Runnable {
             // Also potentially means the drawing of buffered image could be causing lag not
             // registered by
             // the counter but idk
-            Particle.getGrid().updateParticles();
+            Application.grid.updateParticles();
             repaint();
 
             timeDiff = System.currentTimeMillis() - beforeTime;

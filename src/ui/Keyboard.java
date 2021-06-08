@@ -7,7 +7,7 @@ import java.util.Hashtable;
 
 import core.*;
 
-public class KeyAction implements KeyListener {
+public class Keyboard implements KeyListener {
 
     private Board B;
     private char c = Character.MIN_VALUE;
@@ -66,7 +66,7 @@ public class KeyAction implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        B = Application.getBoard();
+        B = Application.board;
         this.c = e.getKeyChar();
 
         // Watches for keys pressed multiple times in a row
