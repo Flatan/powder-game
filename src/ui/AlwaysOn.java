@@ -16,6 +16,7 @@ import ui.UI.TextBuffer;
  * AlwaysOn
  */
 public class AlwaysOn implements UIEvent {
+  Particle tracer;
 
   @Override
   public void draw(TextBuffer t, Graphics2D g) {
@@ -38,6 +39,12 @@ public class AlwaysOn implements UIEvent {
 
     t.addPair("Spawn count: ", Board.runtimeParticleCount).flush();
 
+    if (tracer != null) {
+      t.add(String.format("Tracer: (%d, %d)", tracer.x, tracer.y)).flush();
+      t.add(String.format("Tracer vel: %.2f | %.2f", tracer.vel.x, tracer.vel.y)).flush();
+      t.add(String.format("Tracer n: (%d, %d)", tracer.nx, tracer.ny)).flush();
+
+    }
     g.drawOval(UI.mouse.windowX() - cursorSize / 2, UI.mouse.windowY() - cursorSize / 2, cursorSize, cursorSize);
 
   }
@@ -53,6 +60,13 @@ public class AlwaysOn implements UIEvent {
 
   @Override
   public void on(boolean once) {
+
+    if (once) {
+      ParticleFactory.element = Border.class;
+      ParticleFactory.spawnRect(0, 0, 600, 600, 3);
+      ParticleFactory.element = Granular.class;
+      this.tracer = Application.grid.spawn(300, 300, Granular.class);
+    }
 
     if (UI.keyboard.keyRepeated('a') % 2 == 1) {
       ParticleFactory.shape = Shape.ONE;

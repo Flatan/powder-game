@@ -29,6 +29,7 @@ public abstract class Particle {
 	// velocity:
 	public Vector2D vel = new Vector2D(0, 0);
 
+	public int nx, ny;
 	public Color color;
 	public Color displayColor = color;
 
@@ -127,21 +128,6 @@ public abstract class Particle {
 	public boolean testRel(int x, int y) {
 
 		return getRel(x, y) != null;
-	}
-
-	/**
-	 * Update the particle's position on the particle grid given precise coordinates
-	 * 
-	 * @param x X coordinate
-	 * @param y Y coordinate
-	 */
-	public void setNewPosition(double x, double y) {
-		if (grid.move(this, (int) x, (int) y)) {
-			this.realx = x;
-			this.realy = y;
-			this.x = (int) x;
-			this.y = (int) y;
-		}
 	}
 
 	abstract public void update();

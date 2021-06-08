@@ -4,12 +4,13 @@ import java.util.AbstractCollection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.ArrayDeque;
 
 import core.Application;
 
 import java.awt.image.BufferedImage;
+import java.util.Random;
 import java.awt.Graphics2D;
-import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.lang.reflect.Constructor;
 
@@ -22,7 +23,8 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   private int W;
   private int H;
   private BufferedImage image;
-  private HashSet<Particle> particles = new HashSet<Particle>();
+  private Arena arena = new Arena();
+  private ArrayDeque<Particle> spawnQueue = new ArrayDeque<Particle>();
 
   public ParticleGrid(int W, int H) {
     a = new Particle[W][H];
@@ -56,12 +58,10 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   }
 
   public Particle get(int x, int y) {
-
     return _get(x, y);
   }
 
   public Particle get(double x, double y) {
-
     return _get((int) x, (int) y);
   }
 
@@ -82,15 +82,21 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return whether set was successful
    */
 
-  public boolean set(Particle p) {
+  public void set(int x, int y, Particle p) {
 
-    int px = p.x;
-    int py = p.y;
-    if (test(px, py) || outOfBounds(px, py))
-      return false;
-    else {
-      a[px][a.length - 1 - py] = p;
-      return true;
+    p.x = x;
+    p.y = y;
+
+    try {
+      a[x][a.length - 1 - y] = p;
+    } catch (ArrayIndexOutOfBoundsException e) {
+
+      System.out.printf("\n ArrayIndexOutOfBoundsException thrown. Tried to set particle to (%d,%d)", x, y);
+      System.out.printf("\n (Interally, grid.a[%d][%d - 1 - %d])", x, a.length, y);
+      System.out.printf("\n Particle type: %s", p.getClass().toString());
+      System.out.printf("\n Location: (%d, %d)", p.x, p.y);
+      System.out.printf("\n Velocity: velx:%.2f vely:%.2f", p.vel.x, p.vel.y);
+      System.exit(0);
     }
 
   }
@@ -103,15 +109,54 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param p
    * @return whether move was successful
    */
-  public boolean move(Particle p, int x, int y) {
-    if (test(x, y) || outOfBounds(x, y)) {
-      return false;
-    }
+  public void move(Particle p, int x, int y) {
+
+    int py = p.y;
+    int px = p.x;
+
+    a[px][a.length - 1 - py] = null;
     a[p.x][a.length - 1 - p.y] = null;
-    p.x = x;
-    p.y = y;
-    set(p);
-    return true;
+    set(x, y, p);
+  }
+
+  private class Arena {
+
+    HashSet<Particle[]> colliders;
+
+    Arena() {
+      colliders = new HashSet<Particle[]>();
+    }
+
+    void add(Particle[] p) {
+      colliders.add(p);
+    }
+
+    void process() {
+
+      Random r = new Random();
+      for (Particle[] p : colliders) {
+
+        // if (p[0].vel.y == 0) {
+        p[1].vel.y = 1;
+        p[0].vel.y = 1;
+
+        // }
+
+        if (p[1].vel.y == 0) {
+          p[0].vel.y = 0;
+        }
+
+        if (p[0].vel.x == 0) {
+          p[1].vel.x = 0;
+        }
+
+        if (p[1].vel.x == 0) {
+          p[0].vel.x = 0;
+        }
+      }
+
+      colliders = new HashSet<Particle[]>();
+    }
   }
 
   /**
@@ -120,31 +165,35 @@ public class ParticleGrid extends AbstractCollection<Particle> {
   public void updateParticles() {
     // Iterate through the grid and update every pixel with a Particle
 
-    forEachParticle(x -> x.update());
-
-    forEachParticle(x -> x.updated = false);
-  }
-
-  public boolean computeIfPresent(double x, double y, Consumer<Particle> action) {
-
-    Particle p = get(x, y);
-    if (p != null) {
-      action.accept(p);
-      return true;
+    while (!spawnQueue.isEmpty()) {
+      Particle p = spawnQueue.removeLast();
+      set(p.x, p.y, p);
     }
-    return false;
 
-  }
+    forEachParticle((p) -> {
+      p.nx = (int) (p.x + p.vel.x);
+      p.ny = (int) (p.y + p.vel.y);
 
-  public boolean computeIfPresent(int x, int y, Consumer<Particle> action) {
+    });
 
-    Particle p = get(x, y);
-    if (p != null) {
-      action.accept(p);
-      return true;
-    }
-    return false;
+    forEachParticle((p) -> {
+      if (test(p.nx, p.ny)) {
+        arena.add(new Particle[] { get(p.nx, p.ny), p });
+      }
+    });
 
+    arena.process();
+
+    forEachParticle((p) -> {
+
+      p.nx = (int) (p.x + p.vel.x);
+      p.ny = (int) (p.y + p.vel.y);
+
+      if (!(p instanceof Border)) {
+        move(p, p.nx, p.ny);
+      }
+
+    });
   }
 
   /**
@@ -204,7 +253,8 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     } catch (Throwable e) {
       System.out.println(e);
     }
-    set(particle);
+
+    spawnQueue.add(particle);
     return particle;
   }
 
@@ -216,27 +266,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return boolean true if invalid else false
    */
   public boolean outOfBounds(double x, double y) {
-    return outOfBoundsX(x) || outOfBoundsY(y);
-  }
-
-  /**
-   * Checks if arbitrary y coordinate is invalid
-   * 
-   * @param y
-   * @return boolean true if invalid else false
-   */
-  public boolean outOfBoundsY(double y) {
-    return (y >= H || y < 0);
-  }
-
-  /**
-   * Checks if arbitrary x coordinate is invalid
-   * 
-   * @param x
-   * @return boolean true if invalid else false
-   */
-  public boolean outOfBoundsX(double x) {
-    return (x >= W || x < 0);
+    return (y >= H || y < 0 || x >= W || x < 0);
   }
 
   /**
