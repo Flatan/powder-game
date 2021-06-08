@@ -195,12 +195,12 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @param elementType Class which extends Particle
    * 
    */
-  public Particle spawn(int x, int y, Color color, Class<? extends Particle> elementType) {
+  public Particle spawn(int x, int y, Class<? extends Particle> elementType) {
 
     Particle particle = null;
     try {
-      Constructor<?> cons = elementType.getDeclaredConstructor(int.class, int.class, Color.class);
-      particle = (Particle) cons.newInstance(x, y, color);
+      Constructor<?> cons = elementType.getDeclaredConstructor(int.class, int.class);
+      particle = (Particle) cons.newInstance(x, y);
     } catch (Throwable e) {
       System.out.println(e);
     }

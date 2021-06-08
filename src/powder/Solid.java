@@ -8,8 +8,8 @@ import java.awt.Color;
 
 public class Solid extends Particle {
 
-  Solid(int x, int y, Color color) {
-    super(x, y, color);
+  Solid(int x, int y) {
+    super(x, y, Color.GRAY);
     dynamic = false;
   }
 

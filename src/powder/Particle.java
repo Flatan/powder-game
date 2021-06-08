@@ -29,12 +29,12 @@ public abstract class Particle {
 	// velocity:
 	public Vector2D vel = new Vector2D(0, 0);
 
-	public Color color = Color.white;
+	public Color color;
 	public Color displayColor = color;
 
 	double downPush = 0.0;
 	public boolean updated = false;
-	
+
 	boolean dynamic = true;
 
 	public double temperature = 0;

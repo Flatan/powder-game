@@ -17,11 +17,7 @@ import math.Vector2D;
 public class Granular extends Particle {
 
 	Granular(int x, int y) {
-		super(x, y);
-	}
-
-	Granular(int x, int y, Color color) {
-		super(x, y, color);
+		super(x, y, Color.white);
 	}
 
 	// Good ole particle movin method

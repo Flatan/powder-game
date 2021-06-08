@@ -3,7 +3,6 @@ package ui;
 import powder.*;
 import ui.UI.TextBuffer;
 import java.awt.Graphics2D;
-import java.awt.Color;
 import core.*;
 
 /**
@@ -12,7 +11,6 @@ import core.*;
 public class ParticleFactory implements UIEvent {
   final boolean onlyOne = false;
   public static int temp = 50;
-  public static Color color = Color.white;
   public static Class<? extends Particle> element = Granular.class;
   public static Shape shape = Shape.CIRCLE;
 
@@ -26,7 +24,7 @@ public class ParticleFactory implements UIEvent {
       for (int y_ = y - diameter / 2; y_ < y + diameter / 2; y_++) {
 
         if (Math.hypot(x_ - x, y_ - y) <= diameter / 2) {
-          Particle p = Application.grid.spawn(x_, y_, color, element);
+          Particle p = Application.grid.spawn(x_, y_, element);
           p.temperature = temp;
         }
       }
@@ -66,7 +64,7 @@ public class ParticleFactory implements UIEvent {
         break;
 
       case ONE:
-        Particle p = grid.spawn(mx, my, color, element);
+        Particle p = grid.spawn(mx, my, element);
         p.temperature = temp;
         break;
 

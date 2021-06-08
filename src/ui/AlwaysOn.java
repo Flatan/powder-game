@@ -45,9 +45,9 @@ public class AlwaysOn implements UIEvent {
   public void testCollison() {
     ParticleGrid grid = Application.grid;
     Particle.gravity = new Vector2D();
-    Granular p1 = (Granular) grid.spawn(0, 5, Color.WHITE, Granular.class);
+    Granular p1 = (Granular) grid.spawn(0, 5, Granular.class);
     p1.vel = new Vector2D(0.1, 0);
-    Granular p2 = (Granular) grid.spawn(9, 5, Color.WHITE, Granular.class);
+    Granular p2 = (Granular) grid.spawn(9, 5, Granular.class);
     p2.vel = new Vector2D(-0.1, 0);
   }
 
@@ -65,11 +65,9 @@ public class AlwaysOn implements UIEvent {
     switch (UI.keyboard.keyPressed()) {
       case 'p':
         ParticleFactory.element = Granular.class;
-        ParticleFactory.color = Color.white;
         break;
       case 's':
         ParticleFactory.element = Solid.class;
-        ParticleFactory.color = Color.gray;
         break;
       case 'q':
         System.exit(0);
