@@ -55,9 +55,9 @@ public class Granular extends Particle {
 			Random rnd = new Random();
 			if (!testRel(-1, 0) && !testRel(1, 0) && supported()) {
 				if (rnd.nextBoolean())
-					setNewPosition(X() + 1, Y());
+					setNewPosition(this.x + 1, this.y);
 				else
-					setNewPosition(X() - 1, Y());
+					setNewPosition(this.x - 1, this.y);
 			}
 
 			/*
@@ -78,10 +78,10 @@ public class Granular extends Particle {
 	// Calculates the particle's next position
 	public double[] getNextPos() {
 
-		double targetX = realX() + vel.x;
-		double targetY = realY() + vel.y;
-		double newX = realX();
-		double newY = realY();
+		double targetX = x + vel.x;
+		double targetY = y + vel.y;
+		double newX = x;
+		double newY = y;
 
 		// normalized velocity vector
 		Vector2D normVel = vel.normalizedVect();
@@ -139,22 +139,25 @@ public class Granular extends Particle {
 	 */
 	public void collide(Particle other, double cR) {
 
-		BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
+		if (other.dynamic) {
+			BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
 
-		double tempVelX = vel.x;
-		double tempVelY = vel.y;
+			double tempVelX = vel.x;
+			double tempVelY = vel.y;
 
-		vel.x = newVel.apply(vel.x, other.vel.x);
-		vel.y = newVel.apply(vel.y, other.vel.y);
+			vel.x = newVel.apply(vel.x, other.vel.x);
+			vel.y = newVel.apply(vel.y, other.vel.y);
 
-		other.vel.x = newVel.apply(other.vel.x, tempVelX);
-		other.vel.y = newVel.apply(other.vel.y, tempVelY);
+			other.vel.x = newVel.apply(other.vel.x, tempVelX);
+			other.vel.y = newVel.apply(other.vel.y, tempVelY);
+		} else
+			vel = new Vector2D(0, 0);
 
 	}
 
 	@Override
 	public boolean supported() {
-		if (Y() <= 0)
+		if (this.y <= 0)
 			return true;
 		else if (!testRel(0, -1))
 			return false;

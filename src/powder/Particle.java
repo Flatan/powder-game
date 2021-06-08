@@ -20,7 +20,7 @@ public abstract class Particle {
 	public static ColorGradientMap slopemap = new ColorGradientMap();
 
 	public ParticleGrid grid = Application.grid;
-	private int x, y;
+	public int x, y;
 	private double realx, realy;
 	private int particleID;
 
@@ -34,6 +34,8 @@ public abstract class Particle {
 
 	double downPush = 0.0;
 	public boolean updated = false;
+	
+	boolean dynamic = true;
 
 	public double temperature = 0;
 
@@ -84,14 +86,6 @@ public abstract class Particle {
 		return realy;
 	}
 
-	public int Y() {
-		return y;
-	}
-
-	public int X() {
-		return x;
-	}
-
 	/**
 	 * getID returns a unique particle identifier that can be used for logging
 	 * 
@@ -113,7 +107,7 @@ public abstract class Particle {
 	 */
 	public Particle getRel(int x, int y) {
 
-		return grid.get(X() + x, Y() + y);
+		return grid.get(this.x + x, this.y + y);
 	}
 
 	public double distanceFrom(double x, double y) {

@@ -82,12 +82,14 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return whether set was successful
    */
 
-  public boolean set(int x, int y, Particle p) {
-    if (test(x, y) || outOfBounds(x, y))
+  public boolean set(Particle p) {
+
+    int px = p.x;
+    int py = p.y;
+    if (test(px, py) || outOfBounds(px, py))
       return false;
     else {
-      particles.add(p);
-      a[x][a.length - 1 - y] = p;
+      a[px][a.length - 1 - py] = p;
       return true;
     }
 
@@ -105,8 +107,10 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     if (test(x, y) || outOfBounds(x, y)) {
       return false;
     }
-    a[p.X()][a.length - 1 - p.Y()] = null;
-    set(x, y, p);
+    a[p.x][a.length - 1 - p.y] = null;
+    p.x = x;
+    p.y = y;
+    set(p);
     return true;
   }
 
@@ -173,7 +177,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     image.setRGB(0, 0, W, H, new int[W * H], 0, 0);
     try {
       forEachParticle((particle) -> {
-        image.setRGB(particle.X(), H - 1 - particle.Y(), particle.displayColor.getRGB());
+        image.setRGB(particle.x, H - 1 - particle.y, particle.displayColor.getRGB());
       });
     } catch (ArrayIndexOutOfBoundsException e) {
     }
@@ -200,7 +204,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     } catch (Throwable e) {
       System.out.println(e);
     }
-    set(x, y, particle);
+    set(particle);
     return particle;
   }
 
