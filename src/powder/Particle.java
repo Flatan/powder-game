@@ -29,7 +29,9 @@ public abstract class Particle {
 	// velocity:
 	public Vector2D vel = new Vector2D(0, 0);
 
+	public Vector2D giveVel;
 	public int nx, ny;
+	public int ox, oy;
 	public Color color;
 	public Color displayColor = color;
 
@@ -43,16 +45,7 @@ public abstract class Particle {
 	// Thermal diffusivity:
 	public double thermDiff = 0.47;
 
-	Particle(int x, int y) {
-		particleID = Board.runtimeParticleCount++;
-		this.x = x;
-		this.y = y;
-		this.realx = x;
-		this.realy = y;
-	}
-
 	Particle(int x, int y, Color color) {
-
 		particleID = Board.runtimeParticleCount++;
 		this.x = x;
 		this.y = y;

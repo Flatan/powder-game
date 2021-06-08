@@ -82,17 +82,15 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    * @return whether set was successful
    */
 
-  public void set(int x, int y, Particle p) {
-
-    p.x = x;
-    p.y = y;
+  public void set(Particle p) {
 
     try {
-      a[x][a.length - 1 - y] = p;
+      a[p.x][a.length - 1 - p.y] = p;
     } catch (ArrayIndexOutOfBoundsException e) {
 
-      System.out.printf("\n ArrayIndexOutOfBoundsException thrown. Tried to set particle to (%d,%d)", x, y);
-      System.out.printf("\n (Interally, grid.a[%d][%d - 1 - %d])", x, a.length, y);
+      System.out.printf("\n ArrayIndexOutOfBoundsException thrown. Tried to set particle to (%d,%d)", p.x, p.y);
+      System.out.printf("\n (Interally, grid.a[%d][%d - 1 - %d])", p.x, a.length, p.y);
+      System.out.printf("\n (           grid.a[p.x][a.length - 1 - p.y])");
       System.out.printf("\n Particle type: %s", p.getClass().toString());
       System.out.printf("\n Location: (%d, %d)", p.x, p.y);
       System.out.printf("\n Velocity: velx:%.2f vely:%.2f", p.vel.x, p.vel.y);
@@ -114,9 +112,12 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     int py = p.y;
     int px = p.x;
 
+    p.y = y;
+    p.x = x;
+
+    spawnQueue.add(p);
+
     a[px][a.length - 1 - py] = null;
-    a[p.x][a.length - 1 - p.y] = null;
-    set(x, y, p);
   }
 
   private class Arena {
@@ -136,26 +137,22 @@ public class ParticleGrid extends AbstractCollection<Particle> {
       Random r = new Random();
       for (Particle[] p : colliders) {
 
-        // if (p[0].vel.y == 0) {
-        p[1].vel.y = 1;
-        p[0].vel.y = 1;
+        // TODO Vector equations that produce new vectors for each particle.
 
-        // }
+        p[0].vel = p[1].giveVel;
 
-        if (p[1].vel.y == 0) {
-          p[0].vel.y = 0;
-        }
+        p[1].vel = p[0].giveVel;
 
-        if (p[0].vel.x == 0) {
-          p[1].vel.x = 0;
-        }
-
-        if (p[1].vel.x == 0) {
-          p[0].vel.x = 0;
-        }
       }
 
       colliders = new HashSet<Particle[]>();
+    }
+  }
+
+  private void trace(Particle p, String msg) {
+
+    if (p instanceof Tracer) {
+      System.out.printf("\nTRACER %s x = %d y = %d", msg, p.x, p.y);
     }
   }
 
@@ -164,10 +161,12 @@ public class ParticleGrid extends AbstractCollection<Particle> {
    */
   public void updateParticles() {
     // Iterate through the grid and update every pixel with a Particle
-
+    //
     while (!spawnQueue.isEmpty()) {
+
       Particle p = spawnQueue.removeLast();
-      set(p.x, p.y, p);
+      a[p.ox][a.length - 1 - p.oy] = null;
+      set(p);
     }
 
     forEachParticle((p) -> {
@@ -178,7 +177,10 @@ public class ParticleGrid extends AbstractCollection<Particle> {
 
     forEachParticle((p) -> {
       if (test(p.nx, p.ny)) {
-        arena.add(new Particle[] { get(p.nx, p.ny), p });
+        if (get(p.nx, p.ny) != p) {
+          arena.add(new Particle[] { get(p.nx, p.ny), p });
+        }
+
       }
     });
 
@@ -190,7 +192,13 @@ public class ParticleGrid extends AbstractCollection<Particle> {
       p.ny = (int) (p.y + p.vel.y);
 
       if (!(p instanceof Border)) {
-        move(p, p.nx, p.ny);
+
+        p.ox = p.x;
+        p.oy = p.y;
+        p.y = p.ny;
+        p.x = p.nx;
+
+        spawnQueue.add(p);
       }
 
     });
@@ -254,6 +262,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
       System.out.println(e);
     }
 
+    // System.out.printf("\n%s x=%d, y=%d", particle.getClass().toString(), x, y);
     spawnQueue.add(particle);
     return particle;
   }

@@ -65,7 +65,7 @@ public class AlwaysOn implements UIEvent {
       ParticleFactory.element = Border.class;
       ParticleFactory.spawnRect(0, 0, 600, 600, 3);
       ParticleFactory.element = Granular.class;
-      this.tracer = Application.grid.spawn(300, 300, Granular.class);
+      this.tracer = Application.grid.spawn(300, 300, Tracer.class);
     }
 
     if (UI.keyboard.keyRepeated('a') % 2 == 1) {
