@@ -3,8 +3,10 @@ package ui;
 import java.awt.Graphics2D;
 import java.util.HashSet;
 import java.util.ArrayDeque;
+import java.awt.Point;
 
 import core.Board;
+import core.Application;
 
 /**
  * UI
@@ -28,21 +30,32 @@ public class UI {
     B.addKeyListener(UI.keyboard);
     B.addMouseWheelListener(UI.mouse.wheelControls);
     B.addMouseListener(UI.mouse.adapter);
+    B.connectEvent(AlwaysOn.class);
     B.connectEvent(ParticleFactory.class);
     B.connectEvent(ShowHeatMap.class);
-    B.connectEvent(AlwaysOn.class);
     B.connectEvent(Spinner.class);
     B.connectEvent(Resolution.class);
     B.connectEvent(Button.class);
 
   }
 
+  public enum TextArea {
+    TOPLEFT(5, 5), TOPRIGHT(Application.board.getWidth() - 200, 0);
+
+    public final int x;
+    public final int y;
+
+    TextArea(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+
   /**
    * Simple tool for storing lines of text and drawing them
    */
-  public class TextBuffer {
+  public class Printer {
 
-    private ArrayDeque<String> q;
     int vertSpacing;
     int x = 0;
     int y = 0;
@@ -51,64 +64,17 @@ public class UI {
     int fs;
     Graphics2D g;
 
-    TextBuffer(Graphics2D g, int vertSpacing, int padX, int padY) {
+    Printer(Graphics2D g, int vertSpacing, int padX, int padY) {
       this.vertSpacing = vertSpacing;
-      this.q = new ArrayDeque<String>();
       this.g = g;
       this.padX = padX;
       this.padY = padY;
       this.fs = g.getFont().getSize();
     }
 
-    /**
-     * Simplifies formatting a key value pair where the value is a double
-     * 
-     * @param key
-     * @param value
-     */
-    public TextBuffer addPair(String key, double value) {
-      q.add(String.format((key + "%.2f"), value));
-      return this;
-    }
-
-    /**
-     *
-     * Simplifies formatting a key value pair where the value is an int
-     * 
-     * @param key
-     * @param value
-     */
-    public TextBuffer addPair(String key, int value) {
-      q.add(String.format((key + "%d"), value));
-      return this;
-    }
-
-    /**
-     * Adds a single String to the internal queue
-     * 
-     * @param str
-     */
-    public TextBuffer add(String str) {
-      q.add(str);
-      return this;
-    }
-
-    /**
-     * Internal flush(). Empties the queue into g.drawString()
-     */
-    private void _flush() {
-      while (!q.isEmpty()) {
-        y += fs + vertSpacing;
-        g.drawString(q.remove(), x + padX, y + padY);
-      }
-    }
-
-    /**
-     * Draw the contents of the buffer to the interally stored Graphics2D object.
-     * When no x,y position is given, continue from the previous position
-     */
-    public void flush() {
-      _flush();
+    public void setLocation(TextArea T) {
+      this.x = T.x;
+      this.y = T.y;
     }
 
     /**
@@ -118,10 +84,10 @@ public class UI {
      * @param x
      * @param y
      */
-    public void flush(int x, int y) {
-      this.x = x;
-      this.y = y;
-      _flush();
+    public void println(String str) {
+
+      y += fs + vertSpacing;
+      g.drawString(str, x + padX, y + padY);
     }
   }
 
@@ -137,10 +103,10 @@ public class UI {
 
     this.g2 = g2;
 
-    TextBuffer t = new TextBuffer(g2, 5, 5, 0);
+    Printer p = new Printer(g2, 5, 5, 0);
 
     for (UIEvent event : B.getConnectedEvents()) {
-      event.draw(t, g2);
+      event.draw(p, g2);
     }
 
   }

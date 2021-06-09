@@ -1,7 +1,7 @@
 package ui;
 
 import powder.*;
-import ui.UI.TextBuffer;
+import ui.UI.Printer;
 import java.awt.Graphics2D;
 import core.*;
 
@@ -14,7 +14,7 @@ public class Spinner implements UIEvent {
   int iteration = 0;
 
   @Override
-  public void draw(TextBuffer t, Graphics2D g) {
+  public void draw(Printer p, Graphics2D g) {
   }
 
   @Override

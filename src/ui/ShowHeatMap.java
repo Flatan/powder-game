@@ -1,9 +1,8 @@
 package ui;
 
 import powder.*;
-import ui.UI.TextBuffer;
+import ui.UI.Printer;
 import java.awt.Graphics2D;
-import core.*;
 
 /**
  * ToggleHeatMap
@@ -11,15 +10,12 @@ import core.*;
 public class ShowHeatMap implements UIEvent {
 
   @Override
-  public void draw(TextBuffer t, Graphics2D g) {
-    Board B = Application.board;
-
-    t.add("");
-    t.add("t - toggle heat map display");
-    t.add("c - cold particles");
-    t.add("w - warm particles");
-    t.add("h - hot particles");
-    t.flush(B.getWidth() - 200, 80);
+  public void draw(Printer p, Graphics2D g) {
+    p.println("");
+    p.println("t - toggle heat map display");
+    p.println("c - cold particles");
+    p.println("w - warm particles");
+    p.println("h - hot particles");
   }
 
   @Override

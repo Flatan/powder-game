@@ -10,9 +10,9 @@ import powder.*;
 import java.awt.Graphics2D;
 
 import ui.ParticleFactory.Shape;
-import ui.UI.TextBuffer;
+import static ui.UI.TextArea.*;
+import ui.UI.Printer;
 
-import java.util.function.*;
 import java.awt.geom.Ellipse2D;
 
 /**
@@ -23,30 +23,31 @@ public class AlwaysOn implements UIEvent {
   Graphics2D aog;
 
   @Override
-  public void draw(TextBuffer t, Graphics2D g) {
+  public void draw(Printer p, Graphics2D g) {
 
     this.aog = g;
     Board B = Application.board;
 
-    t.add("q - quit");
-    t.add("p - powder");
-    t.add("s - solid");
-    t.add("a - cycle spawn shapes");
-    t.flush(0, 0);
+    p.setLocation(TOPLEFT);
+    p.println("q - quit");
+    p.println("p - powder");
+    p.println("s - solid");
+    p.println("a - cycle spawn shapes");
 
+    p.setLocation(TOPRIGHT);
     if (B.getFPS() < 40)
       g.setColor(Color.red);
 
-    t.addPair("FPS: ", B.getFPS()).flush(B.getWidth() - 200, 0);
+    p.println(String.format("FPS: %.2f", B.getFPS()));
 
     g.setColor(Color.white);
 
-    t.addPair("Spawn count: ", Board.runtimeParticleCount).flush();
+    p.println(String.format("Spawn count: %d", Board.runtimeParticleCount));
 
     if (tracer != null) {
-      t.add(String.format("Tracer: (%d, %d)", tracer.x, tracer.y)).flush();
-      t.add(String.format("Tracer vel: %.2f | %.2f", tracer.vel.x, tracer.vel.y)).flush();
-      t.add(String.format("Tracer n: (%d, %d)", tracer.nx, tracer.ny)).flush();
+      p.println(String.format("Tracer: (%d, %d)", tracer.x, tracer.y));
+      p.println(String.format("Tracer vel: %.2f | %.2f", tracer.vel.x, tracer.vel.y));
+      p.println(String.format("Tracer n: (%d, %d)", tracer.nx, tracer.ny));
 
     }
 

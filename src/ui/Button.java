@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import ui.UI.TextBuffer;
+import ui.UI.Printer;
 import java.awt.geom.Area;
 
 /**
@@ -16,7 +16,7 @@ public class Button implements UIEvent {
   Rectangle r = new Rectangle(600, 300, 50, 50);
 
   @Override
-  public void draw(TextBuffer t, Graphics2D g) {
+  public void draw(Printer p, Graphics2D g) {
 
     g.setColor(Color.white);
     g.drawRect(r.x, r.y, r.width, r.height);

@@ -6,15 +6,13 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import ui.UI.TextBuffer;
+import ui.UI.Printer;
 
 public class Resolution implements UIEvent {
 
   @Override
-  public void draw(TextBuffer t, Graphics2D g) {
-    t.add("r - toggle resolution");
-    t.flush(0, 70);
-
+  public void draw(Printer p, Graphics2D g) {
+    p.println("r - toggle resolution");
   }
 
   @Override
