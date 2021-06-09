@@ -18,10 +18,10 @@ public class Application extends JFrame {
 
     public static int scale = 1;
     private static int WinH = 600;
-    private static int WinW = 600;
+    private static int WinW = 800;
 
     public static final Board board = new Board(WinW, WinH);
-    public static final ParticleGrid grid = new ParticleGrid(WinW, WinH);
+    public static final ParticleGrid grid = new ParticleGrid(WinW - 200, WinH);
 
     private Application() {
         initUI();

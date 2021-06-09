@@ -14,12 +14,12 @@ public class ShowHeatMap implements UIEvent {
   public void draw(TextBuffer t, Graphics2D g) {
     Board B = Application.board;
 
-    t.add("――――――――――――――――");
+    t.add("");
     t.add("t - toggle heat map display");
     t.add("c - cold particles");
     t.add("w - warm particles");
     t.add("h - hot particles");
-    t.flush(B.getWidth() - 200, 60);
+    t.flush(B.getWidth() - 200, 80);
   }
 
   @Override
