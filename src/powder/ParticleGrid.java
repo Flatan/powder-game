@@ -37,6 +37,7 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     a = new Particle[W][H];
     this.W = W;
     this.H = H;
+    spawnQueue = new ArrayDeque<Particle>();
     image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
   }
 

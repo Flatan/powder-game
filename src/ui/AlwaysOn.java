@@ -60,9 +60,8 @@ public class AlwaysOn implements UIEvent {
 
   @Override
   public void on(boolean once) {
-
     if (once) {
-      ParticleFactory.element = Border.class;
+      ParticleFactory.element = Solid.class;
       ParticleFactory.spawnRect(0, 0, 600, 600, 3);
       ParticleFactory.element = Granular.class;
       this.tracer = Application.grid.spawn(300, 300, Tracer.class);

@@ -29,7 +29,7 @@ public abstract class Particle {
 	// velocity:
 	public Vector2D vel = new Vector2D(0, 0);
 
-	public Vector2D giveVel;
+	public Vector2D giveVel = new Vector2D(0, 0);
 	public int nx, ny;
 	public int ox, oy;
 	public Color color;
