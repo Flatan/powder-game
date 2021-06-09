@@ -12,17 +12,21 @@ import java.awt.Graphics2D;
 import ui.ParticleFactory.Shape;
 import ui.UI.TextBuffer;
 
+import java.util.function.*;
+import java.awt.geom.Ellipse2D;
+
 /**
  * AlwaysOn
  */
 public class AlwaysOn implements UIEvent {
   Particle tracer;
+  Graphics2D aog;
 
   @Override
   public void draw(TextBuffer t, Graphics2D g) {
 
+    this.aog = g;
     Board B = Application.board;
-    int cursorSize = UI.mouse.getCursorSize();
 
     t.add("q - quit");
     t.add("p - powder");
@@ -45,7 +49,10 @@ public class AlwaysOn implements UIEvent {
       t.add(String.format("Tracer n: (%d, %d)", tracer.nx, tracer.ny)).flush();
 
     }
-    g.drawOval(UI.mouse.windowX() - cursorSize / 2, UI.mouse.windowY() - cursorSize / 2, cursorSize, cursorSize);
+
+    Mouse m = UI.mouse;
+
+    m.draw(g);
 
   }
 
@@ -61,8 +68,11 @@ public class AlwaysOn implements UIEvent {
   @Override
   public void on(boolean once) {
     if (once) {
+
+      UI.mouse.setShape(new Ellipse2D.Float(0, 0, 1, 1), true);
       Application.grid.reset(600, 600);
       this.tracer = Application.grid.spawn(300, 300, Tracer.class);
+
     }
 
     if (UI.keyboard.keyRepeated('a') % 2 == 1) {

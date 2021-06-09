@@ -30,8 +30,6 @@ public class ShowHeatMap implements UIEvent {
   @Override
   public void on(boolean once) {
 
-    Board B = Application.board;
-
     switch (UI.keyboard.keyPressed()) {
       case 'c':
         ParticleFactory.temp = 0;

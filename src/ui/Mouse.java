@@ -1,12 +1,16 @@
 package ui;
 
 import java.awt.MouseInfo;
-
+import java.awt.Graphics2D;
 import java.awt.IllegalComponentStateException;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 import core.*;
 
@@ -18,27 +22,67 @@ public class Mouse {
 
   private int cursorSize = 20;
   public boolean isDown = false;
-  private Board B = Application.board;
+  private AffineTransform at = AffineTransform.getTranslateInstance(0.0, 0.0);
+  private Boolean dynamic = true;
+  private Boolean prevDynamic;
+  private Shape shape;
+  private Shape prevShape;
 
   public Mouse() {
   }
 
-  /**
-   * Returns the cursor size
-   * 
-   * @return
-   */
   public int getCursorSize() {
     return cursorSize;
   }
 
-  /**
-   * Sets the cursor size
-   * 
-   * @param cursorSize
-   */
   public void setCursorSize(int cursorSize) {
     this.cursorSize = cursorSize;
+  }
+
+  public void setShape(Shape shape, boolean dynamic) {
+
+    if (this.shape != null) {
+      prevShape = this.shape;
+      prevDynamic = this.dynamic;
+    }
+
+    this.shape = shape;
+    this.dynamic = dynamic;
+  }
+
+  public Shape getShape() {
+    return this.shape;
+  }
+
+  public boolean revertShape() {
+
+    if (prevShape != null) {
+      setShape(prevShape, prevDynamic);
+      return true;
+    }
+    return false;
+  }
+
+  public void draw(Graphics2D g2) {
+
+    Rectangle2D bounds = this.shape.getBounds2D();
+    double w = bounds.getWidth();
+    double h = bounds.getHeight();
+
+    if (dynamic) {
+      w = cursorSize;
+      h = cursorSize;
+    }
+
+    at.setTransform(w, 0, 0, h, X() - w / 2, Y() - h / 2);
+    g2.draw(at.createTransformedShape(this.shape));
+  }
+
+  public boolean cursorInBounds(Rectangle r) {
+    if (r.contains(X(), Y())) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -49,6 +93,7 @@ public class Mouse {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
       cursorSize = (cursorSize - 2 * e.getWheelRotation());
+
     }
 
   };
