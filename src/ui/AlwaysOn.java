@@ -61,7 +61,7 @@ public class AlwaysOn implements UIEvent {
   @Override
   public void on(boolean once) {
     if (once) {
-      Application.grid.reset(600,600);
+      Application.grid.reset(600, 600);
       this.tracer = Application.grid.spawn(300, 300, Tracer.class);
     }
 

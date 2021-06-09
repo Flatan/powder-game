@@ -21,7 +21,6 @@ public class Solid extends Particle {
 
     if (!updated) {
       updated = true;
-      updateTemp();
 
     }
 

@@ -39,11 +39,11 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     this.W = W;
     this.H = H;
     spawnQueue = new ArrayDeque<Particle>();
-    
+
     ParticleFactory.element = Solid.class;
     ParticleFactory.spawnRect(0, 0, W, H, 3);
     ParticleFactory.element = Granular.class;
-    
+
     image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
   }
 
@@ -198,15 +198,13 @@ public class ParticleGrid extends AbstractCollection<Particle> {
       p.nx = (int) (p.x + p.vel.x);
       p.ny = (int) (p.y + p.vel.y);
 
-      if (!(p instanceof Border)) {
+      p.ox = p.x;
+      p.oy = p.y;
+      p.y = p.ny;
+      p.x = p.nx;
 
-        p.ox = p.x;
-        p.oy = p.y;
-        p.y = p.ny;
-        p.x = p.nx;
-
-        spawnQueue.add(p);
-      }
+      p.updateProperties();
+      spawnQueue.add(p);
 
     });
   }

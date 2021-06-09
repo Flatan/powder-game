@@ -126,9 +126,18 @@ public abstract class Particle {
 	abstract public void update();
 
 	/**
+	 * Update Particle properties not directly related to position or velocity. This
+	 * is a temporary container. We might eventually want to have properties that
+	 * can actually change pos/vel.
+	 */
+	public void updateProperties() {
+		updateTemp();
+	}
+
+	/**
 	 * Updates the particle's temperature
 	 */
-	public void updateTemp() {
+	private void updateTemp() {
 		double leftTemp, rightTemp, topTemp, bottomTemp;
 		// if a side is not touching another particle, treats it as a particle of the
 		// same temperature
