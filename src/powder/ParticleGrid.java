@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import java.util.ArrayDeque;
 
 import core.Application;
+import ui.ParticleFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -38,6 +39,11 @@ public class ParticleGrid extends AbstractCollection<Particle> {
     this.W = W;
     this.H = H;
     spawnQueue = new ArrayDeque<Particle>();
+    
+    ParticleFactory.element = Solid.class;
+    ParticleFactory.spawnRect(0, 0, W, H, 3);
+    ParticleFactory.element = Granular.class;
+    
     image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
   }
 
