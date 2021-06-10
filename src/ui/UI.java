@@ -36,19 +36,8 @@ public class UI {
     B.connectEvent(Spinner.class);
     B.connectEvent(Resolution.class);
     B.connectEvent(Button.class);
+    B.connectEvent(Logger.class);
 
-  }
-
-  public enum TextArea {
-    TOPLEFT(5, 5), TOPRIGHT(Application.board.getWidth() - 200, 0);
-
-    public final int x;
-    public final int y;
-
-    TextArea(int x, int y) {
-      this.x = x;
-      this.y = y;
-    }
   }
 
   /**
@@ -72,9 +61,9 @@ public class UI {
       this.fs = g.getFont().getSize();
     }
 
-    public void setLocation(TextArea T) {
-      this.x = T.x;
-      this.y = T.y;
+    public void setLocation(int x, int y) {
+      this.x = x;
+      this.y = y;
     }
 
     /**

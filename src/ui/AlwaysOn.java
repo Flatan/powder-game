@@ -10,7 +10,6 @@ import powder.*;
 import java.awt.Graphics2D;
 
 import ui.ParticleFactory.Shape;
-import static ui.UI.TextArea.*;
 import ui.UI.Printer;
 
 import java.awt.geom.Ellipse2D;
@@ -28,13 +27,13 @@ public class AlwaysOn implements UIEvent {
     this.aog = g;
     Board B = Application.board;
 
-    p.setLocation(TOPLEFT);
+    p.setLocation(0, 0);
     p.println("q - quit");
     p.println("p - powder");
     p.println("s - solid");
     p.println("a - cycle spawn shapes");
 
-    p.setLocation(TOPRIGHT);
+    p.setLocation(Application.board.getWidth() - 200, 0);
     if (B.getFPS() < 40)
       g.setColor(Color.red);
 
@@ -73,6 +72,7 @@ public class AlwaysOn implements UIEvent {
       UI.mouse.setShape(new Ellipse2D.Float(0, 0, 1, 1), true);
       Application.grid.reset(600, 600);
       this.tracer = Application.grid.spawn(300, 300, Tracer.class);
+      Logger.log("test!");
 
     }
 
