@@ -19,6 +19,9 @@ public class Button implements UIEvent {
   int Y = 300;
   int W = 70;
   int H = 20;
+  int Xpad = 2;
+  String label = "Powder";
+  Color hoverFg = new Color(150, 150, 150);
   Color innerGradient = new Color(30, 30, 30);
   Color outerGradient = Color.BLACK;
   Rectangle r = new Rectangle(X, Y, W, H);
@@ -44,8 +47,16 @@ public class Button implements UIEvent {
         }
       }
       g.drawImage(img, X, Y, null);
+      g.setColor(hoverFg);
+
+      g.drawString(label, X + Xpad, Y + g.getFont().getSize() / 2 + H / 2);
+    } else {
+
+      g.drawString(label, X + Xpad, Y + g.getFont().getSize() / 2 + H / 2);
     }
+
     g.drawRect(X, Y, W, H);
+
   }
 
   @Override
