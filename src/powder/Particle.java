@@ -35,6 +35,8 @@ public abstract class Particle {
   boolean dynamic = true;
 
   public double temperature = 0;
+  
+  public double mass = 1;
 
   // Thermal diffusivity:
   public double thermDiff = 0.47;
@@ -147,5 +149,6 @@ public abstract class Particle {
   public boolean supported() {
     return true;
   }
+  
 
 }

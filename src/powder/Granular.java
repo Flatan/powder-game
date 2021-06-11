@@ -23,25 +23,18 @@ public class Granular extends Particle {
   /**
    * Calculates collision between two particles
    * 
-   * @param other The other particle
+   * @param p1	particle 1
+   * @param p2	particle 2
    * @param cR    Coefficient of Restitution. Should be between 0-1. Or SLIGHTLY
    *              higher for fun bouncy effect
+   * @return the exerted impulse
    */
-  public void collide(Particle other, double cR) {
-
-    if (other.dynamic) {
-      BiFunction<Double, Double, Double> newVel = (a, b) -> (cR * (b - a) + a + b) / 2;
-
-      double tempVelX = vel.x;
-      double tempVelY = vel.y;
-
-      vel.x = newVel.apply(vel.x, other.vel.x);
-      vel.y = newVel.apply(vel.y, other.vel.y);
-
-      other.vel.x = newVel.apply(other.vel.x, tempVelX);
-      other.vel.y = newVel.apply(other.vel.y, tempVelY);
-    } else
-      vel = new Vector2D(0, 0);
+  public static double collide(Particle p1, Particle p2, double cR) {
+	  double impulse;
+	  impulse = (p1.mass*p2.mass)/(p1.mass+p2.mass);
+	  impulse *= p2.vel.magnitude() - p1.vel.magnitude();
+	  impulse *= 1 + cR;
+	  return impulse;
 
   }
 }
