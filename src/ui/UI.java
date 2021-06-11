@@ -22,6 +22,10 @@ public class UI {
   public static final Keyboard keyboard = new Keyboard();
   public static final Mouse mouse = new Mouse();
 
+  public enum EventT {
+    KEYPRESS, MOUSECLICK
+  };
+
   public UI(Board B) {
     this.B = B;
     B.addKeyListener(UI.keyboard);

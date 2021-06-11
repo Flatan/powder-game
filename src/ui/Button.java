@@ -5,7 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import ui.UI.Printer;
+import powder.*;
 import color.ColorGradientMap;
 import java.awt.geom.Area;
 
@@ -14,13 +18,16 @@ import java.awt.geom.Area;
  */
 public class Button implements UIEvent {
 
-  boolean triggered = false;
-  int X = 610;
-  int Y = 300;
-  int W = 70;
-  int H = 20;
-  int Xpad = 2;
-  String label = "Powder";
+  final int X = 610;
+  final int Y = 300;
+  final int W = 70;
+  final int H = 20;
+  final int XPAD = 2;
+  final String LABEL = "Powder";
+
+  boolean hover = false;
+  boolean set = false;
+
   Color hoverFg = new Color(150, 150, 150);
   Color innerGradient = new Color(30, 30, 30);
   Color outerGradient = Color.BLACK;
@@ -35,7 +42,8 @@ public class Button implements UIEvent {
     c.addColor(0.0, innerGradient);
     g.setColor(new Color(80, 80, 80));
 
-    if (triggered) {
+    if (hover) {
+
       double mx = UI.mouse.X() - X;
       double my = UI.mouse.Y() - Y;
 
@@ -49,10 +57,14 @@ public class Button implements UIEvent {
       g.drawImage(img, X, Y, null);
       g.setColor(hoverFg);
 
-      g.drawString(label, X + Xpad, Y + g.getFont().getSize() / 2 + H / 2);
-    } else {
+      g.drawString(LABEL, X + XPAD, Y + g.getFont().getSize() / 2 + H / 2);
+    }
 
-      g.drawString(label, X + Xpad, Y + g.getFont().getSize() / 2 + H / 2);
+    if (set) {
+      g.setColor(Color.WHITE);
+      g.drawString(LABEL, X + XPAD, Y + g.getFont().getSize() / 2 + H / 2);
+    } else {
+      g.drawString(LABEL, X + XPAD, Y + g.getFont().getSize() / 2 + H / 2);
     }
 
     g.drawRect(X, Y, W, H);
@@ -62,15 +74,24 @@ public class Button implements UIEvent {
   @Override
   public void on(boolean once) {
     if (once) {
-      triggered = true;
+      hover = true;
       UI.mouse.setShape(new Area(), false);
     }
+
+    if (!set && UI.mouse.clicked()) {
+      set = true;
+      ParticleFactory.element = Granular.class;
+    } else if (set && UI.mouse.clicked()) {
+      set = false;
+      ParticleFactory.element = Solid.class;
+    }
+
   }
 
   @Override
   public void off(boolean once) {
     if (once) {
-      triggered = false;
+      hover = false;
       UI.mouse.revertShape();
     }
 

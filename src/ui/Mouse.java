@@ -13,6 +13,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
 import core.*;
+import ui.UI.EventT;
 
 /**
  * Collect the current mouse coordinates on the window
@@ -85,6 +86,12 @@ public class Mouse {
     return false;
   }
 
+  public boolean clicked() {
+    if (Application.board.eventSignal == EventT.MOUSECLICK)
+      return true;
+    return false;
+  }
+
   /**
    * MouseWheelListener object that attaches to the Board
    */
@@ -105,6 +112,7 @@ public class Mouse {
 
     public void mousePressed(MouseEvent e) {
       isDown = true;
+      Application.board.queueEvent(EventT.MOUSECLICK);
     }
 
     public void mouseReleased(MouseEvent e) {

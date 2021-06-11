@@ -4,16 +4,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Hashtable;
+import ui.UI.EventT;
 
 import core.*;
 
 public class Keyboard implements KeyListener {
 
-  private Board B;
   private char c = Character.MIN_VALUE;
   private HashSet<Character> toggleBuffer = new HashSet<Character>();
   private Hashtable<Character, Integer> countBuffer = new Hashtable<Character, Integer>();
-  public char instanceBuffer = Character.MIN_VALUE;
+  public Character instance = null;
 
   /**
    * Returns the last key pressed by the user. Will return Character.MIN_VALUE as
@@ -31,7 +31,12 @@ public class Keyboard implements KeyListener {
    * @return c
    */
   public char keyPressed() {
-    return instanceBuffer;
+
+    if (Application.board.eventSignal == EventT.KEYPRESS)
+      return c;
+
+    return Character.MIN_VALUE;
+
   }
 
   /**
@@ -66,7 +71,6 @@ public class Keyboard implements KeyListener {
   @Override
   public void keyPressed(KeyEvent e) {
 
-    B = Application.board;
     this.c = e.getKeyChar();
 
     if (countBuffer.containsKey(c)) {
@@ -82,7 +86,7 @@ public class Keyboard implements KeyListener {
       toggleBuffer.add(c);
     }
 
-    instanceBuffer = c;
+    Application.board.queueEvent(EventT.KEYPRESS);
   }
 
   @Override
