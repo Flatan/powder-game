@@ -1,4 +1,4 @@
-package ui;
+package core;
 
 import java.awt.MouseInfo;
 import java.awt.Graphics2D;
@@ -12,8 +12,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
-import core.*;
-import ui.UI.EventT;
+import core.UI.EventT;
 
 /**
  * Collect the current mouse coordinates on the window
@@ -29,7 +28,7 @@ public class Mouse {
   private Shape shape;
   private Shape prevShape;
 
-  public Mouse() {
+  protected Mouse() {
   }
 
   public int getCursorSize() {
@@ -64,7 +63,7 @@ public class Mouse {
     return false;
   }
 
-  public void draw(Graphics2D g2) {
+  protected void draw(Graphics2D g2) {
 
     Rectangle2D bounds = this.shape.getBounds2D();
     double w = bounds.getWidth();
@@ -95,7 +94,7 @@ public class Mouse {
   /**
    * MouseWheelListener object that attaches to the Board
    */
-  public MouseWheelListener wheelControls = new MouseWheelListener() {
+  protected MouseWheelListener wheelControls = new MouseWheelListener() {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -108,7 +107,7 @@ public class Mouse {
   /**
    * MouseAdapter object that attaches to the Board
    */
-  public MouseAdapter adapter = new MouseAdapter() {
+  protected MouseAdapter adapter = new MouseAdapter() {
 
     public void mousePressed(MouseEvent e) {
       isDown = true;

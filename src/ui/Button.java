@@ -5,11 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import ui.UI.Printer;
+import core.UI.Printer;
+import core.UI.UIEvent;
+import core.UI;
 import powder.*;
+import core.Mouse;
 import color.ColorGradientMap;
 import java.awt.geom.Area;
 
@@ -26,7 +26,7 @@ public class Button implements UIEvent {
   final String LABEL = "Powder";
 
   boolean hover = false;
-  boolean set = false;
+  boolean set = true;
 
   Color hoverFg = new Color(150, 150, 150);
   Color innerGradient = new Color(30, 30, 30);

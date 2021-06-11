@@ -1,10 +1,10 @@
-package ui;
+package core;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.HashSet;
 
-import core.Board;
+import ui.EventLoader;
 
 /**
  * UI
@@ -15,30 +15,30 @@ import core.Board;
  */
 public class UI {
 
-  private Board B;
-
   HashSet<Integer> positionBuffer = new HashSet<Integer>();
 
   public static final Keyboard keyboard = new Keyboard();
   public static final Mouse mouse = new Mouse();
 
-  public enum EventT {
+  protected enum EventT {
     KEYPRESS, MOUSECLICK
   };
 
+  public interface UIEvent {
+    public boolean trigger();
+
+    public void on(boolean once);
+
+    public void off(boolean once);
+
+    public void draw(Printer p, Graphics2D g);
+  }
+
   public UI(Board B) {
-    this.B = B;
     B.addKeyListener(UI.keyboard);
     B.addMouseWheelListener(UI.mouse.wheelControls);
     B.addMouseListener(UI.mouse.adapter);
-    B.connectEvent(AlwaysOn.class);
-    B.connectEvent(ParticleFactory.class);
-    B.connectEvent(ShowHeatMap.class);
-    B.connectEvent(Spinner.class);
-    B.connectEvent(Resolution.class);
-    B.connectEvent(Button.class);
-    B.connectEvent(Logger.class);
-
+    EventLoader.loadEvents(B);
   }
 
   /**
@@ -97,14 +97,13 @@ public class UI {
    * 
    * @param g2
    */
-  public void draw(Graphics2D g2) {
+  protected void draw(Graphics2D g2) {
 
+    UI.mouse.draw(g2);
     Printer p = new Printer(g2, 5, 5, 0);
 
-    for (UIEvent event : B.getConnectedEvents()) {
+    for (UIEvent event : Application.board.getConnectedEvents()) {
       event.draw(p, g2);
     }
-
   }
-
 }

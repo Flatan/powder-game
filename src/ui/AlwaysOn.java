@@ -10,7 +10,9 @@ import powder.*;
 import java.awt.Graphics2D;
 
 import ui.ParticleFactory.Shape;
-import ui.UI.Printer;
+import core.UI;
+import core.UI.Printer;
+import core.UI.UIEvent;
 
 import java.awt.geom.Ellipse2D;
 
@@ -45,8 +47,6 @@ public class AlwaysOn implements UIEvent {
       p.println(String.format("Tracer: (%d, %d)", tracer.x, tracer.y));
       p.println(String.format("Tracer vel: %.2f | %.2f", tracer.vel.x, tracer.vel.y));
     }
-
-    UI.mouse.draw(g);
 
   }
 

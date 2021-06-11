@@ -13,9 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.HashSet;
 
-import ui.UIEvent;
-import ui.UI;
-import ui.UI.EventT;
+import core.UI.EventT;
+import core.UI.UIEvent;
 import powder.*;
 
 /**
@@ -59,7 +58,6 @@ public class Board extends JPanel implements Runnable {
   private void initBoard() {
     setBackground(Color.BLACK);
     setPreferredSize(new Dimension((int) (W * Application.scale), (int) (H * Application.scale)));
-
     ui = new UI(this);
 
     Particle.heatmap.addColor(0, Color.GREEN);

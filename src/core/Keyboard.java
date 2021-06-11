@@ -1,12 +1,10 @@
-package ui;
+package core;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Hashtable;
-import ui.UI.EventT;
-
-import core.*;
+import core.UI.EventT;
 
 public class Keyboard implements KeyListener {
 
@@ -14,6 +12,10 @@ public class Keyboard implements KeyListener {
   private HashSet<Character> toggleBuffer = new HashSet<Character>();
   private Hashtable<Character, Integer> countBuffer = new Hashtable<Character, Integer>();
   public Character instance = null;
+
+  protected Keyboard() {
+
+  }
 
   /**
    * Returns the last key pressed by the user. Will return Character.MIN_VALUE as

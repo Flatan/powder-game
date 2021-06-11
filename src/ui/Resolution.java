@@ -6,7 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
 
-import ui.UI.Printer;
+import core.UI.UIEvent;
+import core.UI.Printer;
+import core.UI;
 
 public class Resolution implements UIEvent {
 

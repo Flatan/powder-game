@@ -1,12 +1,11 @@
 package ui;
 
-import powder.*;
 import core.Application;
-import ui.UI.Printer;
+import core.UI.Printer;
+import core.UI.UIEvent;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Hashtable;
-import java.util.Set;
 
 /**
  * ToggleHeatMap

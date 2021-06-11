@@ -1,7 +1,9 @@
 package ui;
 
 import powder.*;
-import ui.UI.Printer;
+import core.UI.Printer;
+import core.UI;
+import core.UI.UIEvent;
 import java.awt.Graphics2D;
 
 /**
