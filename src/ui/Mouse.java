@@ -74,7 +74,7 @@ public class Mouse {
       h = cursorSize;
     }
 
-    at.setTransform(w, 0, 0, h, X() - w / 2, Y() - h / 2);
+    at.setTransform(w, 0, 0, h, windowX() - w / 2, windowY() - h / 2);
     g2.draw(at.createTransformedShape(this.shape));
   }
 

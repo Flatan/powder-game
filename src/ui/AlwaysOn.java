@@ -46,7 +46,6 @@ public class AlwaysOn implements UIEvent {
     if (tracer != null) {
       p.println(String.format("Tracer: (%d, %d)", tracer.x, tracer.y));
       p.println(String.format("Tracer vel: %.2f | %.2f", tracer.vel.x, tracer.vel.y));
-      p.println(String.format("Tracer n: (%d, %d)", tracer.nx, tracer.ny));
 
     }
 

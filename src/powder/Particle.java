@@ -22,21 +22,15 @@ public abstract class Particle {
   public ParticleGrid grid = Application.grid;
   public int x, y;
   private double realx, realy;
-  private int particleID;
-
   public static Vector2D gravity = new Vector2D(0, -0.5);
 
   // velocity:
   public Vector2D vel = new Vector2D(0, 0);
 
   public Vector2D giveVel = new Vector2D(0, 0);
-  public int nx, ny;
   public int ox, oy;
   public Color color;
   public Color displayColor = color;
-
-  double downPush = 0.0;
-  public boolean updated = false;
 
   boolean dynamic = true;
 
@@ -46,7 +40,7 @@ public abstract class Particle {
   public double thermDiff = 0.47;
 
   Particle(int x, int y, Color color) {
-    particleID = Board.runtimeParticleCount++;
+    Board.runtimeParticleCount++;
     this.x = x;
     this.y = y;
     this.realx = x;
@@ -81,17 +75,6 @@ public abstract class Particle {
   }
 
   /**
-   * getID returns a unique particle identifier that can be used for logging
-   * 
-   * @return String particleID
-   */
-  public String getID() {
-    return String.format("P-%d", particleID);
-  }
-
-  // Returns a Particle relative to the position of this one
-
-  /**
    * Returns a Particle relative to the position of this one Takes regular
    * Cartesian coordinates
    *
@@ -122,8 +105,6 @@ public abstract class Particle {
 
     return getRel(x, y) != null;
   }
-
-  abstract public void update();
 
   /**
    * Update Particle properties not directly related to position or velocity. This

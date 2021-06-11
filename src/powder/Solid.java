@@ -16,14 +16,4 @@ public class Solid extends Particle {
     giveVel = new Vector2D(0, 0);
   }
 
-  @Override
-  public void update() {
-
-    if (!updated) {
-      updated = true;
-
-    }
-
-  }
-
 }

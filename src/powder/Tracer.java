@@ -16,13 +16,4 @@ public class Tracer extends Particle {
     vel.y -= 1;
   }
 
-  // Good ole particle movin method
-  @Override
-  public void update() {
-
-    if (!updated) {
-      updated = true;
-
-    }
-  }
 }

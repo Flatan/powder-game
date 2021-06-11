@@ -20,16 +20,6 @@ public class Granular extends Particle {
     giveVel = new Vector2D(0.5, 0.5);
   }
 
-  // Good ole particle movin method
-  @Override
-  public void update() {
-
-    if (!updated) {
-      updated = true;
-
-    }
-  }
-
   /**
    * Calculates collision between two particles
    * 
