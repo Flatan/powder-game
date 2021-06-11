@@ -19,12 +19,10 @@ import java.awt.geom.Ellipse2D;
  */
 public class AlwaysOn implements UIEvent {
   Particle tracer;
-  Graphics2D aog;
 
   @Override
   public void draw(Printer p, Graphics2D g) {
 
-    this.aog = g;
     Board B = Application.board;
 
     p.setLocation(0, 0);
@@ -34,24 +32,21 @@ public class AlwaysOn implements UIEvent {
     p.println("a - cycle spawn shapes");
 
     p.setLocation(Application.board.getWidth() - 200, 0);
-    if (B.getFPS() < 40)
-      g.setColor(Color.red);
 
-    p.println(String.format("FPS: %.2f", B.getFPS()));
-
-    g.setColor(Color.white);
+    if (B.getFPS() < 40) {
+      p.println(String.format("FPS: %.2f", B.getFPS()), Color.RED);
+    } else {
+      p.println(String.format("FPS: %.2f", B.getFPS()), Color.WHITE);
+    }
 
     p.println(String.format("Spawn count: %d", Board.runtimeParticleCount));
 
     if (tracer != null) {
       p.println(String.format("Tracer: (%d, %d)", tracer.x, tracer.y));
       p.println(String.format("Tracer vel: %.2f | %.2f", tracer.vel.x, tracer.vel.y));
-
     }
 
-    Mouse m = UI.mouse;
-
-    m.draw(g);
+    UI.mouse.draw(g);
 
   }
 

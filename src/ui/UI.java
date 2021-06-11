@@ -1,12 +1,10 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.HashSet;
-import java.util.ArrayDeque;
-import java.awt.Point;
 
 import core.Board;
-import core.Application;
 
 /**
  * UI
@@ -20,7 +18,6 @@ public class UI {
   private Board B;
 
   HashSet<Integer> positionBuffer = new HashSet<Integer>();
-  Graphics2D g2;
 
   public static final Keyboard keyboard = new Keyboard();
   public static final Mouse mouse = new Mouse();
@@ -48,8 +45,8 @@ public class UI {
     int vertSpacing;
     int x = 0;
     int y = 0;
-    int padX;
-    int padY;
+    final int padX;
+    final int padY;
     int fs;
     Graphics2D g;
 
@@ -78,6 +75,14 @@ public class UI {
       y += fs + vertSpacing;
       g.drawString(str, x + padX, y + padY);
     }
+
+    public void println(String str, Color c) {
+
+      g.setColor(c);
+      this.y += fs + vertSpacing;
+      g.drawString(str, x + padX, y + padY);
+      g.setColor(Color.WHITE);
+    }
   }
 
   /**
@@ -89,8 +94,6 @@ public class UI {
    * @param g2
    */
   public void draw(Graphics2D g2) {
-
-    this.g2 = g2;
 
     Printer p = new Printer(g2, 5, 5, 0);
 
