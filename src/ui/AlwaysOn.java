@@ -66,6 +66,8 @@ public class AlwaysOn implements UIEvent {
       UI.mouse.setShape(new Ellipse2D.Float(0, 0, 1, 1), true);
       Application.grid.reset(600, 600);
       this.tracer = Application.grid.spawn(300, 300, Tracer.class);
+      this.tracer.vel = new Vector2D(2, 0);
+
       Logger.log("test!");
 
     }

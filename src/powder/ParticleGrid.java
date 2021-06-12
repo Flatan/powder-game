@@ -45,11 +45,11 @@ public class ParticleGrid {
     ParticleFactory.element = Granular.class;
 
     image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
-    
-    Particle p1 = spawn(10, H/2, Granular.class);
-    p1.vel = new Vector2D(0.5,0);
-    Particle p2 = spawn(W-10, H/2, Granular.class);
-    p2.vel = new Vector2D(-0.5,0);
+
+    Particle p1 = spawn(10, H / 2, Granular.class);
+    p1.vel = new Vector2D(0.5, 0);
+    Particle p2 = spawn(W - 10, H / 2, Granular.class);
+    p2.vel = new Vector2D(-0.5, 0);
   }
 
   /**
@@ -135,10 +135,10 @@ public class ParticleGrid {
       for (Particle[] p : colliders) {
 
         // TODO Vector equations that produce new vectors for each particle.
-    	  System.out.println(Granular.collide(p[0], p[1], 0));
+        System.out.println(Granular.collide(p[0], p[1], 0));
         // p[0] <---> p[1]
-        p[0].vel = p[1].giveVel;
-        p[1].vel = p[0].giveVel;
+        p[0].vel.x = 1;
+        p[1].vel.x = -2;
 
       }
 
@@ -167,7 +167,7 @@ public class ParticleGrid {
       int nx = (int) p.targetX;
       int ny = (int) p.targetY;
       if (test(nx, ny) && get(nx, ny) != p) {
-    	  System.out.println("collide");
+        System.out.println("collide");
         arena.add(new Particle[] { get(nx, ny), p });
       }
     });
