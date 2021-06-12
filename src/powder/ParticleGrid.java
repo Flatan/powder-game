@@ -97,20 +97,25 @@ public class ParticleGrid {
    * @param x
    * @param y
    * @param p
-   * @return whether move was successful
    */
   public void move(Particle p, int x, int y) {
 
-    int py = p.y;
-    int px = p.x;
-
-    p.y = y;
-    p.x = x;
-
-    spawnQueue.add(p);
-
-    a[px][a.length - 1 - py] = null;
+    move(p,(double)x,(double)y);
   }
+  
+  public void move(Particle p, double x, double y) {
+
+	    int py = p.y;
+	    int px = p.x;
+
+	    p.setRealx(x);
+	    p.setRealy(y);
+
+	    spawnQueue.add(p);
+
+	    a[px][a.length - 1 - py] = null;
+	}
+
 
   private class Arena {
 
@@ -152,12 +157,15 @@ public class ParticleGrid {
       a[p.ox][a.length - 1 - p.oy] = null;
       set(p);
     }
+    
+
 
     forEachParticle((p) -> {
 
-      int nx = (int) (p.x + p.vel.x);
-      int ny = (int) (p.y + p.vel.y);
-
+      p.calcTarget();
+      
+      int nx = (int) p.targetX;
+      int ny = (int) p.targetY;
       if (test(nx, ny) && get(nx, ny) != p) {
     	  System.out.println("collide");
         arena.add(new Particle[] { get(nx, ny), p });
@@ -168,11 +176,10 @@ public class ParticleGrid {
 
     forEachParticle((p) -> {
 
-      p.ox = p.x;
-      p.oy = p.y;
-      p.y = (int) (p.y + p.vel.y);
-      p.x = (int) (p.x + p.vel.x);
-
+      /*p.ox = p.x;
+      p.oy = p.y;*/
+      p.setRealx(p.targetX);
+      p.setRealy(p.targetY);
       p.updateProperties();
       spawnQueue.add(p);
 

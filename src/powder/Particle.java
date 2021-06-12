@@ -29,6 +29,7 @@ public abstract class Particle {
 
   public Vector2D giveVel = new Vector2D(0, 0);
   public int ox, oy;
+  public double targetX, targetY;
   public Color color;
   public Color displayColor = color;
 
@@ -37,6 +38,7 @@ public abstract class Particle {
   public double temperature = 0;
   
   public double mass = 1;
+  
 
   // Thermal diffusivity:
   public double thermDiff = 0.47;
@@ -75,8 +77,20 @@ public abstract class Particle {
   public double realY() {
     return realy;
   }
+  
+  
 
-  /**
+  public void setRealx(double realx) {
+	this.realx = realx;
+	this.x = (int)realx;
+}
+
+public void setRealy(double realy) {
+	this.realy = realy;
+	this.y = (int)realy;
+}
+
+/**
    * Returns a Particle relative to the position of this one Takes regular
    * Cartesian coordinates
    *
@@ -150,5 +164,9 @@ public abstract class Particle {
     return true;
   }
   
+  public void calcTarget() {
+	  targetX = realx + vel.x;
+	  targetY = realy + vel.y;
+  }
 
 }

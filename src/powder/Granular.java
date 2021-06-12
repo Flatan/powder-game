@@ -13,7 +13,7 @@ import math.Vector2D;
  */
 
 public class Granular extends Particle {
-
+	
   Granular(int x, int y) {
     super(x, y, Color.white);
     vel.y = -1;
@@ -37,4 +37,6 @@ public class Granular extends Particle {
 	  return impulse;
 
   }
+  
+
 }
