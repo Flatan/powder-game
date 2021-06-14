@@ -2,6 +2,10 @@
 package cmd;
 
 import core.Command;
+import math.Vector2D;
+
+import java.util.Random;
+
 import core.*;
 import powder.*;
 
@@ -13,14 +17,12 @@ public class Spawn implements Command {
   @Override
   public void call(String... args) {
 
-    if (args[1].equals("star")) {
+    if (args[1].equals("pop")) {
 
-      for (int i = 0; i < 100; i++) {
-
-        Particle p = Application.grid.spawn(10, 10 + i, Granular.class);
-        p.temperature = 50;
-        p.vel.x = 2;
-        p.vel.y = 0;
+      Random r = new Random();
+      for (int i = 0; i < 50; i++) {
+        Application.grid.spawn(r.nextInt(50) + 275, r.nextInt(50) + 275, Granular.class).vel = new Vector2D(
+            r.nextInt(20) - 10, r.nextInt(20) - 10);
       }
 
       return;
