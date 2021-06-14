@@ -1,10 +1,6 @@
 package ui;
 
 import powder.*;
-import core.UI.Printer;
-import core.UI;
-import core.UI.UIEvent;
-import java.awt.Graphics2D;
 import core.*;
 
 /**
@@ -12,19 +8,11 @@ import core.*;
  *
  * For running super quick collision tests with many particles
  */
-public class Spinner implements UIEvent {
-  int iteration = 0;
+public class Spinner implements Command {
+  int iteration = 1;
 
   @Override
-  public void draw(Printer p, Graphics2D g) {
-  }
-
-  @Override
-  public void off(boolean once) {
-  }
-
-  @Override
-  public void on(boolean once) {
+  public void call(String... args) {
 
     Board B = Application.board;
 
@@ -50,14 +38,6 @@ public class Spinner implements UIEvent {
         p.temperature = 50;
       }
     }
-
-  }
-
-  @Override
-  public boolean trigger() {
-
-    return UI.keyboard.keyToggled('n');
-
   }
 
 }

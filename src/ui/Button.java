@@ -1,99 +1,113 @@
 package ui;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import core.UI.Printer;
-import core.UI.UIEvent;
 import core.UI;
-import powder.*;
-import java.awt.Point;
+
+import java.awt.event.MouseEvent;
 //import core.Mouse;
+//
+import java.awt.event.MouseListener;
 import color.ColorGradientMap;
-import java.awt.geom.Area;
+
+import java.awt.Container;
 
 /**
  * Button
  */
-public class Button implements UIEvent {
+abstract public class Button extends Container implements MouseListener {
 
-  final int X = 610;
-  final int Y = 300;
-  final int W = 70;
-  final int H = 20;
   final int XPAD = 2;
-  final String LABEL = "Powder";
 
-  boolean hover = false;
-  boolean set = true;
+  private boolean hover = false;
+  private boolean set;
 
   Color hoverFg = new Color(150, 150, 150);
   Color innerGradient = new Color(30, 30, 30);
   Color outerGradient = Color.BLACK;
-  Rectangle r = new Rectangle(X, Y, W, H);
-  BufferedImage img = new BufferedImage(W, H, BufferedImage.TYPE_INT_BGR);
+  public String LABEL;
+  final Rectangle r;
+  final BufferedImage img;
   ColorGradientMap c = new ColorGradientMap().addColor(1.0, outerGradient).addColor(0.0, innerGradient);
 
+  Button(int x, int y, int w, int h, String label) {
+
+    this.set = false;
+    this.r = new Rectangle(x, y, w, h);
+    this.img = new BufferedImage(r.width, r.height, BufferedImage.TYPE_INT_BGR);
+    this.LABEL = label;
+    setBounds(r);
+    addMouseListener(this);
+    setPreferredSize(new Dimension(r.width, r.height));
+    setVisible(true);
+  }
+
+  public void disable() {
+    this.set = false;
+  }
+
+  public void enable() {
+    this.set = true;
+  }
+
   @Override
-  public void draw(Printer p, Graphics2D g) {
+  public void mouseExited(MouseEvent e) {
+    hover = false;
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent e) {
+
+    if (set) {
+      set = false;
+      return;
+    }
+    set = true;
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent e) {
+    hover = true;
+  }
+
+  @Override
+  public void mousePressed(MouseEvent e) {
+  }
+
+  @Override
+  public void mouseReleased(MouseEvent e) {
+  }
+
+  @Override
+  public void paint(Graphics g) {
+
+    super.paint(g);
+
+    setLocation(r.x, r.y);
     g.setColor(new Color(80, 80, 80));
 
     if (hover) {
 
-      double mx = UI.mouse.X() - X;
-      double my = UI.mouse.Y() - Y;
+      double mx = UI.mouse.X() - r.x;
+      double my = UI.mouse.Y() - r.y;
 
-      img = c.applyRadialGradient(img, (int) mx, (int) my, r);
+      BufferedImage tempimg = c.applyRadialGradient(img, (int) mx, (int) my, r);
 
-      g.drawImage(img, X, Y, null);
+      g.drawImage(tempimg, 0, 0, null);
       g.setColor(hoverFg);
-
-      g.drawString(LABEL, X + XPAD, Y + g.getFont().getSize() / 2 + H / 2);
     }
 
     if (set) {
       g.setColor(Color.WHITE);
-      g.drawString(LABEL, X + XPAD, Y + g.getFont().getSize() / 2 + H / 2);
+      g.drawString(LABEL, XPAD, 0 + g.getFont().getSize() / 2 + (int) r.getHeight() / 2);
+      g.drawRect(0, 0, (int) r.getWidth() - 1, (int) r.getHeight() - 1);
     } else {
-      g.drawString(LABEL, X + XPAD, Y + g.getFont().getSize() / 2 + H / 2);
+      g.drawString(LABEL, XPAD, 0 + g.getFont().getSize() / 2 + (int) r.getHeight() / 2);
     }
-
-    g.drawRect(X, Y, W, H);
-
-  }
-
-  @Override
-  public void on(boolean once) {
-    if (once) {
-      hover = true;
-      UI.mouse.setShape(new Area(), false);
-    }
-
-    if (!set && UI.mouse.clicked()) {
-      set = true;
-      ParticleFactory.element = Granular.class;
-    } else if (set && UI.mouse.clicked()) {
-      set = false;
-      ParticleFactory.element = Solid.class;
-    }
-
-  }
-
-  @Override
-  public void off(boolean once) {
-    if (once) {
-      hover = false;
-      UI.mouse.revertShape();
-    }
-
-  }
-
-  @Override
-  public boolean trigger() {
-
-    return (UI.mouse.cursorInBounds(r));
 
   }
 }

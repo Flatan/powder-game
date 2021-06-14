@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import java.util.ArrayDeque;
 
 import core.Application;
+import math.Point;
 import math.Vector2D;
 import ui.ParticleFactory;
 
@@ -26,6 +27,7 @@ public class ParticleGrid {
   private Arena arena = new Arena();
   private ArrayDeque<Particle> spawnQueue = new ArrayDeque<Particle>();
   private AffineTransform transform = new AffineTransform();
+  private Point target = new Point(0, 0);
 
   public ParticleGrid(int W, int H) {
     a = new Particle[W][H];
@@ -39,17 +41,11 @@ public class ParticleGrid {
     this.W = W;
     this.H = H;
     spawnQueue = new ArrayDeque<Particle>();
-
     ParticleFactory.element = Solid.class;
     ParticleFactory.spawnRect(0, 0, W, H, 3);
     ParticleFactory.element = Granular.class;
-
     image = new BufferedImage(W, H, BufferedImage.TYPE_INT_RGB);
 
-    Particle p1 = spawn(10, H / 2, Granular.class);
-    p1.vel = new Vector2D(0.5, 0);
-    Particle p2 = spawn(W - 10, H / 2, Granular.class);
-    p2.vel = new Vector2D(-0.5, 0);
   }
 
   /**
@@ -59,15 +55,15 @@ public class ParticleGrid {
    * @param y Y coordinate
    * @return Particle
    */
-  public Particle get(int x, int y) {
-    if (outOfBounds(x, y)) {
+  public Particle get(Point p) {
+    if (outOfBounds(p)) {
       return null;
     }
-    return a[x][a.length - 1 - y];
+    return a[(int) p.x][a.length - 1 - (int) p.y];
   }
 
-  public boolean test(int x, int y) {
-    return get(x, y) != null;
+  public boolean test(Point p) {
+    return get(p) != null;
   }
 
   /**
@@ -78,16 +74,13 @@ public class ParticleGrid {
    */
   private boolean set(Particle p) {
 
-    if (outOfBounds(p.x, p.y)) {
-      System.out.printf("\n Tried to set particle to (%d,%d)", p.x, p.y);
-      System.out.printf("\n (Interally, grid.a[%d][%d - 1 - %d])", p.x, a.length, p.y);
+    if (outOfBounds(p.loc)) {
       System.out.printf("\n (           grid.a[p.x][a.length - 1 - p.y])");
       System.out.printf("\n Particle type: %s", p.getClass().toString());
-      System.out.printf("\n Location: (%d, %d)", p.x, p.y);
       System.out.printf("\n Velocity: velx:%.2f vely:%.2f", p.vel.x, p.vel.y);
       return false;
     }
-    a[p.x][a.length - 1 - p.y] = p;
+    a[(int) p.loc.x][a.length - 1 - (int) p.loc.y] = p;
     return true;
   }
 
@@ -100,22 +93,15 @@ public class ParticleGrid {
    */
   public void move(Particle p, int x, int y) {
 
-    move(p,(double)x,(double)y);
+    int py = (int) p.loc.y;
+    int px = (int) p.loc.x;
+
+    p.loc = new Point(x, y);
+
+    spawnQueue.add(p);
+
+    a[px][a.length - 1 - py] = null;
   }
-  
-  public void move(Particle p, double x, double y) {
-
-	    int py = p.y;
-	    int px = p.x;
-
-	    p.setRealx(x);
-	    p.setRealy(y);
-
-	    spawnQueue.add(p);
-
-	    a[px][a.length - 1 - py] = null;
-	}
-
 
   private class Arena {
 
@@ -135,10 +121,12 @@ public class ParticleGrid {
       for (Particle[] p : colliders) {
 
         // TODO Vector equations that produce new vectors for each particle.
-        System.out.println(Granular.collide(p[0], p[1], 0));
+        // System.out.println(Granular.collide(p[0], p[1], 0));
         // p[0] <---> p[1]
-        p[0].vel.x = 1;
-        p[1].vel.x = -2;
+        p[0].vel.x = 0;
+        p[1].vel.x = 0;
+        p[0].vel.y = 0;
+        p[1].vel.y = 0;
 
       }
 
@@ -151,24 +139,31 @@ public class ParticleGrid {
    */
   public void updateParticles() {
     // Iterate through the grid and update every pixel with a Particle
-    while (!spawnQueue.isEmpty()) {
 
-      Particle p = spawnQueue.removeLast();
-      a[p.ox][a.length - 1 - p.oy] = null;
+    while (!spawnQueue.isEmpty()) {
+      Particle p = spawnQueue.pollLast();
+
+      if (p.oloc != null) {
+        a[(int) p.oloc.x][a.length - 1 - (int) p.oloc.y] = null;
+      }
+
       set(p);
     }
-    
-
 
     forEachParticle((p) -> {
 
-      p.calcTarget();
-      
-      int nx = (int) p.targetX;
-      int ny = (int) p.targetY;
-      if (test(nx, ny) && get(nx, ny) != p) {
-        System.out.println("collide");
-        arena.add(new Particle[] { get(nx, ny), p });
+      Point prevTarget = p.loc;
+      Point target = p.loc.add(p.vel.normalizedVect());
+
+      for (int i = 0; i <= p.vel.magnitude(); i++) {
+
+        if (test(target) && get(target) != p) {
+          arena.add(new Particle[] { get(target), p });
+          p.loc = prevTarget;
+        }
+        prevTarget = target;
+        target = target.add(p.vel.normalizedVect());
+
       }
     });
 
@@ -176,10 +171,12 @@ public class ParticleGrid {
 
     forEachParticle((p) -> {
 
-      /*p.ox = p.x;
-      p.oy = p.y;*/
-      p.setRealx(p.targetX);
-      p.setRealy(p.targetY);
+      // if (p.oloc != null) {
+      p.oloc = p.loc;
+      // }
+
+      p.loc = p.loc.add(p.vel);
+
       p.updateProperties();
       spawnQueue.add(p);
 
@@ -193,10 +190,18 @@ public class ParticleGrid {
    */
   private void forEachParticle(Consumer<Particle> action) {
 
+    HashSet<Particle> buff = new HashSet<>();
+    Point p = new Point(0, 0);
+
     for (int x = 0; x < W; x++) {
       for (int y = 0; y < H; y++) {
-        if (test(x, y))
-          action.accept(get(x, y));
+        p.setLocation(x, y);
+        if (test(p)) {
+          if (!buff.contains(get(p))) {
+            action.accept(get(p));
+            buff.add(get(p));
+          }
+        }
       }
     }
   }
@@ -214,7 +219,7 @@ public class ParticleGrid {
     image.setRGB(0, 0, W, H, new int[W * H], 0, 0);
 
     forEachParticle((particle) -> {
-      image.setRGB(particle.x, H - 1 - particle.y, particle.displayColor.getRGB());
+      image.setRGB((int) particle.loc.x, H - 1 - (int) particle.loc.y, particle.displayColor.getRGB());
     });
 
     g2.drawImage(image, 0, 0, W, H, null);
@@ -238,7 +243,7 @@ public class ParticleGrid {
       Constructor<?> cons = elementType.getDeclaredConstructor(int.class, int.class);
       particle = (Particle) cons.newInstance(x, y);
     } catch (Throwable e) {
-      System.out.println(e);
+      // System.out.println(e);
     }
 
     spawnQueue.add(particle);
@@ -252,8 +257,8 @@ public class ParticleGrid {
    * @param y Y coordinate
    * @return boolean true if invalid else false
    */
-  public boolean outOfBounds(double x, double y) {
-    return (y >= H || y < 0 || x >= W || x < 0);
+  public boolean outOfBounds(Point p) {
+    return (p.y >= H || p.y < 0 || p.x >= W || p.x < 0);
   }
 
 }

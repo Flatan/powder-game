@@ -7,15 +7,21 @@ import java.awt.Graphics2D;
 
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.awt.geom.Ellipse2D;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayDeque;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import java.util.HashSet;
 
-import core.UI.EventT;
-import core.UI.UIEvent;
+import math.Vector2D;
 import powder.*;
+import ui.EventLoader;
 
 /**
  * Board
@@ -29,7 +35,6 @@ public class Board extends JPanel implements Runnable {
 
   public static int runtimeParticleCount = 0;
 
-  private ArrayDeque<EventT> eventQueue = new ArrayDeque<>();
   public Object eventSignal = null;
 
   private int W;
@@ -41,8 +46,9 @@ public class Board extends JPanel implements Runnable {
   // Measures the framerate
   private double fps = 0;
 
+  private List<String> commandClasses = new ArrayList<>();
   private Thread animator;
-  private ArrayList<UIEvent> UIevents = new ArrayList<UIEvent>();
+  private ArrayList<Command> commands = new ArrayList<>();
 
   private UI ui;
 
@@ -54,11 +60,44 @@ public class Board extends JPanel implements Runnable {
 
   }
 
+  private void initCommands() {
+    // https://stackoverflow.com/questions/34459486/joining-paths-in-java
+    Path currentPath = Paths.get(System.getProperty("user.dir"));
+    Path cmdPath = Paths.get(currentPath.toString(), "cmd");
+
+    try (Stream<Path> walk = Files.walk(cmdPath)) {
+      // https://mkyong.com/java/java-how-to-list-all-files-in-a-directory/
+      List<String> result = walk.map(x -> x.toString()).filter(f -> f.endsWith(".class")).collect(Collectors.toList());
+
+      result.forEach(System.out::println);
+      result.forEach((path) -> {
+        Path classFile = Paths.get(path);
+        String className = classFile.getFileName().toString().split("\\.")[0];
+        commandClasses.add("cmd." + className);
+      });
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   // Setup initial settings and event listeners
   private void initBoard() {
+    initCommands();
     setBackground(Color.BLACK);
     setPreferredSize(new Dimension((int) (W * Application.scale), (int) (H * Application.scale)));
-    ui = new UI(this);
+
+    commandClasses.forEach((cmdstr) -> {
+      try {
+        Object obj = Class.forName(cmdstr).getDeclaredConstructor().newInstance();
+        Command cmd = (Command) obj;
+        connectCommand(cmd);
+        System.out.println("Loaded " + cmdstr);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+    });
 
     Particle.heatmap.addColor(0, Color.GREEN);
     Particle.heatmap.addColor(50, Color.YELLOW);
@@ -69,15 +108,6 @@ public class Board extends JPanel implements Runnable {
     Particle.slopemap.addColor(5, Color.GREEN);
 
     setFocusable(true);
-  }
-
-  /**
-   * Get the initialized UI events
-   * 
-   * @return
-   */
-  public ArrayList<UIEvent> getConnectedEvents() {
-    return UIevents;
   }
 
   /**
@@ -116,13 +146,34 @@ public class Board extends JPanel implements Runnable {
     return fps;
   }
 
-  public void connectEvent(Class<? extends UIEvent> event) {
+  public void connectCommand(Command instance) {
 
     try {
-      UIEvent instance = event.getDeclaredConstructor().newInstance();
-      UIevents.add(instance);
+      // Command instance = cmd.getDeclaredConstructor().newInstance();
+      commands.add(instance);
     } catch (Exception e) {
       // TODO: handle exception
+    }
+  }
+
+  public boolean testCommand(String cmd) {
+
+    String[] arguments = cmd.split(" ");
+    for (Command c : commands) {
+      if (arguments[0].toLowerCase().equals(c.getClass().getSimpleName().toLowerCase())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void invokeCommand(String cmd) {
+
+    String[] arguments = cmd.split(" ");
+    for (Command c : commands) {
+      if (arguments[0].toLowerCase().equals(c.getClass().getSimpleName().toLowerCase())) {
+        c.call(arguments);
+      }
     }
   }
 
@@ -149,60 +200,30 @@ public class Board extends JPanel implements Runnable {
     ui.draw(g2);
   }
 
-  public void queueEvent(EventT arg) {
-    eventQueue.add(arg);
-  }
-
   // Copied this from a tutorial and don't know what it does; don't mess with it:
   // apparently a better way of making a game loop timer
   @Override
   public void run() {
 
+    ui = new UI(this);
+
+    addMouseWheelListener(UI.mouse.wheelControls);
+    addMouseListener(UI.mouse.adapter);
+    EventLoader.loadEvents(this);
     long beforeTime, timeDiff, sleep;
 
-    HashSet<UIEvent> ActiveEventBuffer = new HashSet<UIEvent>();
-
+    UI.mouse.setShape(new Ellipse2D.Float(0, 0, 1, 1), true);
+    Application.grid.reset(600, 600);
+    // Application.grid.reset(600, 600);
+    // Particle tracer = Application.grid.spawn(300, 300, Tracer.class);
+    // tracer.vel = new Vector2D(2, 0);
     beforeTime = System.currentTimeMillis();
 
     while (true) {
 
-      // Allows the KeyPressed() event to deliver the key only once
-      // by immediately switching instanceBuffer back to "MIN_VALUE"
-      // (char placeholder for "null")
-      eventSignal = eventQueue.poll();
-
-      // Stream each UIEvent if its ".trigger()" gate is open
-      for (UIEvent E : UIevents) {
-        if (E.trigger()) {
-
-          if (!ActiveEventBuffer.contains(E)) {
-            E.on(true);
-            ActiveEventBuffer.add(E);
-          } else {
-            E.on(false);
-          }
-        } else {
-
-          if (ActiveEventBuffer.contains(E)) {
-            E.off(true);
-            ActiveEventBuffer.remove(E);
-          } else {
-            E.off(false);
-          }
-        }
-      }
-
-      // The particles can't be updated from within the paintComponent method because
-      // for some dumb reason repaint() doesn't wait to finish running before the
-      // program continues on
-      // and it breaks the framerate counter so I had to move updateParticles() out
-      // here
-
-      // Also potentially means the drawing of buffered image could be causing lag not
-      // registered by
-      // the counter but idk
-      Application.grid.updateParticles();
       repaint();
+
+      Application.grid.updateParticles();
 
       timeDiff = System.currentTimeMillis() - beforeTime;
       sleep = DELAY - timeDiff;

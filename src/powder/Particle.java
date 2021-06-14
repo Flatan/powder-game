@@ -5,6 +5,7 @@ import color.ColorGradientMap;
 import core.Application;
 import core.Board;
 import math.Vector2D;
+import math.Point;
 
 /**
  * Particle
@@ -20,15 +21,14 @@ public abstract class Particle {
   public static ColorGradientMap slopemap = new ColorGradientMap();
 
   public ParticleGrid grid = Application.grid;
-  public int x, y;
-  private double realx, realy;
   public static Vector2D gravity = new Vector2D(0, -0.5);
 
   // velocity:
   public Vector2D vel = new Vector2D(0, 0);
+  public Point loc;
 
   public Vector2D giveVel = new Vector2D(0, 0);
-  public int ox, oy;
+  public Point oloc;
   public double targetX, targetY;
   public Color color;
   public Color displayColor = color;
@@ -36,19 +36,15 @@ public abstract class Particle {
   boolean dynamic = true;
 
   public double temperature = 0;
-  
+
   public double mass = 1;
-  
 
   // Thermal diffusivity:
   public double thermDiff = 0.47;
 
   Particle(int x, int y, Color color) {
     Board.runtimeParticleCount++;
-    this.x = x;
-    this.y = y;
-    this.realx = x;
-    this.realy = y;
+    this.loc = new Point((double) x, (double) y);
     this.color = color;
     displayColor = color;
   }
@@ -70,27 +66,7 @@ public abstract class Particle {
     }
   }
 
-  public double realX() {
-    return realx;
-  }
-
-  public double realY() {
-    return realy;
-  }
-  
-  
-
-  public void setRealx(double realx) {
-	this.realx = realx;
-	this.x = (int)realx;
-}
-
-public void setRealy(double realy) {
-	this.realy = realy;
-	this.y = (int)realy;
-}
-
-/**
+  /**
    * Returns a Particle relative to the position of this one Takes regular
    * Cartesian coordinates
    *
@@ -100,12 +76,7 @@ public void setRealy(double realy) {
    */
   public Particle getRel(int x, int y) {
 
-    return grid.get(this.x + x, this.y + y);
-  }
-
-  public double distanceFrom(double x, double y) {
-    return Math.hypot(x - realX(), y - realY());
-
+    return grid.get(new Point(x, y));
   }
 
   /**
@@ -162,11 +133,6 @@ public void setRealy(double realy) {
    */
   public boolean supported() {
     return true;
-  }
-  
-  public void calcTarget() {
-	  targetX = realx + vel.x;
-	  targetY = realy + vel.y;
   }
 
 }
